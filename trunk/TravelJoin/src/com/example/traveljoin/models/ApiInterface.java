@@ -78,6 +78,11 @@ public class ApiInterface {
             	}            	
             }
             
+            if (object instanceof User) {
+            	jsonObject = new JSONObject();
+        		jsonObject.put("facebook_id", ((User) object).getFacebookId() );
+            }
+            	
 
             // 4. convert JSONObject to JSON to String
             json = jsonObject.toString();
