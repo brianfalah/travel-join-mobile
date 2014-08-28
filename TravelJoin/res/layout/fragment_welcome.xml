@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="#D64A00" >
+
+    <ImageView
+        android:id="@+id/splash_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:src="@drawable/icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/app_name"
+        android:textColor="#FFFFFF"
+        android:textSize="42sp"
+        android:textStyle="italic"
+        android:typeface="serif" />
+
+    <Button
+            android:id="@+id/explore_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#D64A00"
+            android:background="#FFFFFF"
+            android:textStyle="bold"
+            android:paddingLeft="30dip"
+    		android:paddingRight="30dip"
+            android:text="@string/explore_button"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="30dp" />
+
+</LinearLayout>

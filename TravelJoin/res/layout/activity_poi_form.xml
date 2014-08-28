@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollViewPoiAdd"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!-- descripcion del formulario -->
+
+        <TextView
+            android:id="@+id/FormDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/poi_form_description"
+            android:textSize="10pt" >
+        </TextView>
+
+        <!-- latitud(invisible al usuario) -->
+
+        <TextView
+            android:id="@+id/PoiLatitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone" >
+        </TextView>
+
+        <!-- longitud(invisible al usuario) -->
+
+        <TextView
+            android:id="@+id/PoiLongitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone" >
+        </TextView>
+
+        <!-- nombre -->
+
+        <EditText
+            android:id="@+id/PoiName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:inputType="textCapSentences|textAutoCorrect" >
+        </EditText>
+
+        <!-- descripcion -->
+
+        <EditText
+            android:id="@+id/PoiDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            android:inputType="textCapSentences|textAutoCorrect" >
+        </EditText>
+
+        <!-- spinner(select) de categorias -->
+        
+        <Spinner
+            android:id="@+id/PoiCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/poi_categories" />
+
+
+        
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            
+            <Button
+	            android:id="@+id/addEvent"
+	            style="?android:attr/buttonStyleSmall"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="+"
+	            android:onClick="addEvent" />
+            
+             <Button
+	            android:id="@+id/deleteEvent"
+	            style="?android:attr/buttonStyleSmall"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_toRightOf="@+id/addEvent"
+	            android:text="-"
+	            android:onClick="deleteEvent" />
+             
+              <ListView
+		            android:id="@+id/events"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@+id/addEvent" >
+		      </ListView>
+        </RelativeLayout>
+        
+
+        <Button
+            android:id="@+id/PoiCreateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="createPoi"
+            android:text="@string/create"
+            android:visibility="gone" >
+        </Button>
+
+        <Button
+            android:id="@+id/PoiUpdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="updatePoi"
+            android:text="@string/update"
+            android:visibility="gone" >
+        </Button>
+
+
+
+    </LinearLayout>
+
+</ScrollView>

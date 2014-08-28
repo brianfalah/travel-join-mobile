@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+	<!-- Generales -->
+    <string name="app_name">TravelJoin</string>
+    <string name="api_url">http://192.168.150.1:3001</string>
+    <string name="create">Crear</string>
+    <string name="edit">Editar</string>	
+    <string name="update">Actualizar</string>
+    <string name="delete">Borrar</string>
+    <string name="add">Agregar</string>
+    <string name="cancel">Cancelar</string>
+   	<string name="selectdate">Seleccione la fecha</string>
+   	<string name="ok">OK</string>
+    <!-- FIN Generales -->
+    
+	<!-- Menu -->
+	<string name="profile">Mi Perfil</string>
+	<string name="pois">Puntos De Interés</string>
+	<string name="circuits">Circuitos turísticos</string>
+	<string name="groups">Mis grupos</string>
+	<!-- FIN Menu -->
+	
+    <string name="action_settings">Settings</string>
+    <string name="explore_button">Explorar!</string>
+    
+	<!-- POIs -->
+    <string name="description">Descripción</string>
+    <string name="name">Nombre</string>
+    <string name="poi_form_description">Ingrese los datos del punto de interés:</string>
+    <string name="poi_categories">Categoría</string>    
+    <!--    FIN pois -->
+    
+    <!--     events -->    
+    <string name="event_form_description">Ingrese los datos del evento:</string>    
+    <!--    FIN events -->
+    
+    <!-- Facebook -->
+    <string name="facebook_app_id">1509535099283633</string>
+    <string name="facebook_get_started">Para comenzar, iniciar sesion con Facebook</string>
+    <!-- FIN Facebook -->
+
+</resources>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.traveljoin"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    //VERSIONES DE SDK
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="19" />
+
+    //PERMISOS
+    //Used by the API to download map tiles from Google Maps servers.
+    <uses-permission android:name="android.permission.INTERNET"/>
+    //Allows the API to check the connection status in order to determine whether data can be downloaded.
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    //Allows the API to cache map tile data in the device's external storage area.
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    
+    <uses-permission android:name="in.wptrafficanalyzer.locationingooglemapv2.permission.MAPS_RECEIVE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+        
+    <!-- The following two permissions are not required to use
+     Google Maps Android API v2, but are recommended. -->
+    //Allows the API to use WiFi or mobile cell data (or both) to determine the device's location.
+    //uses-permission android:name="android.permission.android.permission.ACCESS_COARSE_LOCATION"/>
+    Allows the API to use the Global Positioning System (GPS) to determine the device's location to within a very small area.
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    
+    //The Google Maps Android API uses OpenGL ES version 2 to render the map. If OpenGL ES version 2 is not installed, your map will not appear. 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        //actividad principal
+        <activity
+            android:name="com.example.traveljoin.activities.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        //actividad para ABM de puntos de interes
+        <activity
+            android:name="com.example.traveljoin.activities.UserProfileActivity"
+            android:label="@string/app_name" 
+            android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
+            //con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras
+	        <!-- Parent activity meta-data to support 4.0 and lower -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.example.traveljoin.MapActivity" />
+        </activity>
+        
+        //actividad del mapa con los puntos de interes
+        <activity
+            android:name="com.example.traveljoin.activities.MapActivity"
+            android:label="@string/app_name" 
+            android:parentActivityName="com.example.traveljoin.activities.MainActivity" >
+            //con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras
+	        <!-- Parent activity meta-data to support 4.0 and lower -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.example.traveljoin.MainActivity" />
+        </activity>
+        
+        //actividad para Alta y modificacion de puntos de interes
+        <activity
+            android:name="com.example.traveljoin.activities.PoiFormActivity"
+            android:label="@string/app_name" 
+            android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
+            //con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras
+	        <!-- Parent activity meta-data to support 4.0 and lower -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.example.traveljoin.MapActivity" />
+        </activity> 
+        
+        //actividad para Alta y modificacion de eventos
+        <activity
+            android:name="com.example.traveljoin.activities.EventFormActivity"
+            android:label="@string/app_name" 
+            android:parentActivityName="com.example.traveljoin.activities.PoiFormActivity"
+            android:theme="@android:style/Theme.Dialog" >
+            //con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras
+	        <!-- Parent activity meta-data to support 4.0 and lower -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.example.traveljoin.PoiFormActivity" />
+        </activity>         
+       
+        //actividad para detalle de puntos de interes
+        <activity
+            android:name="com.example.traveljoin.activities.PoiDetailsActivity"
+            android:label="@string/app_name" 
+            android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
+            //con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras
+	        <!-- Parent activity meta-data to support 4.0 and lower -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.example.traveljoin.MapActivity" />
+        </activity>  
+        
+       //para incluir la libreria de google play services(y google maps)
+       <meta-data
+		    android:name="com.google.android.gms.version"
+		    android:value="@integer/google_play_services_version" />
+       //API obtenida en https://code.google.com/apis/console/
+       <meta-data
+		    android:name="com.google.android.maps.v2.API_KEY"
+		    android:value="AIzaSyDE4pwwkOJUysZt2LUKcOjJM634L9INuXU"/>
+       <meta-data android:value="@string/facebook_app_id" android:name="com.facebook.sdk.ApplicationId"/>
+       <activity android:name="com.facebook.LoginActivity"></activity> 
+    </application>
+
+</manifest>
