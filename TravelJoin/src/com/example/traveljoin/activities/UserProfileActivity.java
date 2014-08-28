@@ -1,7 +1,6 @@
 package com.example.traveljoin.activities;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.models.Poi;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -13,15 +12,12 @@ import com.facebook.widget.ProfilePictureView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.widget.TextView;
 
 public class UserProfileActivity extends FragmentActivity {
 
 	private ProfilePictureView profilePictureView;
 	private TextView userNameView;
-	private boolean isResumed = false;
 	private static final int REAUTH_ACTIVITY_CODE = 100;
 
 	private UiLifecycleHelper uiHelper;
@@ -86,6 +82,7 @@ public class UserProfileActivity extends FragmentActivity {
 								profilePictureView.setProfileId(user.getId());
 								// Set the Textview's text to the user's name.
 								userNameView.setText(user.getName());
+								//user.getId();
 							}
 						}
 						if (response.getError() != null) {
@@ -101,14 +98,12 @@ public class UserProfileActivity extends FragmentActivity {
 	public void onResume() {
 		super.onResume();
 		uiHelper.onResume();
-		isResumed = true;
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		uiHelper.onPause();
-		isResumed = false;
 	}
 
 	@Override
