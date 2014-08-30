@@ -4,13 +4,16 @@ import org.apache.http.HttpStatus;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.traveljoin.R;
 
@@ -175,4 +178,10 @@ public class PoiDetailsActivity extends ActionBarActivity{
     		progress.dismiss();	
     }
     
+    public void calificate(View button){
+    	final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.calificate);		
+		dialog.setTitle("Calificar punto");	
+		dialog.show();
+    }		
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calificate_layout"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
+    <EditText
+         android:id="@+id/comments"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:hint="Ingrese sus comentarios.."
+         android:inputType="textCapSentences|textAutoCorrect" >
+     </EditText>
+
+    <Button
+      android:id="@+id/btnOk"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/ok">
+    </Button>
+</LinearLayout>

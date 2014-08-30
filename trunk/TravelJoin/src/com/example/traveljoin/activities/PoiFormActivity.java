@@ -318,14 +318,14 @@ public class PoiFormActivity extends ActionBarActivity{
     }
     
     //EVENTOS!!!
-    public void addEvent(){
+    public void addEvent(View button){
     	Intent intent = new Intent(this, EventFormActivity.class);		
 		//va al form para crear un evento y espera un result_code(para saber si se creo o no)
     	//y el evento creado
 		startActivityForResult(intent, ADD_EVENT_REQUEST);
     }
     
-    public void deleteEvent(){
+    public void deleteEvent(View button){
     	Intent intent = new Intent(this, EventFormActivity.class);		
 		//va al form y espera un result_code(para saber si se creo o no)
 		startActivityForResult(intent, ADD_EVENT_REQUEST);
