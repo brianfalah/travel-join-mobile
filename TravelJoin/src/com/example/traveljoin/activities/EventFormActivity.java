@@ -1,7 +1,6 @@
 package com.example.traveljoin.activities;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -35,8 +34,8 @@ public class EventFormActivity extends ActionBarActivity{
 	Button cancelButton;
 	DatePicker dp;
 	TimePicker tp;
-	Date dateFrom;
-	Date dateTo;
+	Calendar timeFrom;
+	Calendar timeTo;
 	
 	private static final int ADD_EVENT_METHOD = 1;
 	
@@ -105,33 +104,34 @@ public class EventFormActivity extends ActionBarActivity{
 		return valid;
 	}
 	
-	public void showTimePickerDialog(View v) {
-		Dialog dialog = new Dialog(this);
+	public void showTimePickerDialog(View button) {
+		final Dialog dialog = new Dialog(this);
 		dialog.setContentView(R.layout.custom_datetime_picker);		
 		dialog.setTitle("Seleccione el día y la hora del evento");
 		
 		dp = (DatePicker)dialog.findViewById(R.id.datePicker);
 		tp = (TimePicker)dialog.findViewById(R.id.timePicker);
 		//para hacer algo cuando cambia el timepicker
-//		tp.setOnTimeChangedListener(myOnTimechangedListener);				
+//		tp.setOnTimeChangedListener(myOnTimechangedListener);	
+		dialog.show();
 	}
 	
 	//click en OK: se setean la fecha y hora en el textview
-	public void setDateTime(){
+	public void setDateTime(View button){
 		int day = dp.getDayOfMonth();
 		int month = dp.getMonth() + 1;
 		int year = dp.getYear();
 		int hour = tp.getCurrentHour();
 		int minute = tp.getCurrentMinute();
-		
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.MONTH, month);
-		cal.set(Calendar.DATE, day);
-		cal.set(Calendar.HOUR_OF_DAY, hour);
-		cal.set(Calendar.MINUTE, minute);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
+				
+		timeFrom = Calendar.getInstance();
+		timeFrom.set(Calendar.YEAR, year);
+		timeFrom.set(Calendar.MONTH, month);
+		timeFrom.set(Calendar.DATE, day);
+		timeFrom.set(Calendar.HOUR_OF_DAY, hour);
+		timeFrom.set(Calendar.MINUTE, minute);
+		timeFrom.set(Calendar.SECOND, 0);
+		timeFrom.set(Calendar.MILLISECOND, 0);
 		
 		//dateFrom = cal.getTime();
 		dateFromtv.setText(day + "/" + month + "/" + year + " " + hour + ":" + minute);

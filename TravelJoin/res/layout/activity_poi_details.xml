@@ -70,8 +70,31 @@
 		    android:onClick="deletePoi"
 		    android:layout_width="wrap_content">
 		</Button>
-		
 
+		<Button
+		    android:id="@+id/AgregarFavoritosButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Agregar a Favoritos" />
+
+		<Button
+		    android:id="@+id/SugerirGrupoButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Sugerir a Grupo" />
+
+		<Button
+		    android:id="@+id/Calificarbutton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Calificar" 
+		    android:onClick="calificate"/>
+
+		<Button
+		    android:id="@+id/DenunciarButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Denunciar" />
  
     </LinearLayout>
 </ScrollView>

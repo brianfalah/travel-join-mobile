@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/linearLayout1"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="vertical" >
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollViewDateTime"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical">
+    
+	<LinearLayout
+	    android:id="@+id/linearLayout1"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+	
+	    <DatePicker
+	         android:id="@+id/datePicker"
+	         android:calendarViewShown="false"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content">
+	    </DatePicker>
+	
+	    <TimePicker
+	        android:id="@+id/timePicker"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" >
+	    </TimePicker>
+	
+	    <Button
+	      android:id="@+id/setDateTime"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:gravity="center"
+	      android:onClick="setDateTime"
+	      android:text="@string/ok">
+	    </Button>
+	</LinearLayout>
 
-    <DatePicker
-         android:id="@+id/datePicker"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content" >
-    </DatePicker>
-
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-    </TimePicker>
-
-    <Button
-      android:id="@+id/setDateTime"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:onClick="setDateTime"
-      android:text="@string/ok">
-    </Button>
-</LinearLayout>
+</ScrollView>

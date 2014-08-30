@@ -441,6 +441,10 @@ public class MapActivity extends SlidingFragmentActivity implements
         if (menu == null){
         	menu = getSlidingMenu();
         }
+        
+        if (markerPoiMap == null){
+        	markerPoiMap = new HashMap<Marker, Poi>();
+        }
     }
     
     /* Request updates at startup */
@@ -614,6 +618,11 @@ public class MapActivity extends SlidingFragmentActivity implements
         dialogFragment.setArguments(args);
         dialogFragment.show(getSupportFragmentManager(), "errordialog");
     } 
+    
+    public void filter(View button){
+    	Intent intent = new Intent(this, FilterPoisActivity.class);
+		startActivity(intent);
+    }
  
     
 //	@Override
