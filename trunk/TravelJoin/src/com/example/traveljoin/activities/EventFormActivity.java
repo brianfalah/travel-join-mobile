@@ -5,6 +5,7 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,11 +21,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.fragments.DateTimePickerDialog;
+import com.example.traveljoin.fragments.DateTimePickerDialog.DateTimePickerDialogListener;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Poi;
 
-public class EventFormActivity extends ActionBarActivity{
+public class EventFormActivity extends ActionBarActivity implements DateTimePickerDialogListener{
 	
 	ProgressDialog progress;
 	EditText nameField;
@@ -104,37 +107,17 @@ public class EventFormActivity extends ActionBarActivity{
 		return valid;
 	}
 	
-	public void showTimePickerDialog(View button) {
-		final Dialog dialog = new Dialog(this);
-		dialog.setContentView(R.layout.custom_datetime_picker);		
-		dialog.setTitle("Seleccione el día y la hora del evento");
-		
-		dp = (DatePicker)dialog.findViewById(R.id.datePicker);
-		tp = (TimePicker)dialog.findViewById(R.id.timePicker);
-		//para hacer algo cuando cambia el timepicker
-//		tp.setOnTimeChangedListener(myOnTimechangedListener);	
-		dialog.show();
-	}
+	public void showTimePickerDialog(View button) {		
+		FragmentManager fm = getSupportFragmentManager();
+		DateTimePickerDialog editNameDialog = new DateTimePickerDialog();
+        editNameDialog.show(fm, "Seleccione el día y la hora del evento");
+	}	       
 	
 	//click en OK: se setean la fecha y hora en el textview
-	public void setDateTime(View button){
-		int day = dp.getDayOfMonth();
-		int month = dp.getMonth() + 1;
-		int year = dp.getYear();
-		int hour = tp.getCurrentHour();
-		int minute = tp.getCurrentMinute();
-				
-		timeFrom = Calendar.getInstance();
-		timeFrom.set(Calendar.YEAR, year);
-		timeFrom.set(Calendar.MONTH, month);
-		timeFrom.set(Calendar.DATE, day);
-		timeFrom.set(Calendar.HOUR_OF_DAY, hour);
-		timeFrom.set(Calendar.MINUTE, minute);
-		timeFrom.set(Calendar.SECOND, 0);
-		timeFrom.set(Calendar.MILLISECOND, 0);
-		
-		//dateFrom = cal.getTime();
-		dateFromtv.setText(day + "/" + month + "/" + year + " " + hour + ":" + minute);
+	@Override
+	public void onFinishDateTimeDialog(Calendar time){						
+		dateFromtv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
+				+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
 	}
 	
 	public void showExceptionError(Exception e){
