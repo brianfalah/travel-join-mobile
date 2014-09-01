@@ -5,7 +5,7 @@
     android:versionName="1.0" >
     //VERSIONES DE SDK
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
     //PERMISOS
     //Used by the API to download map tiles from Google Maps servers.
