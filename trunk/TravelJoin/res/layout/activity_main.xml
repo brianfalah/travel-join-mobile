@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ScrollViewMain"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="vertical">
-	
-	<LinearLayout
-	        android:orientation="vertical"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content">
-	
-	    <fragment android:name="com.example.traveljoin.fragments.FacebookLoginFragment"
-	              android:id="@+id/facebookLoginFragment"
-	              android:layout_width="match_parent"
-	              android:layout_height="match_parent" />
-	    <fragment android:name="com.example.traveljoin.fragments.WelcomeFragment"
-	              android:id="@+id/welcomeFragment"
-	              android:layout_width="match_parent"
-	              android:layout_height="match_parent" />
-	
-	</LinearLayout>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-</ScrollView>
+    <fragment android:name="com.example.traveljoin.fragments.FacebookLoginFragment"
+              android:id="@+id/facebookLoginFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
+    <fragment android:name="com.example.traveljoin.fragments.WelcomeFragment"
+              android:id="@+id/welcomeFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
 
+</LinearLayout>
