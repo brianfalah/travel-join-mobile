@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Poi implements Serializable{
+public class Poi implements Serializable, GeneralListItem{
 	
 	/**
 	 * 
@@ -21,6 +21,13 @@ public class Poi implements Serializable{
 	private Integer categoryId;
 	private String categoryName;
 	
+	//TODO: borrar este constructor. Solo se esta usando para la lista de Poi. Presentacion de interfaces de usuario
+	public Poi(String name,String description) {
+		super();
+		this.name = name;
+		this.description = description;
+	}
+		
 	//constructor
 	public Poi(Integer id, Double latitude, Double longitude, String name,
 			String description, Integer userId,
