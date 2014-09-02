@@ -1,6 +1,7 @@
 package com.example.traveljoin.activities;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.fragments.PoiListFragment;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -96,16 +97,16 @@ public class UserProfileActivity extends FragmentActivity implements ActionBar.T
                 	fragment = new UserInformationFragment();
                 	break;
                 case USER_GROUPS_TAB:
-                	fragment = new UserInformationFragment();
+                	fragment = new PoiListFragment();
                 	break;
                 case USER_POIS_TAB:
-                	fragment = new UserInformationFragment();
+                	fragment = new PoiListFragment();
                 	break;
                 case USER_CIRCUITS_TAB:
-                	fragment = new UserInformationFragment();
+                	fragment = new PoiListFragment();
                 	break;
                 default:
-                    fragment = new UserInformationFragment();
+                    fragment = new PoiListFragment();
                     break;
             }
             return fragment;
