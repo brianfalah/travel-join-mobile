@@ -3,10 +3,11 @@
     package="com.example.traveljoin"
     android:versionCode="1"
     android:versionName="1.0" >
-    //VERSIONES DE SDK
+    
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
+    
     //PERMISOS
     //Used by the API to download map tiles from Google Maps servers.
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,15 +27,18 @@
     Allows the API to use the Global Positioning System (GPS) to determine the device's location to within a very small area.
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     //The Google Maps Android API uses OpenGL ES version 2 to render the map. If OpenGL ES version 2 is not installed, your map will not appear. 
+    
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
 
     <application
+        android:name="com.example.traveljoin.auxiliaries.GlobalContext"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         //actividad principal
         <activity
             android:name="com.example.traveljoin.activities.MainActivity"
@@ -45,6 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         //actividad para ABM de puntos de interes
         <activity
             android:name="com.example.traveljoin.activities.UserProfileActivity"
@@ -56,6 +61,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MapActivity" />
         </activity>
+        
         //actividad del mapa con los puntos de interes
         <activity
             android:name="com.example.traveljoin.activities.MapActivity"
@@ -67,6 +73,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MainActivity" />
         </activity>
+        
         //actividad para Alta y modificacion de puntos de interes
         <activity
             android:name="com.example.traveljoin.activities.PoiFormActivity"
@@ -78,6 +85,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MapActivity" />
         </activity>
+        
         //actividad para Alta y modificacion de eventos
         <activity
             android:name="com.example.traveljoin.activities.EventFormActivity"
@@ -89,22 +97,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.PoiFormActivity" />
         </activity>
+        
         //actividad para detalle de puntos de interes
         <activity
             android:name="com.example.traveljoin.activities.PoiDetailsActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
             //con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras
+            
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MapActivity" />
         </activity>
-       //para incluir la libreria de google play services(y google maps)
+        
+       	//para incluir la libreria de google play services(y google maps)
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-       //API obtenida en https://code.google.com/apis/console/
+       	
+        //API obtenida en https://code.google.com/apis/console/
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDE4pwwkOJUysZt2LUKcOjJM634L9INuXU" />
