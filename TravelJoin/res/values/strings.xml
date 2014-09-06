@@ -3,7 +3,7 @@
 
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.146:3001</string>
+    <string name="api_url">http://192.168.1.150:3001</string>
     <string name="create">Crear</string>
     <string name="edit">Editar</string>
     <string name="update">Actualizar</string>
