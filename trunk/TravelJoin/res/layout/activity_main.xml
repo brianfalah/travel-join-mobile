@@ -9,7 +9,7 @@
               android:id="@+id/facebookLoginFragment"
               android:layout_width="match_parent"
               android:layout_height="match_parent" />
-    <fragment android:name="com.example.traveljoin.fragments.WelcomeFragment"
+    <fragment android:name="com.example.traveljoin.fragments.WellcomeFragment"
               android:id="@+id/welcomeFragment"
               android:layout_width="match_parent"
               android:layout_height="match_parent" />

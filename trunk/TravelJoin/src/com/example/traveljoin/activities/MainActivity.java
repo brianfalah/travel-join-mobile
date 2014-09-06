@@ -1,5 +1,6 @@
 package com.example.traveljoin.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,17 +9,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
 public class MainActivity extends FragmentActivity {
-	
+
 	private FragmentManager fragmentManager = getSupportFragmentManager();
 	private Fragment facebookLoginFragment;
 	private Fragment wellcomeFragment;
 	private boolean isResumed = false;
-
+	
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
@@ -34,7 +36,7 @@ public class MainActivity extends FragmentActivity {
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		initializeFragments();		
+		initializeFragments();
 	}
 
 	private void initializeFragments() {
@@ -54,23 +56,29 @@ public class MainActivity extends FragmentActivity {
 		else
 			showFacebookLoginFragment();
 	}
-	
-	private void showAndHideFragment(Fragment fragmentToShow, Fragment fragmentToHide) {
+
+	private void showAndHideFragment(Fragment fragmentToShow,
+			Fragment fragmentToHide) {
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.hide(fragmentToHide);
 		transaction.show(fragmentToShow);
-		transaction.commit();		
+		transaction.commit();
 	}
-	
+
 	private void showFacebookLoginFragment() {
 		showAndHideFragment(facebookLoginFragment, wellcomeFragment);
 	}
 
 	private void showWellcomeFragment() {
-		//TODO: Verificar si ya existe el id del usuario persistido en el dispositivo, si no lo esta, llamar a la funcion crear u obtener usuario
+		ProgressDialog progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.loading));
+        progressDialog.show();
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		globalContext.initializeContext(this, progressDialog);
 		showAndHideFragment(wellcomeFragment, facebookLoginFragment);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -102,7 +110,7 @@ public class MainActivity extends FragmentActivity {
 		super.onSaveInstanceState(outState);
 		uiHelper.onSaveInstanceState(outState);
 	}
-	
+
 	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
 		// Only make changes if the activity is visible
@@ -110,9 +118,9 @@ public class MainActivity extends FragmentActivity {
 			clearBackStack();
 			if (state.isOpened())
 				showWellcomeFragment();
-			else if (state.isClosed()) 
+			else if (state.isClosed())
 				showFacebookLoginFragment();
-			}
+		}
 	}
 
 	private void clearBackStack() {
@@ -120,5 +128,4 @@ public class MainActivity extends FragmentActivity {
 		for (int i = 0; i < backStackSize; i++)
 			fragmentManager.popBackStack();
 	}
-
 }

@@ -12,8 +12,10 @@
     <string name="cancel">Cancelar</string>
     <string name="selectdate">Seleccione la fecha</string>
     <string name="ok">OK</string>
+    <string name="loading">Cargando</string>
+    <string name="wait">Por favor espere</string>
+    
     <!-- FIN Generales -->
-
 
     <!-- Menu -->
     <string name="profile">Mi Perfil</string>
@@ -32,22 +34,22 @@
     <string name="poi_categories">Categoría</string>
     <!-- FIN pois -->
 
-
     <!-- events -->
     <string name="event_form_description">Ingrese los datos del evento:</string>
     <!-- FIN events -->
 
-
-    <!-- Facebook -->
+    <!-- Login -->
     <string name="facebook_app_id">1509535099283633</string>
     <string name="facebook_get_started">Para comenzar, iniciar sesion con Facebook</string>
-    <!-- FIN Facebook -->
+    <string name="fetching_user_error">No se ha podido obtener el usuario.</string>
+    <!-- FIN Login -->
 	
 	<!-- General item list -->
     <string name="item_list_image_description">Imagen del elemento</string>
     <!-- FIN events -->
     
+    
+    
     <string name="title_activity_filter_pois">Filtrar</string>
-    <string name="hello_world">Hello world!</string>
 
 </resources>
