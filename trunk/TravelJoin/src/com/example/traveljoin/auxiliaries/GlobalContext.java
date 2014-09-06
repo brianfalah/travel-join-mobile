@@ -1,5 +1,8 @@
 package com.example.traveljoin.auxiliaries;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -32,11 +35,13 @@ public class GlobalContext extends Application {
 		this.user = user;
 	}
 
-	public void initializeContext(final FragmentActivity requesterActivity, ProgressDialog progressDialog) {
+	public void initializeContext(final FragmentActivity requesterActivity,
+			ProgressDialog progressDialog) {
 		initializeUser(requesterActivity, progressDialog);
 	}
 
-	private void initializeUser(final FragmentActivity requesterActivity, final ProgressDialog progressDialog) {
+	private void initializeUser(final FragmentActivity requesterActivity,
+			final ProgressDialog progressDialog) {
 		final Session session = Session.getActiveSession();
 
 		Request request = Request.newMeRequest(session,
@@ -52,12 +57,10 @@ public class GlobalContext extends Application {
 								User user = new User(facebookUser.getId(),
 										facebookUser.getFirstName(),
 										facebookUser.getLastName());
-								
-								CreateUserIfNotExistTask httpAsyncTask = new CreateUserIfNotExistTask(
+
+								GetOrCreateUserIfNotExistTask httpAsyncTask = new GetOrCreateUserIfNotExistTask(
 										user, requesterActivity, progressDialog);
 								httpAsyncTask.execute(url);
-								
-								setUser(user);
 							}
 						}
 						if (response.getError() != null) {
@@ -69,22 +72,24 @@ public class GlobalContext extends Application {
 		request.executeAsync();
 
 	}
-	
-	private class CreateUserIfNotExistTask extends AsyncTask<String, Void, String> {
-		
+
+	private class GetOrCreateUserIfNotExistTask extends
+			AsyncTask<String, Void, String> {
+
 		private ApiInterface apiInterface = new ApiInterface();
 		private Object objectToSend;
 		private ApiResult apiResult;
 		private FragmentActivity requesterActivity;
 		private ProgressDialog progressDialog;
-		
-		public CreateUserIfNotExistTask(Object objectToSend,
-				FragmentActivity requesterActivity, ProgressDialog progressDialog) {
+
+		public GetOrCreateUserIfNotExistTask(Object objectToSend,
+				FragmentActivity requesterActivity,
+				ProgressDialog progressDialog) {
 			this.objectToSend = objectToSend;
 			this.requesterActivity = requesterActivity;
 			this.progressDialog = progressDialog;
 		}
-				
+
 		@Override
 		protected String doInBackground(String... urls) {
 			apiResult = apiInterface.POST(urls[0], objectToSend, null);
@@ -93,14 +98,24 @@ public class GlobalContext extends Application {
 
 		@Override
 		protected void onPostExecute(String result) {
-			if (!apiResult.ok()) {
-				CustomTravelJoinException exception = new CustomTravelJoinException(
-						getString(R.string.fetching_user_error));
-				exception.alertExceptionMessage(requesterActivity);
+			try {
+				if (apiResult.ok()) {
+					JSONObject jsonObject = new JSONObject(result);
+					GlobalContext globalContext = (GlobalContext) getApplicationContext();
+					globalContext.setUser(User.fromJSON(jsonObject));
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.fetching_user_error));
+					exception.alertExceptionMessage(requesterActivity);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				if (progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
 			}
-			if (progressDialog.isShowing()) {
-				progressDialog.dismiss();
-	        }
 		}
 	}
 
