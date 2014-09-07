@@ -1,6 +1,7 @@
 package com.example.traveljoin.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +21,7 @@ public class Poi implements Serializable, GeneralListItem{
 	private Integer userId;
 	private Integer categoryId;
 	private String categoryName;
+	private ArrayList<PoiEvent> poiEvents;
 	
 	//TODO: borrar este constructor. Solo se esta usando para la lista de Poi. Presentacion de interfaces de usuario
 	public Poi(String name,String description) {
@@ -97,6 +99,14 @@ public class Poi implements Serializable, GeneralListItem{
 		this.categoryName = categoryName;
 	}
 
+
+	public ArrayList<PoiEvent> getPoiEvents() {
+		return poiEvents;
+	}
+
+	public void setPoiEvents(ArrayList<PoiEvent> poiEvents) {
+		this.poiEvents = poiEvents;
+	}
 
 	public static Poi fromJSON(JSONObject poiJson) throws JSONException{		
 		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"), poiJson.getDouble("longitude"),

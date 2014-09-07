@@ -30,6 +30,6 @@ public class Category {
 
     @Override
     public String toString() {
-        return this.getName();            // What to display in the Spinner list.
+        return this.getName();            // Para que lo usen los adapters
     }
 }

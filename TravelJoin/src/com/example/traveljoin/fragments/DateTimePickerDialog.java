@@ -5,7 +5,6 @@ import java.util.Calendar;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.EventFormActivity;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -21,12 +20,14 @@ public class DateTimePickerDialog  extends DialogFragment{
 	TimePicker tp;
 	Button btnOK;
 	Calendar time;
+	private Integer field;
 	
 	public interface DateTimePickerDialogListener {
-        void onFinishDateTimeDialog(Calendar timeCalendar);
+        void onFinishDateTimeDialog(Calendar timeCalendar, Integer field);
     }
 
-    public DateTimePickerDialog() {
+    public DateTimePickerDialog(Integer field) {
+    	this.field = field;
         // Empty constructor required for DialogFragment
     }
 
@@ -57,7 +58,7 @@ public class DateTimePickerDialog  extends DialogFragment{
                 		time.set(Calendar.MINUTE, minute);
                 		time.set(Calendar.SECOND, 0);
                 		time.set(Calendar.MILLISECOND, 0);
-                        activity.onFinishDateTimeDialog(time);
+                        activity.onFinishDateTimeDialog(time, field);
                         getDialog().dismiss();
                         //this.dismiss();
                     }

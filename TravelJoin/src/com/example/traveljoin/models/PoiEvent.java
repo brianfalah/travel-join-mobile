@@ -1,17 +1,22 @@
 package com.example.traveljoin.models;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.Calendar;
 
-public class Event {
+public class PoiEvent implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private String description;	
 	private Integer poiId;
-	private Date fromDate;
-	private Date toDate;
+	private Calendar fromDate;
+	private Calendar toDate;
 	
-	public Event(Integer id, String name, String description, Integer poiId,
-			Date fromDate, Date toDate) {
+	public PoiEvent(Integer id, String name, String description, Integer poiId,
+			Calendar fromDate, Calendar toDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -53,19 +58,24 @@ public class Event {
 		this.poiId = poiId;
 	}
 
-	public Date getFromDate() {
+	public Calendar getFromDate() {
 		return fromDate;
 	}
 
-	public void setFromDate(Date fromDate) {
+	public void setFromDate(Calendar fromDate) {
 		this.fromDate = fromDate;
 	}
 
-	public Date getToDate() {
+	public Calendar getToDate() {
 		return toDate;
 	}
 
-	public void setToDate(Date toDate) {
+	public void setToDate(Calendar toDate) {
 		this.toDate = toDate;
 	}
+	
+    @Override
+    public String toString() {
+        return this.getName();            // Para que lo usen los adapters
+    }
 }

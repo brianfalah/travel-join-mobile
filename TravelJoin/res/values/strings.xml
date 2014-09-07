@@ -9,8 +9,7 @@
     <string name="update">Actualizar</string>
     <string name="delete">Borrar</string>
     <string name="add">Agregar</string>
-    <string name="cancel">Cancelar</string>
-    <string name="selectdate">Seleccione la fecha</string>
+    <string name="cancel">Cancelar</string>   
     <string name="ok">OK</string>
     <string name="loading">Cargando</string>
     <string name="wait">Por favor espere</string>
@@ -36,6 +35,8 @@
 
     <!-- events -->
     <string name="event_form_description">Ingrese los datos del evento:</string>
+    <string name="select_date_time_start">Fecha y hora de inicio</string>
+    <string name="select_date_time_end">Fecha y hora de fin</string>
     <!-- FIN events -->
 
     <!-- Login -->

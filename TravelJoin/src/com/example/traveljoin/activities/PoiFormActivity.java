@@ -3,7 +3,6 @@ package com.example.traveljoin.activities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,10 +15,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.PoiEvent;
 import com.google.android.gms.maps.model.LatLng;
 
 public class PoiFormActivity extends ActionBarActivity{
@@ -43,6 +45,10 @@ public class PoiFormActivity extends ActionBarActivity{
 	Button createButton;
 	Button updateButton;
 	Poi poi;
+	//array de eventos del poi
+	ArrayList<PoiEvent> poiEvents = new ArrayList<PoiEvent>();
+	ArrayAdapter<PoiEvent> poiEventsAdapter;
+	ListView lvEvents;	
 	
 	private final static int GET_CATEGORIES_METHOD = 1;
 	private static final int ADD_POI_METHOD = 2;
@@ -65,6 +71,8 @@ public class PoiFormActivity extends ActionBarActivity{
 		categoryField = (Spinner) findViewById(R.id.PoiCategories);
 		createButton = (Button) findViewById(R.id.PoiCreateButton);
 		updateButton = (Button) findViewById(R.id.PoiUpdateButton);
+		lvEvents = (ListView) findViewById(R.id.lvEvents);
+		lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
         Bundle b = getIntent().getExtras(); // gets the previously created intent
         
@@ -78,6 +86,7 @@ public class PoiFormActivity extends ActionBarActivity{
         	nameField.setText(poi.getName());
         	descField.setText(poi.getDescription());
         	updateButton.setVisibility(View.VISIBLE);
+        	//TODO obtener todos los events y cargar el array poiEvents y el listView lvEvents
         }
         //si no viene un poi, estamos creando uno nuevo, se rellenan solo la lat y long(que vienen del punto presionado en el mapa)
         //Y MOSTRAR BOTON DE CREATE
@@ -86,6 +95,11 @@ public class PoiFormActivity extends ActionBarActivity{
             setHiddenFields(point);
             createButton.setVisibility(View.VISIBLE);
         }
+        
+        //aca ya tienen que estar cargados los poiEvents
+        poiEventsAdapter = new ArrayAdapter<PoiEvent>(this,
+							android.R.layout.simple_list_item_multiple_choice, poiEvents);
+        lvEvents.setAdapter(poiEventsAdapter);
 
         //pedimos a la API todas las categorias para rellenar el Spinner
         progress = ProgressDialog.show(this, "Cargando",
@@ -175,7 +189,7 @@ public class PoiFormActivity extends ActionBarActivity{
 
 	private Boolean validateField(View field) {
 		Boolean valid = null;
-		if (field instanceof TextView) {
+		if (field instanceof EditText) {
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty( edit_text_field.getText().toString() ) ){
 				edit_text_field.setError(edit_text_field.getHint() + " is required!");
@@ -304,6 +318,7 @@ public class PoiFormActivity extends ActionBarActivity{
 	
 	public void closeActivity(Poi poi_created_or_updated){
 		Intent output = new Intent();	    
+		poi_created_or_updated.setPoiEvents(poiEvents);
 		output.putExtra("poi_created_or_updated", poi_created_or_updated);	    
 		setResult(Activity.RESULT_OK, output);
 		finish();
@@ -319,15 +334,55 @@ public class PoiFormActivity extends ActionBarActivity{
     
     //EVENTOS!!!
     public void addEvent(View button){
-    	Intent intent = new Intent(this, EventFormActivity.class);		
+    	Intent intent = new Intent(this, EventFormActivity.class);	
+    	if (poi != null){
+    		intent.putExtra("poi_id", poi.getId());    		
+    	}
 		//va al form para crear un evento y espera un result_code(para saber si se creo o no)
     	//y el evento creado
 		startActivityForResult(intent, ADD_EVENT_REQUEST);
     }
     
     public void deleteEvent(View button){
-    	Intent intent = new Intent(this, EventFormActivity.class);		
-		//va al form y espera un result_code(para saber si se creo o no)
-		startActivityForResult(intent, ADD_EVENT_REQUEST);
+    		SparseBooleanArray checked = lvEvents.getCheckedItemPositions();
+    		ArrayList<PoiEvent> poiEventsToDelete = new ArrayList<PoiEvent>();
+    		for (int i = 0; i < checked.size(); i++) {
+                // Item position in adapter
+                int position = checked.keyAt(i);
+                // borrar evento si esta checkeado
+                if (checked.valueAt(i)){
+                	PoiEvent poiEventToDelete = (PoiEvent) lvEvents.getItemAtPosition(position);
+                	poiEventsToDelete.add(poiEventToDelete);          
+    			}                
+            }    
+    		poiEvents.removeAll(poiEventsToDelete);
+            poiEventsAdapter.notifyDataSetChanged();
+    	}
+    
+    /*Cuando vuelve de un activity empezado con un startActivityForResult viene aca*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	// Decide what to do based on the original request code
+    	switch (requestCode) {
+	    	//PARA CUANDO SE VUELVE DE CREAR UN EVENTO
+	    	case ADD_EVENT_REQUEST :
+	    		/*
+	    		 * If the result code is Activity.RESULT_OK, agregar punto al mapa
+	    		 */
+	    		switch (resultCode) {
+		    		case Activity.RESULT_OK :		    			
+		    			Bundle b = data.getExtras();		    			
+		    			PoiEvent poiEvent = (PoiEvent) b.get("poiEvent");		    			
+		    			poiEvents.add(poiEvent);		    					    		
+		    			poiEventsAdapter.notifyDataSetChanged();
+		    		break;
+		    		case Activity.RESULT_CANCELED :
+		    			
+		    		break;
+	    		}
+	    	break;
+	    	
+	    }
+
     }
 }

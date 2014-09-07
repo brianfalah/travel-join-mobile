@@ -3,12 +3,11 @@ package com.example.traveljoin.activities;
 import java.util.Calendar;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -26,21 +25,27 @@ import com.example.traveljoin.fragments.DateTimePickerDialog.DateTimePickerDialo
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.PoiEvent;;
 
 public class EventFormActivity extends ActionBarActivity implements DateTimePickerDialogListener{
 	
 	ProgressDialog progress;
 	EditText nameField;
 	EditText descField;
-	TextView dateFromtv;
+	TextView dateFromTv;
+	TextView dateToTv;
 	Button addButton;
 	Button cancelButton;
 	DatePicker dp;
 	TimePicker tp;
 	Calendar timeFrom;
 	Calendar timeTo;
+	Integer poi_id = null; 
 	
 	private static final int ADD_EVENT_METHOD = 1;
+	//campos
+	private static final Integer DATE_FROM = 1;
+	private static final Integer DATE_TO = 2;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,28 +57,32 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		descField = (EditText) findViewById(R.id.EventDescription);
 		addButton = (Button) findViewById(R.id.EventAddButton);
 		cancelButton = (Button) findViewById(R.id.EventCancelButton);   
-		dateFromtv = (TextView) findViewById(R.id.dateFromTv);
+		dateFromTv = (TextView) findViewById(R.id.dateFromTv);
+		dateToTv = (TextView) findViewById(R.id.dateToTv);
+		Bundle b = getIntent().getExtras();
+		if (b != null){
+			poi_id = (Integer) b.get("poi_id");
+		}
     }
  
     
 	//cuando se clickea el boton viene aca!
-	public void addEvent(View button) { 
-		
-//			Poi poi_to_create = new Poi(null, Double.parseDouble(tvLatitude.getText().toString()),
-//					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
-//					descField.getText().toString(), 0, ((Category)categoryField.getSelectedItem()).getId(),
-//					"");
-//			
-//	        String url = getResources().getString(R.string.api_url) + "/pois/create";
-//	        HttpAsyncTask httpAsyncTask = new HttpAsyncTask(ADD_POI_METHOD, poi_to_create); 
-//	        httpAsyncTask.execute(url);        
-	        //sigue en onPostExecute, en la parte de ADD_POI_METHOD
-		
+	public void addEvent(View button) { 		
+		Intent output = new Intent();	 
+		if (validateFields()){
+			PoiEvent poiEvent = new PoiEvent(null, nameField.getText().toString(),
+					descField.getText().toString(), poi_id, timeFrom, timeTo);
+			output.putExtra("poiEvent", poiEvent);	    
+			setResult(Activity.RESULT_OK, output);
+			finish();
+		}
 	}
 	
 	//cuando se clickea el boton viene aca!
 	public void cancel(View button) { 	
-		
+		Intent output = new Intent();	    			    
+		setResult(Activity.RESULT_CANCELED, output);
+		finish();
 	}
 
 	private Boolean validateFields() {		
@@ -82,7 +91,7 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 
 	private Boolean validateField(View field) {
 		Boolean valid = null;
-		if (field instanceof TextView) {
+		if (field instanceof EditText) {
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty( edit_text_field.getText().toString() ) ){
 				edit_text_field.setError(edit_text_field.getHint() + " is required!");
@@ -107,17 +116,36 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		return valid;
 	}
 	
-	public void showTimePickerDialog(View button) {		
+	public void showTimePickerDialog(View v) {		
 		FragmentManager fm = getSupportFragmentManager();
-		DateTimePickerDialog editNameDialog = new DateTimePickerDialog();
-        editNameDialog.show(fm, "Seleccione el día y la hora del evento");
+		DateTimePickerDialog editNameDialog;
+		switch (v.getId()) {
+		    case (R.id.dateFromImg):
+		    	editNameDialog = new DateTimePickerDialog(DATE_FROM);
+	        	editNameDialog.show(fm, "Seleccione el día y la hora de inicio del evento");
+		    break;
+		    case (R.id.dateToImg):
+		    	editNameDialog = new DateTimePickerDialog(DATE_TO);
+        		editNameDialog.show(fm, "Seleccione el día y la hora de fin del evento");
+		    break;
+	    }		
 	}	       
 	
 	//click en OK: se setean la fecha y hora en el textview
 	@Override
-	public void onFinishDateTimeDialog(Calendar time){						
-		dateFromtv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
+	public void onFinishDateTimeDialog(Calendar time, Integer field){		
+		if ( DATE_FROM.equals(field) ){
+			timeFrom = time;
+			dateFromTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
 				+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
+		}
+		else{
+			if ( DATE_TO.equals(field) ){
+				timeTo = time;
+				dateToTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
+						+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
+			}
+		}
 	}
 	
 	public void showExceptionError(Exception e){
@@ -126,12 +154,12 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		e.printStackTrace();
 	}
 	
-	public void closeActivity(Poi poi_created_or_updated){
-		Intent output = new Intent();	    
-		output.putExtra("poi_created_or_updated", poi_created_or_updated);	    
-		setResult(Activity.RESULT_OK, output);
-		finish();
-	}
+//	public void closeActivity(Poi poi_created_or_updated){
+//		Intent output = new Intent();	    
+//		output.putExtra("poi_created_or_updated", poi_created_or_updated);	    
+//		setResult(Activity.RESULT_OK, output);
+//		finish();
+//	}
 	
     @Override
     protected void onPause() {
