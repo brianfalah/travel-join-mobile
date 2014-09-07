@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity {
 	private void showWellcomeFragment() {
 		ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle(getString(R.string.loading));
-		progressDialog.setMessage(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.wait));
         progressDialog.show();
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		globalContext.initializeContext(this, progressDialog);
