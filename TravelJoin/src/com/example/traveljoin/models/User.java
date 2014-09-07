@@ -52,6 +52,10 @@ public class User implements Serializable {
 		this.surname = surname;
 	}
 
+	public String getFullName() {
+		return getName() + " " + getSurname();
+	}
+	
 	public static User fromJSON(JSONObject jsonObject) throws JSONException {
 		return new User(jsonObject.getString("facebook_id"),
 				jsonObject.getString("name"), jsonObject.getString("surname"));
@@ -69,5 +73,6 @@ public class User implements Serializable {
 		}
 		return jsonObject;
 	}
+
 
 }
