@@ -43,7 +43,8 @@
 				android:layout_width="250dp"
 				android:layout_marginTop="50dp"
 				android:layout_marginLeft="5dp"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content"
+				android:text="@string/select_date_time_start">
 			</TextView>
 			     
 		     <ImageButton
@@ -52,7 +53,31 @@
 				android:layout_height="wrap_content"
 				android:layout_alignBottom="@+id/dateFromTv"
 				android:layout_toRightOf="@+id/dateFromTv"
-				android:contentDescription="@string/selectdate"
+				android:contentDescription="@string/select_date_time_start"
+				android:cropToPadding="true"
+				android:src="@drawable/ic_datepicker"
+				android:onClick="showTimePickerDialog" />
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+	    	<TextView
+	        	android:id="@+id/dateToTv"
+				android:layout_width="250dp"
+				android:layout_marginTop="50dp"
+				android:layout_marginLeft="5dp"
+				android:layout_height="wrap_content"
+				android:text="@string/select_date_time_end">
+			</TextView>
+			     
+		     <ImageButton
+				android:id="@+id/dateToImg"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignBottom="@+id/dateToTv"
+				android:layout_toRightOf="@+id/dateToTv"
+				android:contentDescription="@string/select_date_time_end"
 				android:cropToPadding="true"
 				android:src="@drawable/ic_datepicker"
 				android:onClick="showTimePickerDialog" />
