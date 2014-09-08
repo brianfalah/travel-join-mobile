@@ -3,7 +3,7 @@
 
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.150:3001</string>
+    <string name="api_url">http://192.168.1.146:3001</string>
     <string name="create">Crear</string>
     <string name="edit">Editar</string>
     <string name="update">Actualizar</string>
@@ -23,7 +23,9 @@
     <string name="groups">Mis grupos</string>
     <!-- FIN Menu -->
 
-    <string name="action_settings">Settings</string>
+	<string name="action_logout">Cerrar sesión</string>
+    <string name="action_settings">Configuraciones</string>
+    <string name="action_search">Buscar</string>
     <string name="explore_button">Explorar!</string>
 
     <!-- POIs -->
