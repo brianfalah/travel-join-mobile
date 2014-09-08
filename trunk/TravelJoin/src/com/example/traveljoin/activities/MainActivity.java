@@ -4,9 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.auxiliaries.GlobalContext;
@@ -14,7 +14,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 
 	private FragmentManager fragmentManager = getSupportFragmentManager();
 	private Fragment facebookLoginFragment;
@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 		initializeFragments();
 	}
-
+	
 	private void initializeFragments() {
 		facebookLoginFragment = fragmentManager
 				.findFragmentById(R.id.facebookLoginFragment);
@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity {
 		globalContext.initializeContext(this, progressDialog);
 		showAndHideFragment(wellcomeFragment, facebookLoginFragment);
 	}
-
+	
 	@Override
 	public void onResume() {
 		super.onResume();

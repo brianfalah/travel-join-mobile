@@ -4,22 +4,27 @@ import com.example.traveljoin.R;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.PoiListFragment;
 import com.example.traveljoin.models.User;
+import com.facebook.Session;
 import com.facebook.widget.ProfilePictureView;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class UserProfileActivity extends FragmentActivity implements
+public class UserProfileActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
 	AppSectionsPagerAdapter appSectionsPagerAdapter;
@@ -33,6 +38,8 @@ public class UserProfileActivity extends FragmentActivity implements
 		appSectionsPagerAdapter = new AppSectionsPagerAdapter(
 				getSupportFragmentManager());
 		actionBar = getActionBar();
+		//TODO: Poner los subtitulos en todos los demas y ponerlo en el string.xml
+		actionBar.setSubtitle("Mi Perfil");
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -54,7 +61,32 @@ public class UserProfileActivity extends FragmentActivity implements
 		actionBar.addTab(actionBar.newTab().setText("Circuitos")
 				.setTabListener(this));
 	}
-
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.user_profile_activity_actions, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.action_logout:
+	            logout();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	public void logout() {
+		Session session = Session.getActiveSession();
+		session.closeAndClearTokenInformation();
+		startActivity(new Intent(getApplicationContext(), MainActivity.class));
+	    finish();
+	}
+	
 	@Override
 	public void onTabUnselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {

@@ -2,11 +2,15 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.MapActivity;
+import com.facebook.Session;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,7 +19,13 @@ public class WellcomeFragment extends Fragment {
 
 	public WellcomeFragment() {
 	}
-
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setHasOptionsMenu(true);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -33,6 +43,33 @@ public class WellcomeFragment extends Fragment {
 		});
 
 		return view;
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    // Inflate the menu items for use in the action bar
+//	    MenuInflater inflater = getMenuInflater();
+		super.onCreateOptionsMenu(menu, inflater);
+	    inflater.inflate(R.menu.wellcome_fragment_actions, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.action_logout:
+	            logout();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	public void logout() {
+		Session session = Session.getActiveSession();
+		session.closeAndClearTokenInformation();
+//		startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//	    finish();
+		getActivity().recreate();
 	}
 
 }
