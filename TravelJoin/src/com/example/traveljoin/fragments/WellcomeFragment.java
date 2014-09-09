@@ -67,8 +67,6 @@ public class WellcomeFragment extends Fragment {
 	public void logout() {
 		Session session = Session.getActiveSession();
 		session.closeAndClearTokenInformation();
-//		startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//	    finish();
 		getActivity().recreate();
 	}
 

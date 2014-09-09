@@ -51,7 +51,11 @@
     <string name="item_list_image_description">Imagen del elemento</string>
     <!-- FIN events -->
     
-    
+    <!-- General item list context menu -->
+    <string name="conext_menu_view">Ver</string>
+    <string name="conext_menu_edit">Editar</string>
+    <string name="conext_menu_delete">Eliminar</string>
+    <!-- FIN General item list context menu -->
     
     <string name="title_activity_filter_pois">Filtrar</string>
 
