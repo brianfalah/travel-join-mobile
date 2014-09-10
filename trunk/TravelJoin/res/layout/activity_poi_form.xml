@@ -121,6 +121,15 @@
             android:text="@string/update"
             android:visibility="gone" >
         </Button>
+        
+        <Button
+            android:id="@+id/PoiCancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="cancel"
+            android:text="@string/cancel">
+        </Button>
 
 
 

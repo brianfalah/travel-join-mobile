@@ -1,5 +1,6 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class PoiFormActivity extends ActionBarActivity{
 	ArrayList<PoiEvent> poiEvents = new ArrayList<PoiEvent>();
 	ArrayAdapter<PoiEvent> poiEventsAdapter;
 	ListView lvEvents;	
+	ArrayList<PoiEvent> poiEventsToDelete = new ArrayList<PoiEvent>();
 	
 	private final static int GET_CATEGORIES_METHOD = 1;
 	private static final int ADD_POI_METHOD = 2;
@@ -86,7 +88,7 @@ public class PoiFormActivity extends ActionBarActivity{
         	nameField.setText(poi.getName());
         	descField.setText(poi.getDescription());
         	updateButton.setVisibility(View.VISIBLE);
-        	//TODO obtener todos los events y cargar el array poiEvents y el listView lvEvents
+        	poiEvents = poi.getPoiEvents();
         }
         //si no viene un poi, estamos creando uno nuevo, se rellenan solo la lat y long(que vienen del punto presionado en el mapa)
         //Y MOSTRAR BOTON DE CREATE
@@ -147,7 +149,7 @@ public class PoiFormActivity extends ActionBarActivity{
 		return index;
 	} 
     
-	//cuando se clickea el boton viene aca!
+	//cuando se clickea el boton crear viene aca!
 	public void createPoi(View button) { 
 		Boolean valid = validateFields();
 		if (valid){					
@@ -156,7 +158,7 @@ public class PoiFormActivity extends ActionBarActivity{
 			Poi poi_to_create = new Poi(null, Double.parseDouble(tvLatitude.getText().toString()),
 					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
 					descField.getText().toString(), 0, ((Category)categoryField.getSelectedItem()).getId(),
-					"");
+					"", poiEvents);
 			
 	        String url = getResources().getString(R.string.api_url) + "/pois/create";
 	        HttpAsyncTask httpAsyncTask = new HttpAsyncTask(ADD_POI_METHOD, poi_to_create); 
@@ -165,7 +167,7 @@ public class PoiFormActivity extends ActionBarActivity{
 		}
 	}
 	
-	//cuando se clickea el boton viene aca!
+	//cuando se clickea el boton actualizar viene aca!
 	public void updatePoi(View button) { 	
 		Boolean valid = validateFields();
 		if (valid){			
@@ -174,13 +176,21 @@ public class PoiFormActivity extends ActionBarActivity{
 			poi = new Poi(poi.getId(), Double.parseDouble(tvLatitude.getText().toString()),
 					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
 					descField.getText().toString(), 0, ((Category)categoryField.getSelectedItem()).getId(),
-					"");
+					"", poiEvents);
+			poi.setPoiEventsToDelete(poiEventsToDelete);
 			
 	        String url = getResources().getString(R.string.api_url) + "/pois/update";
 	        HttpAsyncTask httpAsyncTask = new HttpAsyncTask(UPDATE_POI_METHOD, poi); 
 	        httpAsyncTask.execute(url);
 	        //sigue en HttpAsyncTask en doInBackground en UPDATE_POI_METHOD
 		}
+	}
+	
+	//cuando se clickea el boton cancelar viene aca!
+	public void cancel(View button) { 	
+		Intent output = new Intent();	    			    
+		setResult(Activity.RESULT_CANCELED, output);
+		finish();
 	}
 
 	private Boolean validateFields() {		
@@ -192,7 +202,7 @@ public class PoiFormActivity extends ActionBarActivity{
 		if (field instanceof EditText) {
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty( edit_text_field.getText().toString() ) ){
-				edit_text_field.setError(edit_text_field.getHint() + " is required!");
+				edit_text_field.setError(edit_text_field.getHint() + " es requerido!");
 				valid = false;
 			} else {
 				edit_text_field.setError(null);
@@ -276,6 +286,8 @@ public class PoiFormActivity extends ActionBarActivity{
 			        	    closeActivity(poi_created);
 						} catch (JSONException e) {
 							showExceptionError(e);						
+						} catch (ParseException e) {
+							showExceptionError(e);
 						}
 					}
 					else {
@@ -293,6 +305,8 @@ public class PoiFormActivity extends ActionBarActivity{
 							Poi poi_updated = Poi.fromJSON(poiUpdatedJson);
 			        	    closeActivity(poi_updated);
 						} catch (JSONException e) {
+							showExceptionError(e);
+						} catch (ParseException e) {
 							showExceptionError(e);
 						}    	  
 					}
@@ -345,18 +359,20 @@ public class PoiFormActivity extends ActionBarActivity{
     
     public void deleteEvent(View button){
     		SparseBooleanArray checked = lvEvents.getCheckedItemPositions();
-    		ArrayList<PoiEvent> poiEventsToDelete = new ArrayList<PoiEvent>();
+    		ArrayList<PoiEvent> eventsToDelete = new ArrayList<PoiEvent>();
     		for (int i = 0; i < checked.size(); i++) {
                 // Item position in adapter
                 int position = checked.keyAt(i);
                 // borrar evento si esta checkeado
                 if (checked.valueAt(i)){
                 	PoiEvent poiEventToDelete = (PoiEvent) lvEvents.getItemAtPosition(position);
-                	poiEventsToDelete.add(poiEventToDelete);          
+                	poiEventToDelete.markAsDeleted();
+                	eventsToDelete.add(poiEventToDelete);          
     			}                
             }    
-    		poiEvents.removeAll(poiEventsToDelete);
+    		poiEvents.removeAll(eventsToDelete);    		
             poiEventsAdapter.notifyDataSetChanged();
+            poiEventsToDelete.addAll(eventsToDelete);
     	}
     
     /*Cuando vuelve de un activity empezado con un startActivityForResult viene aca*/
