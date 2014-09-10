@@ -1,5 +1,6 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -353,10 +354,12 @@ public class MapActivity extends SlidingFragmentActivity implements
             		addMarkers(pois);
             		progress.dismiss();  
     			} catch (JSONException e) {
-    				//TODO si no se pudo parsear las categorias mostrar cartel para reintentar
     				progress.dismiss();  
     				e.printStackTrace();
-    			}
+    			} catch (ParseException e) {
+    				progress.dismiss();  
+    				e.printStackTrace();
+				}
         	}
         	else{
         		showConnectionError();
@@ -365,7 +368,7 @@ public class MapActivity extends SlidingFragmentActivity implements
        }
     }
     
-    public void addMarkers(JSONArray pois) throws JSONException{
+    public void addMarkers(JSONArray pois) throws JSONException, ParseException{
     	mapFragment.clearMarkers();
     	markerPoiMap.clear();
     	for (int i = 0; i < pois.length(); i++) {

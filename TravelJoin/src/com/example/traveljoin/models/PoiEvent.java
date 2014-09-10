@@ -1,7 +1,14 @@
 package com.example.traveljoin.models;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PoiEvent implements Serializable{
 	/**
@@ -14,6 +21,7 @@ public class PoiEvent implements Serializable{
 	private Integer poiId;
 	private Calendar fromDate;
 	private Calendar toDate;
+	private boolean deleted;
 	
 	public PoiEvent(Integer id, String name, String description, Integer poiId,
 			Calendar fromDate, Calendar toDate) {
@@ -74,8 +82,56 @@ public class PoiEvent implements Serializable{
 		this.toDate = toDate;
 	}
 	
+	public static PoiEvent fromJSON(JSONObject poiEventJson) throws JSONException, ParseException{	
+		Calendar dateFrom = TimeFormatter.toCalendar(poiEventJson.getString("from_date"));		
+		Calendar dateTo = TimeFormatter.toCalendar(poiEventJson.getString("to_date"));
+		
+		PoiEvent poiEvent = new PoiEvent(poiEventJson.getInt("id"), poiEventJson.getString("name"),
+				poiEventJson.getString("description"), poiEventJson.getInt("poi_id"), dateFrom, dateTo);
+						
+		return poiEvent;
+	}
+	
+	public JSONObject toJSON(){
+
+	    JSONObject jsonObject= new JSONObject();
+	    try {
+	    	if (getId() != null){
+	    		jsonObject.put("id", getId());
+	    	}	    		    		    
+	    	
+	        jsonObject.put("name", getName());
+	        jsonObject.put("description", getDescription());
+	        jsonObject.put("poi_id", getPoiId());
+	        jsonObject.put("from_date", TimeFormatter.fromCalendar(getFromDate()));
+	        jsonObject.put("to_date", TimeFormatter.fromCalendar(getToDate()));
+	        if (isDeleted() == true){
+	    		jsonObject.put("_destroy", "true");
+	    	}
+	        
+	        return jsonObject;
+	    } catch (JSONException e) {
+	        e.printStackTrace();
+	        return jsonObject;
+	    }
+
+	}
+	
     @Override
     public String toString() {
         return this.getName();            // Para que lo usen los adapters
     }
+
+    //marcamos el evento como borrado, porque ruby lo necesita asi     
+	public void markAsDeleted() {
+		this.setDeleted(true);		
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 }

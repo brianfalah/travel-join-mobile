@@ -85,8 +85,10 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		finish();
 	}
 
-	private Boolean validateFields() {		
-		return validateField(nameField) && validateField(descField);
+	private Boolean validateFields() {				
+		return validateField(nameField) && validateField(descField) &&
+				validateDateField(dateFromTv, timeFrom) && validateDateField(dateToTv, timeTo);
+		//TODO validar que se hayan seleccionado las fechas, que ambas sean mayores al dia y hora de hoy, y que la de fin sea mayor a la de inicio
 	}
 
 	private Boolean validateField(View field) {
@@ -94,7 +96,7 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		if (field instanceof EditText) {
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty( edit_text_field.getText().toString() ) ){
-				edit_text_field.setError(edit_text_field.getHint() + " is required!");
+				edit_text_field.setError(edit_text_field.getHint() + " es requerido!");
 				valid = false;
 			} else {
 				edit_text_field.setError(null);
@@ -114,6 +116,21 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 			}
 		}
 		return valid;
+	}
+	
+	private Boolean validateDateField(View field, Calendar time){
+		Boolean valid = null;
+		
+		TextView edit_text_field = (TextView) field;
+		if (time == null){
+			edit_text_field.setError(edit_text_field.getText() + " es requerido!");
+			valid = false;
+		} else {
+			edit_text_field.setError(null);
+			valid = true;
+		}
+		
+		return valid;		
 	}
 	
 	public void showTimePickerDialog(View v) {		
@@ -138,12 +155,14 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 			timeFrom = time;
 			dateFromTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
 				+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
+			dateFromTv.setError(null);
 		}
 		else{
 			if ( DATE_TO.equals(field) ){
 				timeTo = time;
 				dateToTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
 						+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
+				dateToTv.setError(null);
 			}
 		}
 	}
