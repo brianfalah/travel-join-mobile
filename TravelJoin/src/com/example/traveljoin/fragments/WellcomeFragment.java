@@ -47,8 +47,6 @@ public class WellcomeFragment extends Fragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	    // Inflate the menu items for use in the action bar
-//	    MenuInflater inflater = getMenuInflater();
 		super.onCreateOptionsMenu(menu, inflater);
 	    inflater.inflate(R.menu.wellcome_fragment_actions, menu);
 	}
