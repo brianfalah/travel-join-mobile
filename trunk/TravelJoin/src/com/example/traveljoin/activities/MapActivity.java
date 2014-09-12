@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.fragments.MainMapFragment;
-import com.example.traveljoin.fragments.SampleListFragment;
+import com.example.traveljoin.fragments.MainMenuFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
@@ -108,7 +108,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 	                
 	    	//Barra LATERAL		    
 	    	fragment_manager.beginTransaction()
-			.replace(R.id.menu_frame, new SampleListFragment())
+			.replace(R.id.menu_frame, new MainMenuFragment())
 			.commit();   		 	       
 	        
 	        // configure the SlidingMenu

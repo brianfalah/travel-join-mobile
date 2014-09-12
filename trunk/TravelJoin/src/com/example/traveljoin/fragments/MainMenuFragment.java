@@ -16,27 +16,27 @@ import com.example.traveljoin.activities.MainActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
 
-public class SampleListFragment extends ListFragment {
+public class MainMenuFragment extends ListFragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list, null);
+		return inflater.inflate(R.layout.main_menu, null);
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		SampleAdapter adapter = new SampleAdapter(getActivity());
-		adapter.add(new SampleItem(getString(R.string.profile), android.R.drawable.ic_menu_preferences));
-		adapter.add(new SampleItem(getString(R.string.pois), android.R.drawable.ic_menu_myplaces));
-		adapter.add(new SampleItem(getString(R.string.circuits), android.R.drawable.ic_menu_myplaces));
-		adapter.add(new SampleItem(getString(R.string.groups), android.R.drawable.ic_menu_agenda));
+		MainMenuItemAdapter adapter = new MainMenuItemAdapter(getActivity());
+		adapter.add(new MainMenuItem(getString(R.string.profile), R.drawable.ic_action_person));
+		adapter.add(new MainMenuItem(getString(R.string.pois), R.drawable.ic_action_place));
+		adapter.add(new MainMenuItem(getString(R.string.circuits), R.drawable.ic_action_split));
+		adapter.add(new MainMenuItem(getString(R.string.groups), R.drawable.ic_action_group));
 		setListAdapter(adapter);
 	}
 
-	private class SampleItem {
+	private class MainMenuItem {
 		public String tag;
 		public int iconRes;
 		
-		public SampleItem(String tag, int iconRes) {
+		public MainMenuItem(String tag, int iconRes) {
 			this.tag = tag; 
 			this.iconRes = iconRes;
 		}
@@ -45,7 +45,8 @@ public class SampleListFragment extends ListFragment {
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id){
 		Class<?> cls = null;
-		String title = ((SampleItem) l.getItemAtPosition(position)).tag;		
+		String title = ((MainMenuItem) l.getItemAtPosition(position)).tag;		
+		
 		if (title.equals(getString(R.string.profile))) {
 			cls = UserProfileActivity.class;	
 		} else if (title.equals(getString(R.string.pois))) {
@@ -56,22 +57,21 @@ public class SampleListFragment extends ListFragment {
 			cls = MainActivity.class;
 		}
         
-
         Intent intent = new Intent(getActivity(), cls);
         startActivity(intent);
     }  
 
-	public class SampleAdapter extends ArrayAdapter<SampleItem> {
+	private class MainMenuItemAdapter extends ArrayAdapter<MainMenuItem> {
 
-		public SampleAdapter(Context context) {
+		public MainMenuItemAdapter(Context context) {
 			super(context, 0);
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			SampleItem item = getItem(position);
+			MainMenuItem item = getItem(position);
 			
 			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.main_menu_item, null);
 			}
 			
 			convertView.setBackgroundColor(getResources().getColor(R.color.common_signin_btn_dark_text_pressed));
