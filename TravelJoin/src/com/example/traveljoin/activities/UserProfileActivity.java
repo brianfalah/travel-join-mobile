@@ -1,16 +1,10 @@
 package com.example.traveljoin.activities;
 
-import java.util.ArrayList;
-
 import com.example.traveljoin.R;
-import com.example.traveljoin.adapters.GeneralExpandableListAdapter;
-import com.example.traveljoin.auxiliaries.GlobalContext;
-import com.example.traveljoin.fragments.PoiListFragment;
-import com.example.traveljoin.models.GroupFavouriteItems;
-import com.example.traveljoin.models.Poi;
-import com.example.traveljoin.models.User;
+import com.example.traveljoin.fragments.FavouritesFragment;
+import com.example.traveljoin.fragments.GroupListFragment;
+import com.example.traveljoin.fragments.UserInformationFragment;
 import com.facebook.Session;
-import com.facebook.widget.ProfilePictureView;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -21,15 +15,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 public class UserProfileActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
@@ -45,9 +33,7 @@ public class UserProfileActivity extends ActionBarActivity implements
 		appSectionsPagerAdapter = new AppSectionsPagerAdapter(
 				getSupportFragmentManager());
 		actionBar = getActionBar();
-		// TODO: Poner los subtitulos en todos los demas y ponerlo en el
-		// string.xml
-		actionBar.setSubtitle("Mi Perfil");
+		actionBar.setSubtitle(R.string.profile);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -59,12 +45,12 @@ public class UserProfileActivity extends ActionBarActivity implements
 						actionBar.setSelectedNavigationItem(position);
 					}
 				});
-
-		actionBar.addTab(actionBar.newTab().setText("General")
+		
+		actionBar.addTab(actionBar.newTab().setText(getString(R.string.general_user_profile_tab))
 				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Grupos")
+		actionBar.addTab(actionBar.newTab().setText(getString(R.string.groups_user_profile_tab))
 				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Favoritos")
+		actionBar.addTab(actionBar.newTab().setText(getString(R.string.favourites_user_profile_tab))
 				.setTabListener(this));
 	}
 
@@ -128,13 +114,13 @@ public class UserProfileActivity extends ActionBarActivity implements
 				fragment = new UserInformationFragment();
 				break;
 			case USER_GROUPS_TAB:
-				fragment = new PoiListFragment();
+				fragment = new GroupListFragment();
 				break;
 			case USER_FAVOURITES_TAB:
 				fragment = new FavouritesFragment();
 				break;
 			default:
-				fragment = new PoiListFragment();
+				fragment = new UserInformationFragment();
 				break;
 			}
 			return fragment;
@@ -144,69 +130,6 @@ public class UserProfileActivity extends ActionBarActivity implements
 		public int getCount() {
 			return TABS_AMOUNT;
 		}
-	}
-
-	public static class UserInformationFragment extends Fragment {
-
-		private ProfilePictureView profilePictureView;
-		private TextView userNameView;
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-
-			View view = inflater.inflate(R.layout.fragment_user_information,
-					container, false);
-
-			profilePictureView = (ProfilePictureView) view
-					.findViewById(R.id.selection_profile_pic);
-			profilePictureView.setCropped(true);
-			userNameView = (TextView) view
-					.findViewById(R.id.selection_user_name);
-
-			GlobalContext globalContext = (GlobalContext) getActivity()
-					.getApplicationContext();
-			User user = globalContext.getUser();
-			profilePictureView.setProfileId(user.getFacebookId());
-			userNameView.setText(user.getFullName());
-
-			return view;
-		}
-
-	}
-
-	public static class FavouritesFragment extends Fragment {
-
-		private SparseArray<GroupFavouriteItems> groups = new SparseArray<GroupFavouriteItems>();
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-
-			super.onCreateView(inflater, container, savedInstanceState);
-			View view = inflater.inflate(R.layout.fragment_user_favourites,
-					container, false);
-			createData();
-			ExpandableListView expadableListView = (ExpandableListView) view
-					.findViewById(R.id.favouritesExpandableListView);
-			GeneralExpandableListAdapter adapter = new GeneralExpandableListAdapter(
-					getActivity(), groups);
-			expadableListView.setAdapter(adapter);
-
-			return view;
-		}
-
-		public void createData() {
-			for (int j = 0; j < 5; j++) {
-				GroupFavouriteItems group = new GroupFavouriteItems("Test " + j);
-				for (int i = 0; i < 5; i++) {
-					group.children.add(new Poi("Prueba " + i, "Descripcion "
-							+ i));
-				}
-				groups.append(j, group);
-			}
-		}
-
 	}
 
 }

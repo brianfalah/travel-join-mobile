@@ -3,7 +3,6 @@ package com.example.traveljoin.adapters;
 import com.example.traveljoin.R;
 import com.example.traveljoin.models.GeneralListItem;
 import com.example.traveljoin.models.GroupFavouriteItems;
-import com.example.traveljoin.models.Poi;
 
 import android.app.Activity;
 import android.util.SparseArray;
@@ -14,13 +13,13 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 
-public class GeneralExpandableListAdapter extends BaseExpandableListAdapter {
+public class FavouritesExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private final SparseArray<GroupFavouriteItems> groups;
 	private LayoutInflater inflater;
 	private Activity activity;
 
-	public GeneralExpandableListAdapter(Activity activity,
+	public FavouritesExpandableListAdapter(Activity activity,
 			SparseArray<GroupFavouriteItems> groups) {
 		this.activity = activity;
 		this.groups = groups;
@@ -28,10 +27,10 @@ public class GeneralExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	// TODO: Cambiar Poi por algo como Favorito
 	public GeneralListItem getChild(int groupPosition, int childPosition) {
-		return groups.get(groupPosition).children.get(childPosition);
+		return ((GroupFavouriteItems) getGroup(groupPosition)).getItem(childPosition);
 	}
+	
 
 	@Override
 	public long getChildId(int groupPosition, int childPosition) {
@@ -55,6 +54,7 @@ public class GeneralExpandableListAdapter extends BaseExpandableListAdapter {
 		nameTextView.setText(item.getName());
 		descriptionTextView.setText(item.getName());
 		
+		//TODO: Redireccionar a la actividad correspondiente
 		// convertView.setOnClickListener(new OnClickListener() {
 		// @Override
 		// public void onClick(View v) {
@@ -67,7 +67,7 @@ public class GeneralExpandableListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return groups.get(groupPosition).children.size();
+		return ((GroupFavouriteItems) getGroup(groupPosition)).size();
 	}
 
 	@Override
@@ -99,13 +99,12 @@ public class GeneralExpandableListAdapter extends BaseExpandableListAdapter {
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.general_group_list_item,
-					null);
+			convertView = inflater.inflate(R.layout.general_group_list_item, parent, false);
 		}
 		GroupFavouriteItems group = (GroupFavouriteItems) getGroup(groupPosition);
-		// TODO: cambiar esto para que no use accesosr publicos
-		((CheckedTextView) convertView).setText(group.string);
+		((CheckedTextView) convertView).setText(group.getName());
 		((CheckedTextView) convertView).setChecked(isExpanded);
+		((CheckedTextView) convertView).setCompoundDrawablesWithIntrinsicBounds(0, group.getDrawableId(), 0, 0);
 		return convertView;
 	}
 
@@ -116,7 +115,8 @@ public class GeneralExpandableListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return false;
+		//Para el menu contextual de los items tiene que devolver true
+		return true;
 	}
-
+	
 }
