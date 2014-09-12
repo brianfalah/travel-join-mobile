@@ -13,16 +13,15 @@
     <string name="ok">OK</string>
     <string name="loading">Cargando</string>
     <string name="wait">Por favor espere</string>
-    
     <!-- FIN Generales -->
-
+	
     <!-- Menu -->
-    <string name="profile">Mi Perfil</string>
-    <string name="pois">Puntos De Interés</string>
+    <string name="profile">Mi perfil</string>
+    <string name="pois">Puntos de interés</string>
     <string name="circuits">Circuitos turísticos</string>
-    <string name="groups">Mis grupos</string>
+    <string name="groups">Grupos</string>
     <!-- FIN Menu -->
-
+    
 	<string name="action_logout">Cerrar sesión</string>
     <string name="action_settings">Configuraciones</string>
     <string name="action_search">Buscar</string>
@@ -50,6 +49,14 @@
 	<!-- General item list -->
     <string name="item_list_image_description">Imagen del elemento</string>
     <!-- FIN events -->
+    
+    <!-- User profile -->
+    <string name="general_user_profile_tab">General</string>
+    <string name="groups_user_profile_tab">Grupos</string>
+    <string name="favourites_user_profile_tab">Favoritos</string>
+    <string name="favourite_pois_group">Puntos de interés</string>
+    <string name="favourite_tours_group">Circuitos turísticos</string>
+    <!-- FIN User Profile -->
     
     <!-- General item list context menu -->
     <string name="conext_menu_view">Ver</string>
