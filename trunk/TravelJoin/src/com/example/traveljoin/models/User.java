@@ -9,13 +9,16 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String facebookId;
+	private Integer id;
+
 	private String email;
 	private String name;
 	private String surname;
 
-	public User(String facebookId, String name, String surname) {
+	public User(String facebookId, Integer id, String name, String surname) {
 		super();
 		this.facebookId = facebookId;
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
 	}
@@ -26,6 +29,14 @@ public class User implements Serializable {
 
 	public void setFacebookId(String facebookId) {
 		this.facebookId = facebookId;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -55,10 +66,11 @@ public class User implements Serializable {
 	public String getFullName() {
 		return getName() + " " + getSurname();
 	}
-	
+
 	public static User fromJSON(JSONObject jsonObject) throws JSONException {
 		return new User(jsonObject.getString("facebook_id"),
-				jsonObject.getString("name"), jsonObject.getString("surname"));
+				jsonObject.getInt("id"), jsonObject.getString("name"),
+				jsonObject.getString("surname"));
 	}
 
 	public JSONObject toJSON() {
@@ -73,6 +85,5 @@ public class User implements Serializable {
 		}
 		return jsonObject;
 	}
-
 
 }

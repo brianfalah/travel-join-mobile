@@ -55,6 +55,7 @@ public class GlobalContext extends Application {
 										.getString(R.string.api_url)
 										+ "/users/get_or_create";
 								User user = new User(facebookUser.getId(),
+										null,
 										facebookUser.getFirstName(),
 										facebookUser.getLastName());
 

@@ -79,8 +79,7 @@ public class ApiInterface {
             }
             
             if (object instanceof User) {
-            	jsonObject = new JSONObject();
-        		jsonObject.put("facebook_id", ((User) object).getFacebookId() );
+            	jsonObject = ((User) object).toJSON();
             }
             	
 
