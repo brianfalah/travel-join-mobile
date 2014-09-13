@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.MainActivity;
 import com.example.traveljoin.activities.MapActivity;
+import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
 
 public class MainMenuFragment extends ListFragment {
@@ -27,7 +28,7 @@ public class MainMenuFragment extends ListFragment {
 		MainMenuItemAdapter adapter = new MainMenuItemAdapter(getActivity());
 		adapter.add(new MainMenuItem(getString(R.string.profile), R.drawable.ic_action_person));
 		adapter.add(new MainMenuItem(getString(R.string.pois), R.drawable.ic_action_place));
-		adapter.add(new MainMenuItem(getString(R.string.circuits), R.drawable.ic_action_split));
+		adapter.add(new MainMenuItem(getString(R.string.tours), R.drawable.ic_action_split));
 		adapter.add(new MainMenuItem(getString(R.string.groups), R.drawable.ic_action_group));
 		setListAdapter(adapter);
 	}
@@ -51,8 +52,8 @@ public class MainMenuFragment extends ListFragment {
 			cls = UserProfileActivity.class;	
 		} else if (title.equals(getString(R.string.pois))) {
 			cls = MapActivity.class;
-		} else if (title.equals(getString(R.string.circuits))) {
-			cls = MainActivity.class;
+		} else if (title.equals(getString(R.string.tours))) {
+			cls = TourFormActivity.class;
 		} else if (title.equals(getString(R.string.groups))) {
 			cls = MainActivity.class;
 		}
