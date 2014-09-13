@@ -3,7 +3,7 @@
 
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.146:3001</string>
+    <string name="api_url">http://192.168.1.111:3001</string>
     <string name="create">Crear</string>
     <string name="edit">Editar</string>
     <string name="update">Actualizar</string>
@@ -39,6 +39,10 @@
     <string name="select_date_time_start">Fecha y hora de inicio</string>
     <string name="select_date_time_end">Fecha y hora de fin</string>
     <!-- FIN events -->
+    
+    <!-- Tours -->
+    <string name="tour_form_description">Ingrese los datos del circuito:</string>
+    <!-- FIN tours -->
 
     <!-- Login -->
     <string name="facebook_app_id">1509535099283633</string>
