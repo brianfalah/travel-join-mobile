@@ -27,16 +27,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.PoiEvent;
+import com.example.traveljoin.models.User;
 import com.google.android.gms.maps.model.LatLng;
 
 public class PoiFormActivity extends ActionBarActivity{
-	
+	User user;
 	ProgressDialog progress;
 	TextView tvLatitude;
 	TextView tvLongitude;
@@ -64,7 +66,10 @@ public class PoiFormActivity extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_form);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //get current user
+        GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		User user = globalContext.getUser();
         // get reference to the views
         tvLatitude = (TextView) findViewById(R.id.PoiLatitude);
 		tvLongitude = (TextView) findViewById(R.id.PoiLongitude);
@@ -157,7 +162,7 @@ public class PoiFormActivity extends ActionBarActivity{
 	        	    "Por favor espere...", true);
 			Poi poi_to_create = new Poi(null, Double.parseDouble(tvLatitude.getText().toString()),
 					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
-					descField.getText().toString(), 0, ((Category)categoryField.getSelectedItem()).getId(),
+					descField.getText().toString(), user.getId(), ((Category)categoryField.getSelectedItem()).getId(),
 					"", poiEvents);
 			
 	        String url = getResources().getString(R.string.api_url) + "/pois/create";
@@ -175,7 +180,7 @@ public class PoiFormActivity extends ActionBarActivity{
 	        	    "Por favor espere...", true);
 			poi = new Poi(poi.getId(), Double.parseDouble(tvLatitude.getText().toString()),
 					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
-					descField.getText().toString(), 0, ((Category)categoryField.getSelectedItem()).getId(),
+					descField.getText().toString(), user.getId(), ((Category)categoryField.getSelectedItem()).getId(),
 					"", poiEvents);
 			poi.setPoiEventsToDelete(poiEventsToDelete);
 			

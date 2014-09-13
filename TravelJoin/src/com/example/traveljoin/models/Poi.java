@@ -152,8 +152,10 @@ public class Poi implements Serializable, GeneralListItem{
 	        for (int i = 0; i < getPoiEventsToDelete().size(); i++) {
 	        	eventsJson.put(getPoiEventsToDelete().get(i).toJSON());
 			}
+	        if(eventsJson.length() > 0){
+	        	jsonObject.put("events_attributes", eventsJson);
+	        }
 	        
-	        jsonObject.put("events_attributes", eventsJson);
 	        
 	        JSONObject finalobject = new JSONObject();
 	        finalobject.put("poi", jsonObject);	        
