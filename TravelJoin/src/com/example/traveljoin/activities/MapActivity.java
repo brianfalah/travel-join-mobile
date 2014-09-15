@@ -29,12 +29,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.MainMapFragment;
 import com.example.traveljoin.fragments.MainMenuFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -94,6 +96,7 @@ public class MapActivity extends SlidingFragmentActivity implements
     //para mostrar el gif de "Loading"
     ProgressDialog progress; 
     SlidingMenu menu;
+    User user;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,9 @@ public class MapActivity extends SlidingFragmentActivity implements
                 	        
         setContentView(R.layout.activity_map);
         setBehindContentView(R.layout.menu_frame);
+        //get current user
+        GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		user = globalContext.getUser();
         
         if (savedInstanceState == null) {
 	        android.support.v4.app.FragmentManager fragment_manager = getSupportFragmentManager();
@@ -330,7 +336,9 @@ public class MapActivity extends SlidingFragmentActivity implements
     private void getPois(Location location) {
     	String latitude = String.valueOf(location.getLatitude());
         String longitude = String.valueOf(location.getLongitude());
-		new HttpAsyncTask().execute(getResources().getString(R.string.api_url) + "/pois/index.json?latitude=" + latitude + "&longitude=" + longitude);		
+        String url = getResources().getString(R.string.api_url) + "/pois/index.json?latitude=" + latitude + "&longitude=" + longitude + "&user_id=" + user.getId();
+        HttpAsyncTask task = new HttpAsyncTask();
+        task.execute(url);
 	}
 
 

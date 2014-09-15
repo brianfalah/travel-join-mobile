@@ -69,7 +69,7 @@ public class PoiFormActivity extends ActionBarActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //get current user
         GlobalContext globalContext = (GlobalContext) getApplicationContext();
-		User user = globalContext.getUser();
+		user = globalContext.getUser();
         // get reference to the views
         tvLatitude = (TextView) findViewById(R.id.PoiLatitude);
 		tvLongitude = (TextView) findViewById(R.id.PoiLongitude);
