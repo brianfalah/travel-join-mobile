@@ -73,6 +73,8 @@ public class MainActivity extends ActionBarActivity {
 		ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle(getString(R.string.loading));
 		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setCancelable(false);
         progressDialog.show();
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		globalContext.initializeContext(this, progressDialog);
