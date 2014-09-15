@@ -1,22 +1,32 @@
 package com.example.traveljoin.models;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONObject;
 
 import android.util.Log;
 
 public class ApiInterface {
-	
+	protected static final int CONNECTION_TIMEOUT = 3000;  
+    protected static final int WAIT_RESPONSE_TIMEOUT = 5000;  
+    
 	public ApiResult GET(String url){
 		InputStream inputStream = null;
 		String result = "";
@@ -25,9 +35,14 @@ public class ApiInterface {
 		try {
 
 			// create HttpClient
-			HttpClient httpclient = new DefaultHttpClient();
-
+			
+			//HttpParams httpParameters = new BasicHttpParams();
+			//HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT);
+			//HttpConnectionParams.setSoTimeout(httpParameters, WAIT_RESPONSE_TIMEOUT);
+			//HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+			//httpParameters.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 			// make GET request to the given URL
+			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
 
 			//GET STATUS_CODE
@@ -51,6 +66,41 @@ public class ApiInterface {
 		return api_result;
 	}
 
+	public ApiResult GET_URL(String url){
+		HttpURLConnection urlConnection = null;
+		InputStream inputStream = null;
+		String result = "";
+		ApiResult api_result = null;
+		
+		try {
+
+			// create HttpClient
+			URL connection_url = new URL(url);
+			urlConnection = (HttpURLConnection) connection_url.openConnection();
+			
+			//GET STATUS_CODE
+			int status = urlConnection.getResponseCode();			
+			inputStream  = new BufferedInputStream(urlConnection.getInputStream());		    										
+			
+			// convert inputstream to string
+			if(inputStream != null)
+				result = convertInputStreamToString(inputStream);
+			else
+				result = "";
+			
+            api_result = new ApiResult(status, result);           		     
+		} 		
+		catch (Exception e) {
+			Log.d("InputStream", e.getLocalizedMessage());
+		}
+		finally { 		     
+			urlConnection.disconnect();
+		}
+
+		return api_result;
+	}
+	
+
     public ApiResult POST(String url, Object object, String method){
         InputStream inputStream = null;
         String result = "";
@@ -59,7 +109,9 @@ public class ApiInterface {
         try {
 
             // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
+        	HttpParams params = new BasicHttpParams();
+        	params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+            HttpClient httpclient = new DefaultHttpClient(params);
 
             // 2. make POST request to the given URL
             HttpPost httpPost = new HttpPost(url);

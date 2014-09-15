@@ -125,7 +125,7 @@ public class Poi implements Serializable, GeneralListItem{
 		
 		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"), poiJson.getDouble("longitude"),
 	    		poiJson.getString("name"), poiJson.getString("description"),
-	    		0, poiJson.getInt("category_id"), poiJson.getString("category_name"), poiEventsToAdd);				
+	    		poiJson.getInt("user_id"), poiJson.getInt("category_id"), poiJson.getString("category_name"), poiEventsToAdd);				
 		
 		return poi;
 	}
@@ -143,6 +143,7 @@ public class Poi implements Serializable, GeneralListItem{
 	        jsonObject.put("latitude", getLatitude());
 	        jsonObject.put("longitude", getLongitude());
 	        jsonObject.put("category_id", getCategoryId());
+	        jsonObject.put("user_id", getUserId());
 	        
 	        JSONArray eventsJson = new JSONArray();	        
 	        for (int i = 0; i < getPoiEvents().size(); i++) {
