@@ -3,8 +3,8 @@ package com.example.traveljoin.fragments;
 import java.util.ArrayList;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.adapters.GeneralListItemArrayAdapter;
-import com.example.traveljoin.models.GeneralListItem;
+import com.example.traveljoin.adapters.GeneralItemListAdapter;
+import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Group;
 
 import android.os.Bundle;
@@ -20,18 +20,18 @@ import android.widget.Toast;
 
 public class GroupListFragment extends ListFragment {
 
-	private ArrayList<GeneralListItem> groups;
+	private ArrayList<GeneralItem> groups;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		groups = new ArrayList<GeneralListItem>();
+		groups = new ArrayList<GeneralItem>();
 
 		groups.add(new Group("Prueba 1", "Descripcion 1"));
 		groups.add(new Group("Prueba 2", "Descripcion 2"));
 		groups.add(new Group("Prueba 3", "Descripcion 3"));
 
-		GeneralListItemArrayAdapter adapter = new GeneralListItemArrayAdapter(
+		GeneralItemListAdapter adapter = new GeneralItemListAdapter(
 				getActivity(), groups);
 		setListAdapter(adapter);
 		registerForContextMenu(getListView());

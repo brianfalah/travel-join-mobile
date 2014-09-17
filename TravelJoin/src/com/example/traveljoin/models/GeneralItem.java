@@ -1,6 +1,6 @@
 package com.example.traveljoin.models;
 
-public interface GeneralListItem {
+public interface GeneralItem {
 	public String getName();
 	public String getDescription();
 }

@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class GroupFavouriteItems {
 
 	private String name;
-	private ArrayList<GeneralListItem> favouriteItems;
+	private ArrayList<GeneralItem> favouriteItems;
 	private int drawableId;
 	
 	public GroupFavouriteItems(String name, int drawableId) {
 		this.name = name;
-		this.favouriteItems = new ArrayList<GeneralListItem>();
+		this.favouriteItems = new ArrayList<GeneralItem>();
 		this.drawableId = drawableId;
 	}
 
@@ -22,11 +22,11 @@ public class GroupFavouriteItems {
 		this.name = name;
 	}
 
-	public ArrayList<GeneralListItem> getFavouriteItems() {
+	public ArrayList<GeneralItem> getFavouriteItems() {
 		return favouriteItems;
 	}
 
-	public void setFavouriteItems(ArrayList<GeneralListItem> favouriteItems) {
+	public void setFavouriteItems(ArrayList<GeneralItem> favouriteItems) {
 		this.favouriteItems = favouriteItems;
 	}
 
@@ -38,7 +38,7 @@ public class GroupFavouriteItems {
 		return drawableId;
 	}
 	
-	public GeneralListItem getItem(int position) {
+	public GeneralItem getItem(int position) {
 		return favouriteItems.get(position);
 	}
 	
@@ -46,7 +46,7 @@ public class GroupFavouriteItems {
 		return favouriteItems.size();
 	}
 
-	public void add(GeneralListItem favouriteItem) {
+	public void add(GeneralItem favouriteItem) {
 		favouriteItems.add(favouriteItem);
 	}
 }

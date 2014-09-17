@@ -16,7 +16,7 @@ import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.FavouritesExpandableListAdapter;
-import com.example.traveljoin.models.GeneralListItem;
+import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.GroupFavouriteItems;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.Tour;
@@ -64,7 +64,7 @@ public class FavouritesFragment extends Fragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		GeneralListItem favouriteItem;
+		GeneralItem favouriteItem;
 		switch (item.getItemId()) {
 			case R.id.favourite_context_menu_view:
 				// TODO: Redirigir a la vista
@@ -89,7 +89,7 @@ public class FavouritesFragment extends Fragment {
 			}
 	}
 
-	private GeneralListItem getFavouriteItem(MenuItem item) {
+	private GeneralItem getFavouriteItem(MenuItem item) {
 		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item
 				.getMenuInfo();
 		int groupPosition = ExpandableListView
@@ -98,7 +98,7 @@ public class FavouritesFragment extends Fragment {
 				.getPackedPositionChild(info.packedPosition);
 		GroupFavouriteItems group = (GroupFavouriteItems) groups
 				.get(groupPosition);
-		GeneralListItem favouriteItem = (GeneralListItem) group
+		GeneralItem favouriteItem = (GeneralItem) group
 				.getItem(childPosition);
 		return favouriteItem;
 	}

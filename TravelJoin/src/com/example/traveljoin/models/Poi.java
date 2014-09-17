@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Poi implements Serializable, GeneralListItem{
+public class Poi implements Serializable, GeneralItem{
 	
 	/**
 	 * 

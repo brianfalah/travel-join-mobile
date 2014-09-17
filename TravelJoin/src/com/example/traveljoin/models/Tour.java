@@ -1,6 +1,6 @@
 package com.example.traveljoin.models;
 
-public class Tour implements GeneralListItem {
+public class Tour implements GeneralItem {
 	
 	private String name;
 	private String description;
