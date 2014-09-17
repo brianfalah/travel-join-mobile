@@ -22,9 +22,9 @@ import android.view.MenuItem;
 public class UserProfileActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
-	AppSectionsPagerAdapter appSectionsPagerAdapter;
-	ViewPager viewPager;
-	ActionBar actionBar;
+	private AppSectionsPagerAdapter appSectionsPagerAdapter;
+	private ViewPager viewPager;
+	private ActionBar actionBar;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

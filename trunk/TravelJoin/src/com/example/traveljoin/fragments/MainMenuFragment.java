@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.activities.GroupsActivity;
 import com.example.traveljoin.activities.MainActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.TourFormActivity;
@@ -55,7 +56,7 @@ public class MainMenuFragment extends ListFragment {
 		} else if (title.equals(getString(R.string.tours))) {
 			cls = TourFormActivity.class;
 		} else if (title.equals(getString(R.string.groups))) {
-			cls = MainActivity.class;
+			cls = GroupsActivity.class;
 		}
         
         Intent intent = new Intent(getActivity(), cls);

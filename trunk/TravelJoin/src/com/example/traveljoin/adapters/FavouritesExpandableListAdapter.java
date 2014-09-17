@@ -1,7 +1,7 @@
 package com.example.traveljoin.adapters;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.models.GeneralListItem;
+import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.GroupFavouriteItems;
 
 import android.app.Activity;
@@ -27,7 +27,7 @@ public class FavouritesExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public GeneralListItem getChild(int groupPosition, int childPosition) {
+	public GeneralItem getChild(int groupPosition, int childPosition) {
 		return ((GroupFavouriteItems) getGroup(groupPosition)).getItem(childPosition);
 	}
 	
@@ -40,7 +40,7 @@ public class FavouritesExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		final GeneralListItem item = (GeneralListItem) getChild(groupPosition, childPosition);
+		final GeneralItem item = (GeneralItem) getChild(groupPosition, childPosition);
 
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.general_list_item, parent, false);
