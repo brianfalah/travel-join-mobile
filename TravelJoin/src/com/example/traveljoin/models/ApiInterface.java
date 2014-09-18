@@ -43,7 +43,9 @@ public class ApiInterface {
 			//httpParameters.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 			// make GET request to the given URL
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+			HttpGet httpGet = new HttpGet(url);
+			//httpGet.setHeader("Content-Type", "application/x-www-form-url-encoded; charset=utf-8");
+			HttpResponse httpResponse = httpclient.execute(httpGet);
 
 			//GET STATUS_CODE
 			int status = httpResponse.getStatusLine().getStatusCode();
@@ -66,39 +68,39 @@ public class ApiInterface {
 		return api_result;
 	}
 
-	public ApiResult GET_URL(String url){
-		HttpURLConnection urlConnection = null;
-		InputStream inputStream = null;
-		String result = "";
-		ApiResult api_result = null;
-		
-		try {
-
-			// create HttpClient
-			URL connection_url = new URL(url);
-			urlConnection = (HttpURLConnection) connection_url.openConnection();
-			
-			//GET STATUS_CODE
-			int status = urlConnection.getResponseCode();			
-			inputStream  = new BufferedInputStream(urlConnection.getInputStream());		    										
-			
-			// convert inputstream to string
-			if(inputStream != null)
-				result = convertInputStreamToString(inputStream);
-			else
-				result = "";
-			
-            api_result = new ApiResult(status, result);           		     
-		} 		
-		catch (Exception e) {
-			Log.d("InputStream", e.getLocalizedMessage());
-		}
-		finally { 		     
-			urlConnection.disconnect();
-		}
-
-		return api_result;
-	}
+//	public ApiResult GET_URL(String url){
+//		HttpURLConnection urlConnection = null;
+//		InputStream inputStream = null;
+//		String result = "";
+//		ApiResult api_result = null;
+//		
+//		try {
+//
+//			// create HttpClient
+//			URL connection_url = new URL(url);
+//			urlConnection = (HttpURLConnection) connection_url.openConnection();
+//			
+//			//GET STATUS_CODE
+//			int status = urlConnection.getResponseCode();			
+//			inputStream  = new BufferedInputStream(urlConnection.getInputStream());		    										
+//			
+//			// convert inputstream to string
+//			if(inputStream != null)
+//				result = convertInputStreamToString(inputStream);
+//			else
+//				result = "";
+//			
+//            api_result = new ApiResult(status, result);           		     
+//		} 		
+//		catch (Exception e) {
+//			Log.d("InputStream", e.getLocalizedMessage());
+//		}
+//		finally { 		     
+//			urlConnection.disconnect();
+//		}
+//
+//		return api_result;
+//	}
 	
 
     public ApiResult POST(String url, Object object, String method){
