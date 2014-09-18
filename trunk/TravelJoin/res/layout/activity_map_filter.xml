@@ -1,0 +1,59 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollViewFilterPois"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical">
+    
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    tools:context="com.example.traveljoin.activities.FilterPoisActivity" >	    
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="32dp"
+	        android:orientation="horizontal" >
+
+	        <TextView
+	            android:id="@+id/chkTvDistances"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"	            
+	            android:text="Distancia" />
+
+	        <Spinner
+	            android:id="@+id/spinnerDistances"
+	            android:layout_width="106dp"
+	            android:layout_height="wrap_content" />
+
+	        <TextView
+	            android:id="@+id/tvKms"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Kms" />
+	        
+	    </LinearLayout>
+
+	    <ExpandableListView
+	        android:id="@+id/listFilters"
+	        android:layout_width="fill_parent"
+	        android:layout_height="140dp"
+	        android:cacheColorHint="@null"
+	        android:groupIndicator="@null"
+	        android:scrollbars="none" >
+	    </ExpandableListView>
+	    	    
+	    <Button
+	      android:id="@+id/setFilters"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:gravity="center"
+	      android:text="@string/ok"
+	      android:onClick="setFilters">
+	    </Button>
+
+	</LinearLayout>
+
+</ScrollView>

@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,12 +31,15 @@ import android.widget.Toast;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.fragments.DateTimePickerDialog;
 import com.example.traveljoin.fragments.MainMapFragment;
 import com.example.traveljoin.fragments.MainMenuFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
+import com.example.traveljoin.models.MapFilter;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.PoiEvent;
 import com.example.traveljoin.models.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -45,9 +49,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -57,7 +63,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener,
 		com.google.android.gms.location.LocationListener,
-		OnMapLongClickListener {
+		OnMapLongClickListener, OnCameraChangeListener {
 	
     /*
      * Define a request code to send to Google Play services
@@ -65,6 +71,7 @@ public class MapActivity extends SlidingFragmentActivity implements
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int CREATE_POI_REQUEST = 1;
+    private static final int CHANGE_FILTERS_REQUEST = 2;
     // Unique tag for the error dialog fragment
     private static final String DIALOG_ERROR = "dialog_error";
     
@@ -89,6 +96,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 	private static MainMapFragment mapFragment;
 	private static GoogleMap mMap;
 	private static HashMap<Marker, Poi> markerPoiMap;
+	MapFilter mapFilters; 
 	private LocationClient mLocationClient;
     boolean mUpdatesRequested;
     SharedPreferences mPrefs;
@@ -107,6 +115,7 @@ public class MapActivity extends SlidingFragmentActivity implements
         //get current user
         GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
+		mapFilters = new MapFilter(user.getId(), null, null, 1);
         
         if (savedInstanceState == null) {
 	        android.support.v4.app.FragmentManager fragment_manager = getSupportFragmentManager();
@@ -129,9 +138,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 	        menu.setShadowDrawable(R.drawable.shadow);
 	        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 	        menu.setFadeDegree(0.35f);
-	        setSlidingActionBarEnabled(true);
-	        //menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);        
-	        //menu.setMenu(R.layout.menu_frame);        
+	        setSlidingActionBarEnabled(true);   
 	        
 	        //FIN BARRA LATERAL
 		    
@@ -245,22 +252,21 @@ public class MapActivity extends SlidingFragmentActivity implements
                 		startActivity(intent);	
                     }
                 });
+            	
+            	mMap.setOnCameraChangeListener(map_activity);
             }            
      
             return rootView;
-        }
+        }     
         
-//        public void onDestroyView() {
-//        	super.onDestroyView();
-//        	android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-//            //Fragment fragment = (fm.findFragmentById(R.id.map));
-//
-//            //if (mapFragment.isResumed()) {
-//                fm.beginTransaction().remove(mapFragment).commit();
-//            //}
-//                
-//        }
-        
+    }
+    
+    @Override
+    public void onCameraChange(CameraPosition position) {
+    	LatLng target = position.target;
+    	mapFilters.setLatitude(String.valueOf(target.latitude));
+        mapFilters.setLongitude(String.valueOf(target.longitude));
+    	getPois();
     }
     
 	@Override
@@ -307,7 +313,20 @@ public class MapActivity extends SlidingFragmentActivity implements
 		    		break;
 	    		}
 	    	break;
-	    	
+	    	//PARA CUANDO SE VUELVE DE CAMBIAR LOS FILTROS
+	    	case CHANGE_FILTERS_REQUEST :
+	    		/*
+	    		 * If the result code is Activity.RESULT_OK, agregar punto al mapa
+	    		 */
+	    		switch (resultCode) {
+		    		case Activity.RESULT_OK :
+		    			Bundle b = data.getExtras();		    			
+		    			MapFilter mapFiltersReturned = (MapFilter) b.get("mapFiltersReturned");
+		    			mapFilters = mapFiltersReturned;
+		    			getPois();
+		    		break;
+	    		}
+	    	break;	    		    		    	
 	    }
 
     }
@@ -328,15 +347,13 @@ public class MapActivity extends SlidingFragmentActivity implements
         
         Location location = mLocationClient.getLastLocation();            
         onLocationChanged(location);
-        getPois(location);        		
-    }
+        mapFilters.setLatitude(String.valueOf(location.getLatitude()));
+        mapFilters.setLongitude(String.valueOf(location.getLongitude()));
+        getPois();        		
+    }        
     
-    
-    
-    private void getPois(Location location) {
-    	String latitude = String.valueOf(location.getLatitude());
-        String longitude = String.valueOf(location.getLongitude());
-        String url = getResources().getString(R.string.api_url) + "/pois/index.json?latitude=" + latitude + "&longitude=" + longitude + "&user_id=" + user.getId();
+    private void getPois() {    	
+        String url = getResources().getString(R.string.api_url) + "/pois/index.json?" + mapFilters.getUrlParams();
         HttpAsyncTask task = new HttpAsyncTask();
         task.execute(url);
 	}
@@ -404,10 +421,10 @@ public class MapActivity extends SlidingFragmentActivity implements
         LatLng latLng = new LatLng(latitude, longitude);
         
      // Report to the UI that the location was updated
-        String msg = "Updated Location: " +
-                Double.toString(latitude) + "," +
-                Double.toString(longitude);
-        System.out.println(msg);
+//        String msg = "Updated Location: " +
+//                Double.toString(latitude) + "," +
+//                Double.toString(longitude);
+//        System.out.println(msg);
  
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         mMap.animateCamera(cameraUpdate);        
@@ -629,9 +646,11 @@ public class MapActivity extends SlidingFragmentActivity implements
         dialogFragment.show(getSupportFragmentManager(), "errordialog");
     } 
     
-    public void filter(View button){
-    	Intent intent = new Intent(this, FilterPoisActivity.class);
-		startActivity(intent);
+    public void filter(View button){    	
+		Intent intent = new Intent(this, MapFilterActivity.class);		
+		intent.putExtra("mapFilters", mapFilters); //le pasamos los filtros actuales
+		//va al form y espera un result_code(para saber si se creo o no)
+		startActivityForResult(intent, CHANGE_FILTERS_REQUEST);		
     }
  
     

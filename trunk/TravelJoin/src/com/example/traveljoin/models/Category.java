@@ -2,7 +2,7 @@ package com.example.traveljoin.models;
 
 public class Category {
 
-	private Integer id;
+	public Integer id;
     public String name;
     
 	public Category(Integer id, String name) {
