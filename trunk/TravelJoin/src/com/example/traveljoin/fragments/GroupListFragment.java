@@ -42,28 +42,28 @@ public class GroupListFragment extends ListFragment {
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.poi_list_item_context_menu, menu);
+		inflater.inflate(R.menu.group_list_item_context_menu, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		Group selectedGroup; 
 		switch (item.getItemId()) {
-		case R.id.poi_context_menu_view:
+		case R.id.group_context_menu_view:
 			// TODO: Redirigir a la vista del Grupo de vista
 			selectedGroup = getGroupItem(item);
 			Toast.makeText(getActivity(),
 					"View : " + selectedGroup.getName(),
 					Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.poi_context_menu_edit:
+		case R.id.group_context_menu_edit:
 			// TODO: Redirigir a la vista del Grupo de edicion
 			selectedGroup = getGroupItem(item);
 			Toast.makeText(getActivity(),
 					"Edit : " + selectedGroup.getName(),
 					Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.poi_context_menu_delete:
+		case R.id.group_context_menu_delete:
 			// TODO: Ejecutar la misma funcion para eliminar un Grupo
 			selectedGroup = getGroupItem(item);
 			Toast.makeText(getActivity(),

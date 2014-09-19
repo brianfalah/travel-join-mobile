@@ -12,6 +12,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.view.Menu;
@@ -50,7 +51,7 @@ public class GroupsActivity extends Activity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {		
-		getMenuInflater().inflate(R.menu.groups_menu, menu);
+		getMenuInflater().inflate(R.menu.groups_activity_actions, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.group_search)
 				.getActionView();
@@ -64,13 +65,17 @@ public class GroupsActivity extends Activity implements
 	}
 	
 	@Override
-	public boolean onContextItemSelected(MenuItem item) { 
+	public boolean onOptionsItemSelected(MenuItem item) { 
 		switch (item.getItemId()) {
-		case R.id.group_search:
-			onSearchRequested();
-		default:
-			return super.onContextItemSelected(item);
-		}
+			case R.id.group_search:
+				//Already handled in search listener
+				return true;
+			case R.id.group_add:
+				Intent intent = new Intent(this, GroupFormActivity.class);
+				startActivity(intent);
+			default:
+				return super.onContextItemSelected(item);
+			}
 	}
 	
 	@Override

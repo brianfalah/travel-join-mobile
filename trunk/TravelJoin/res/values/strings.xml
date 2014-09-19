@@ -22,12 +22,17 @@
     <string name="groups">Grupos</string>
     <!-- FIN Menu -->
     
+    <!-- Otros sutitulos  -->
+    <string name="groups_creation">Nuevo grupo</string>
+	<!-- FIN Otros sutitulos  -->
+	
 	<string name="action_logout">Cerrar sesión</string>
     <string name="action_settings">Configuraciones</string>
     <string name="action_search">Buscar</string>
+	<string name="action_create">Crear</string>
     <string name="search_hint">Buscar en la lista</string>
     <string name="explore_button">Explorar!</string>
-
+    
     <!-- POIs -->
     <string name="description">Descripción</string>
     <string name="name">Nombre</string>
@@ -50,7 +55,11 @@
     <!-- Tours -->
     <string name="tour_form_description">Ingrese los datos del circuito:</string>
     <!-- FIN tours -->
-
+	
+	<!-- Groups -->
+    <string name="group_form_description">Ingrese los datos del grupo:</string>
+    <!-- FIN groups -->
+    
     <!-- Login -->
     <string name="facebook_app_id">1509535099283633</string>
     <string name="facebook_get_started">Para comenzar, iniciar sesion con Facebook</string>

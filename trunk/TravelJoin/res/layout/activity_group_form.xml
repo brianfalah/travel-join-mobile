@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+	
+	<!-- Bottom button section -->
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
+            style="?android:buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/cancelButton"
+                style="?android:buttonBarButtonStyle"
+                android:drawableLeft="@drawable/ic_action_cancel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/cancel" 
+                android:onClick="onCancelButtonClicked"/>
+
+            <Button
+                android:id="@+id/acceptButton"
+                style="?android:buttonBarButtonStyle"
+                android:drawableLeft="@drawable/ic_action_accept"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/ok"
+                android:onClick="onAcceptButtonClicked"
+                 />
+        </LinearLayout>
+    </LinearLayout>
+	<!-- End - Bottom button section -->
+	
+    <ScrollView
+        android:id="@+id/ScrollViewTourAdd"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/buttons"
+        android:fillViewport="true"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- descripcion del formulario -->
+
+            <TextView
+                android:id="@+id/FormDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tour_form_description"
+                android:textSize="10pt" >
+            </TextView>
+
+            <!-- nombre -->
+
+            <EditText
+                android:id="@+id/TourName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:inputType="textCapSentences|textAutoCorrect" >
+            </EditText>
+
+            <!-- descripcion -->
+
+            <EditText
+                android:id="@+id/TourDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/description"
+                android:inputType="textCapSentences|textAutoCorrect" >
+            </EditText>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
