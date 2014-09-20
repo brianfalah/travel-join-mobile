@@ -13,8 +13,6 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.MapFilter;
-import com.example.traveljoin.models.PoiEvent;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,11 +20,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
@@ -56,12 +52,15 @@ public class MapFilterActivity  extends ActionBarActivity{
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		Bundle b = getIntent().getExtras(); // gets the previously created intent        
 		mapFilter = (MapFilter) b.get("mapFilters");
-		spnDistances = (Spinner) findViewById(R.id.spinnerDistances);
+		
+		spnDistances = (Spinner) findViewById(R.id.spinnerDistances);		
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 				R.array.distances_for_filters, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
 		spnDistances.setAdapter(adapter);
+		//se selecciona el filtro aplicado actualmente
+		int selectedPosition = adapter.getPosition(mapFilter.getMaxDistance().toString());
+		spnDistances.setSelection(selectedPosition);
 		
 		progress = ProgressDialog.show(this, "Cargando",
         	    "Por favor espere...", true);
@@ -177,11 +176,17 @@ public class MapFilterActivity  extends ActionBarActivity{
     }
 	
 	private void loadCategories(JSONArray categories) throws JSONException{
+		ArrayList<Integer> catIds = mapFilter.getCategoriesIds();		
 		categoryFatherItem = new Item(1, "Categorías");
 		ArrayList<Item> categoriesItems = new ArrayList<Item>(); 
 		for (int i = 0; i < categories.length(); i++) {
     	    JSONObject categoryJson = categories.getJSONObject(i);    	        	    
-    	    Item categoryItem = new Item(categoryJson.getInt("id"), categoryJson.getString("name"));
+    	    //si en los filtros actuales estaba seleccionada esta categoria, la checkeamos    	    
+    	    Boolean checked = false;    	    
+	    	if( !((Integer)catIds.indexOf(categoryJson.getInt("id"))).equals(-1) ){
+	    		checked = true;
+	    	}    	        	    
+    	    Item categoryItem = new Item(categoryJson.getInt("id"), categoryJson.getString("name"), checked);
     	    categoriesItems.add(categoryItem);    	    
     	}	
 		
@@ -190,11 +195,17 @@ public class MapFilterActivity  extends ActionBarActivity{
 	}
 	
 	private void loadGroups(JSONArray groups) throws JSONException{
+		ArrayList<Integer> groupIds = mapFilter.getGroupsIds();
 		groupFatherItem = new Item(2, "Grupos");
 		ArrayList<Item> groupsItems = new ArrayList<Item>(); 
 		for (int i = 0; i < groups.length(); i++) {
-    	    JSONObject groupJson = groups.getJSONObject(i);    	        	    
-    	    Item groupItem = new Item(groupJson.getInt("id"), groupJson.getString("name"));
+    	    JSONObject groupJson = groups.getJSONObject(i);  
+    	    //si en los filtros actuales estaba seleccionada este grupo, lo checkeamos    	    
+    	    Boolean checked = false;
+	    	if( !((Integer)groupIds.indexOf(groupJson.getInt("id"))).equals(-1) ){
+	    		checked = true;
+	    	}
+    	    Item groupItem = new Item(groupJson.getInt("id"), groupJson.getString("name"), checked);
     	    groupsItems.add(groupItem);    	    
     	}	
 		
@@ -202,6 +213,12 @@ public class MapFilterActivity  extends ActionBarActivity{
 		//adapterFilters.notifyDataSetChanged();
 		adapterFilters = new ExpandableAdapter(this, listViewFilters, filtersList);
     	listViewFilters.setAdapter(adapterFilters);
+    	if (!mapFilter.getCategoriesIds().isEmpty()){
+    		listViewFilters.expandGroup(0);
+    	}
+    	if (!mapFilter.getGroupsIds().isEmpty()){
+    		listViewFilters.expandGroup(1);
+    	}
     	progress.dismiss();      	
 	}
 	
@@ -215,6 +232,13 @@ public class MapFilterActivity  extends ActionBarActivity{
 		CustomTravelJoinException exception = new CustomTravelJoinException(e.getMessage());
 		exception.alertExceptionMessage(this);
 		e.printStackTrace();
+	}
+	
+	//cuando se clickea el boton cancelar viene aca!
+	public void cancel(View button) { 	
+		Intent output = new Intent();	    			    
+		setResult(Activity.RESULT_CANCELED, output);
+		finish();
 	}
     
 }

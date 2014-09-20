@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupsActivity;
-import com.example.traveljoin.activities.MainActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.UserProfileActivity;

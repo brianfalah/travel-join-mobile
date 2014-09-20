@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.example.traveljoin.fragments.DateTimePickerDialog;
 import com.example.traveljoin.fragments.DateTimePickerDialog.DateTimePickerDialogListener;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
-import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.PoiEvent;;
 
 public class EventFormActivity extends ActionBarActivity implements DateTimePickerDialogListener{
@@ -42,7 +40,6 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 	Calendar timeTo;
 	Integer poi_id = null; 
 	
-	private static final int ADD_EVENT_METHOD = 1;
 	//campos
 	private static final Integer DATE_FROM = 1;
 	private static final Integer DATE_TO = 2;

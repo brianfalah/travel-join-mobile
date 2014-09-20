@@ -5,8 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import com.example.traveljoin.R;
-
 public class MapFilter implements Serializable{
 	/**
 	 * 
