@@ -57,12 +57,8 @@ public class PoiFormActivity extends ActionBarActivity{
 	private final static int GET_CATEGORIES_METHOD = 1;
 	private static final int ADD_POI_METHOD = 2;
 	private static final int UPDATE_POI_METHOD = 3;
-	//requests
-	private static final int EDIT_POI_REQUEST = 1;
 	private static final int ADD_EVENT_REQUEST = 2;
-	private static final int DELETE_EVENT_REQUEST = 2;
-	
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_form);

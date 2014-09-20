@@ -9,5 +9,11 @@ public class Item {
 		this.id = id;
 		this.name = name;
 	}
+	
+	public Item(Integer id, String name, Boolean isChecked) {
+		this.id = id;
+		this.name = name;
+		this.isChecked = isChecked; 
+	}
 
 }
