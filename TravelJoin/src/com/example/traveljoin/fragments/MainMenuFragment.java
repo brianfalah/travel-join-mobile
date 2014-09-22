@@ -31,7 +31,7 @@ public class MainMenuFragment extends ListFragment {
 		adapter.add(new MainMenuItem(getString(R.string.pois), R.drawable.ic_action_place));
 		adapter.add(new MainMenuItem(getString(R.string.tours), R.drawable.ic_action_split));
 		adapter.add(new MainMenuItem(getString(R.string.groups), R.drawable.ic_action_group));
-		adapter.add(new MainMenuItem(getString(R.string.augmented_reality), R.drawable.ic_action_group));
+		adapter.add(new MainMenuItem(getString(R.string.augmented_reality), R.drawable.ic_action_full_screen));
 		setListAdapter(adapter);
 	}
 
