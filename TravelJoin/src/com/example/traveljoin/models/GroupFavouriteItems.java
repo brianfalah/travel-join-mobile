@@ -49,5 +49,10 @@ public class GroupFavouriteItems {
 	public void add(GeneralItem favouriteItem) {
 		favouriteItems.add(favouriteItem);
 	}
+
+	public void addAll(ArrayList<GeneralItem> favouriteItems) {
+		favouriteItems.addAll(favouriteItems);
+		
+	}
 }
 
