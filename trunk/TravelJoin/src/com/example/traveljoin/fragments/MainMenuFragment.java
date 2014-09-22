@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.activities.AugmentedRealityActivity;
 import com.example.traveljoin.activities.GroupsActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.TourFormActivity;
@@ -30,6 +31,7 @@ public class MainMenuFragment extends ListFragment {
 		adapter.add(new MainMenuItem(getString(R.string.pois), R.drawable.ic_action_place));
 		adapter.add(new MainMenuItem(getString(R.string.tours), R.drawable.ic_action_split));
 		adapter.add(new MainMenuItem(getString(R.string.groups), R.drawable.ic_action_group));
+		adapter.add(new MainMenuItem(getString(R.string.augmented_reality), R.drawable.ic_action_group));
 		setListAdapter(adapter);
 	}
 
@@ -56,7 +58,9 @@ public class MainMenuFragment extends ListFragment {
 			cls = TourFormActivity.class;
 		} else if (title.equals(getString(R.string.groups))) {
 			cls = GroupsActivity.class;
-		}
+		}else if (title.equals(getString(R.string.augmented_reality))) {
+			cls = AugmentedRealityActivity.class;
+		}	
         
         Intent intent = new Intent(getActivity(), cls);
         startActivity(intent);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
+	<resources>
+	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.133:3001</string>
+    <string name="api_url">http://192.168.1.101:3001</string>
     <string name="create">Crear</string>
     <string name="edit">Editar</string>
     <string name="update">Actualizar</string>
@@ -20,6 +20,7 @@
     <string name="pois">Puntos de interés</string>
     <string name="tours">Circuitos turísticos</string>
     <string name="groups">Grupos</string>
+    <string name="augmented_reality">Realidad Aumentada</string>
     <!-- FIN Menu -->
     
     <!-- Otros sutitulos  -->
