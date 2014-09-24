@@ -32,8 +32,6 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 	EditText descField;
 	TextView dateFromTv;
 	TextView dateToTv;
-	Button addButton;
-	Button cancelButton;
 	DatePicker dp;
 	TimePicker tp;
 	Calendar timeFrom;
@@ -52,8 +50,6 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
         // get reference to the views
 		nameField = (EditText) findViewById(R.id.EventName);
 		descField = (EditText) findViewById(R.id.EventDescription);
-		addButton = (Button) findViewById(R.id.EventAddButton);
-		cancelButton = (Button) findViewById(R.id.EventCancelButton);   
 		dateFromTv = (TextView) findViewById(R.id.dateFromTv);
 		dateToTv = (TextView) findViewById(R.id.dateToTv);
 		Bundle b = getIntent().getExtras();

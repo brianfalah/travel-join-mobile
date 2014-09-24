@@ -1,109 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+   	android:id="@+id/layoutEventForm"
+   	android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    tools:context="com.example.traveljoin.activities.EventFormActivity">
     
-    	<!-- descripcion del formulario -->
+	<LinearLayout android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_alignParentTop="true"
+	    android:layout_alignParentLeft="true" >
+	    
+	    	<!-- descripcion del formulario -->
+	
+	        <TextView
+	            android:id="@+id/EventFormDescription"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/event_form_description"
+	            android:textSize="10pt" >
+	        </TextView>
+	
+	       
+	        <!-- nombre -->
+	
+	        <EditText
+	            android:id="@+id/EventName"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/name"
+	            android:inputType="textCapSentences|textAutoCorrect" >
+	        </EditText>
+	
+	        <!-- descripcion -->
+	
+	        <EditText
+	            android:id="@+id/EventDescription"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/description"
+	            android:inputType="textCapSentences|textAutoCorrect" >
+	        </EditText>
+			
+	        <RelativeLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+		    	<TextView
+		        	android:id="@+id/dateFromTv"
+					android:layout_width="250dp"
+					android:layout_marginTop="50dp"
+					android:layout_marginLeft="5dp"
+					android:layout_height="wrap_content"
+					android:text="@string/select_date_time_start"
+					android:focusable="true"
+	    			android:focusableInTouchMode="true">
+				</TextView>
+				     
+			     <ImageButton
+					android:id="@+id/dateFromImg"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignBottom="@+id/dateFromTv"
+					android:layout_toRightOf="@+id/dateFromTv"
+					android:contentDescription="@string/select_date_time_start"
+					android:cropToPadding="true"
+					android:src="@drawable/ic_action_add_alarm"
+					android:onClick="showTimePickerDialog" />
+	        </RelativeLayout>
+	        
+	        <RelativeLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+		    	<TextView
+		        	android:id="@+id/dateToTv"
+					android:layout_width="250dp"
+					android:layout_marginTop="50dp"
+					android:layout_marginLeft="5dp"
+					android:layout_height="wrap_content"
+					android:text="@string/select_date_time_end"
+					android:focusable="true"
+	    			android:focusableInTouchMode="true">
+				</TextView>
+				     
+			     <ImageButton
+					android:id="@+id/dateToImg"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignBottom="@+id/dateToTv"
+					android:layout_toRightOf="@+id/dateToTv"
+					android:contentDescription="@string/select_date_time_end"
+					android:cropToPadding="true"
+					android:src="@drawable/ic_action_add_alarm"
+					android:onClick="showTimePickerDialog" />
+	        </RelativeLayout>
+	</LinearLayout>
+	        
+    <!-- Bottom button section -->
+    <LinearLayout
+        android:id="@+id/lytButons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/EventFormDescription"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_form_description"
-            android:textSize="10pt" >
-        </TextView>
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
 
-       
-        <!-- nombre -->
-
-        <EditText
-            android:id="@+id/EventName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/name"
-            android:inputType="textCapSentences|textAutoCorrect" >
-        </EditText>
-
-        <!-- descripcion -->
-
-        <EditText
-            android:id="@+id/EventDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/description"
-            android:inputType="textCapSentences|textAutoCorrect" >
-        </EditText>
-		
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            style="?android:buttonBarStyle"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
-	    	<TextView
-	        	android:id="@+id/dateFromTv"
-				android:layout_width="250dp"
-				android:layout_marginTop="50dp"
-				android:layout_marginLeft="5dp"
-				android:layout_height="wrap_content"
-				android:text="@string/select_date_time_start"
-				android:focusable="true"
-    			android:focusableInTouchMode="true">
-			</TextView>
-			     
-		     <ImageButton
-				android:id="@+id/dateFromImg"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignBottom="@+id/dateFromTv"
-				android:layout_toRightOf="@+id/dateFromTv"
-				android:contentDescription="@string/select_date_time_start"
-				android:cropToPadding="true"
-				android:src="@drawable/ic_datepicker"
-				android:onClick="showTimePickerDialog" />
-        </RelativeLayout>
-        
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-	    	<TextView
-	        	android:id="@+id/dateToTv"
-				android:layout_width="250dp"
-				android:layout_marginTop="50dp"
-				android:layout_marginLeft="5dp"
-				android:layout_height="wrap_content"
-				android:text="@string/select_date_time_end"
-				android:focusable="true"
-    			android:focusableInTouchMode="true">
-			</TextView>
-			     
-		     <ImageButton
-				android:id="@+id/dateToImg"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignBottom="@+id/dateToTv"
-				android:layout_toRightOf="@+id/dateToTv"
-				android:contentDescription="@string/select_date_time_end"
-				android:cropToPadding="true"
-				android:src="@drawable/ic_datepicker"
-				android:onClick="showTimePickerDialog" />
-        </RelativeLayout>
-        
-        <Button
-            android:id="@+id/EventAddButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="addEvent"
-            android:text="@string/add">
-        </Button>
-        
-        <Button
-            android:id="@+id/EventCancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="cancel"
-            android:text="@string/cancel">
-        </Button>
-    
 
-</LinearLayout>
+            <Button
+                android:id="@+id/cancelButton"
+                style="?android:buttonBarButtonStyle"
+                android:drawableLeft="@drawable/ic_action_cancel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" 
+                android:onClick="cancel"/>
+
+            <Button
+                android:id="@+id/acceptButton"
+                style="?android:buttonBarButtonStyle"
+                android:drawableLeft="@drawable/ic_action_accept"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/add"
+                android:onClick="addEvent"
+                 />
+        </LinearLayout>
+    </LinearLayout>
+	<!-- End - Bottom button section -->
+	    
+	
+	
+</RelativeLayout>
