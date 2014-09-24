@@ -5,21 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.traveljoin.activities.MapActivity">
+    tools:context="com.example.traveljoin.activities.MapActivity" >
 
-    <RelativeLayout android:layout_width="fill_parent"
-   		android:layout_height="wrap_content">
- 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tvFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgBtnFilter"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:text="Filtrar"
+            android:textSize="30sp" />
+
+        <ImageButton
+            android:id="@+id/imgBtnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:contentDescription="Filtrar"
+            android:cropToPadding="true"
+            android:onClick="filter"
+            android:src="@drawable/ic_action_sort_by_size" />
         
-	    <Button
-	        android:id="@+id/btnFilter"
-	        style="?android:attr/buttonStyleSmall"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:onClick="filter"
-	        android:text="Filtrar"
-	        android:layout_alignParentRight="true"
-		    android:layout_marginLeft="10dp"
-		    android:layout_marginRight="15dp" />
-  	</RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_alignBottom="@+id/imgBtnFilter" />
+
+    </RelativeLayout>
+
 </LinearLayout>

@@ -1,138 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ScrollViewPoiAdd"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
     android:scrollbars="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <!-- descripcion del formulario -->
-
-        <TextView
-            android:id="@+id/FormDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/poi_form_description"
-            android:textSize="10pt" >
-        </TextView>
-
-        <!-- latitud(invisible al usuario) -->
-
-        <TextView
-            android:id="@+id/PoiLatitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:visibility="gone" >
-        </TextView>
-
-        <!-- longitud(invisible al usuario) -->
-
-        <TextView
-            android:id="@+id/PoiLongitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:visibility="gone" >
-        </TextView>
-
-        <!-- nombre -->
-
-        <EditText
-            android:id="@+id/PoiName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/name"
-            android:inputType="textCapSentences|textAutoCorrect" >
-        </EditText>
-
-        <!-- descripcion -->
-
-        <EditText
-            android:id="@+id/PoiDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/description"
-            android:inputType="textCapSentences|textAutoCorrect" >
-        </EditText>
-
-        <!-- spinner(select) de categorias -->
-        
-        <Spinner
-            android:id="@+id/PoiCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/poi_categories" />
-
-
-        
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
-            
-            <Button
-	            android:id="@+id/addEvent"
-	            style="?android:attr/buttonStyleSmall"
+	    
+    <RelativeLayout android:id="@+id/layoutPoiForm"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    tools:context="com.example.traveljoin.activities.PoiFormActivity">
+	
+	   	<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_alignParentTop="true"
+    		android:layout_alignParentLeft="true" >
+	
+	        <!-- descripcion del formulario -->
+	
+	        <TextView
+	            android:id="@+id/FormDescription"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/poi_form_description"
+	            android:textSize="10pt" >
+	        </TextView>
+	
+	        <!-- latitud(invisible al usuario) -->
+	
+	        <TextView
+	            android:id="@+id/PoiLatitude"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:text="+"
-	            android:onClick="addEvent" />
-            
-             <Button
-	            android:id="@+id/deleteEvent"
-	            style="?android:attr/buttonStyleSmall"
+	            android:text=""
+	            android:visibility="gone" >
+	        </TextView>
+	
+	        <!-- longitud(invisible al usuario) -->
+	
+	        <TextView
+	            android:id="@+id/PoiLongitude"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@+id/addEvent"
-	            android:text="-"
-	            android:onClick="deleteEvent" />
-             
-              <ListView
-		            android:id="@+id/lvEvents"
+	            android:text=""
+	            android:visibility="gone" >
+	        </TextView>
+	
+	        <!-- nombre -->
+	
+	        <EditText
+	            android:id="@+id/PoiName"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/name"
+	            android:inputType="textCapSentences|textAutoCorrect" >
+	        </EditText>
+	
+	        <!-- descripcion -->
+	
+	        <EditText
+	            android:id="@+id/PoiDescription"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/description"
+	            android:inputType="textCapSentences|textAutoCorrect" >
+	        </EditText>
+	
+	        <!-- spinner(select) de categorias -->
+	        
+	        <Spinner
+	            android:id="@+id/PoiCategories"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:prompt="@string/poi_categories" />
+	
+	
+	        
+	        <RelativeLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent" >
+	            
+	            <Button
+		            android:id="@+id/addEvent"
+		            style="?android:attr/buttonStyleSmall"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:text="+"
+		            android:onClick="addEvent" />
+	            
+	             <Button
+		            android:id="@+id/deleteEvent"
+		            style="?android:attr/buttonStyleSmall"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_toRightOf="@+id/addEvent"
+		            android:text="-"
+		            android:onClick="deleteEvent" />
+	             
+	              <ListView
+			            android:id="@+id/lvEvents"
+			            android:layout_width="match_parent"
+			            android:layout_height="120dp"
+			            android:layout_below="@+id/addEvent" >
+			      </ListView>
+	        </RelativeLayout>
+	        
+	    </LinearLayout>
+	    
+	   	<!-- Bottom button section -->
+	    <LinearLayout
+	        android:id="@+id/lytButons"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:orientation="vertical" >
+	
+	        	<View
 		            android:layout_width="match_parent"
-		            android:layout_height="120dp"
-		            android:layout_below="@+id/addEvent" >
-		      </ListView>
-        </RelativeLayout>
-        
-
-        <Button
-            android:id="@+id/PoiCreateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="createPoi"
-            android:text="@string/create"
-            android:visibility="gone" >
-        </Button>
-
-        <Button
-            android:id="@+id/PoiUpdateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="updatePoi"
-            android:text="@string/update"
-            android:visibility="gone" >
-        </Button>
-        
-        <Button
-            android:id="@+id/PoiCancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="cancel"
-            android:text="@string/cancel">
-        </Button>
-
-
-
-    </LinearLayout>
-
-</ScrollView>
+		            android:layout_height="1dp"
+		            android:background="?android:attr/dividerVertical" />
+	        
+		        <LinearLayout
+		            style="?android:buttonBarStyle"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content" >
+		
+		            <Button
+		                android:id="@+id/PoiCancelButton"
+		                style="?android:buttonBarButtonStyle"
+		                android:drawableLeft="@drawable/ic_action_cancel"
+		                android:layout_width="fill_parent"
+		                android:layout_height="wrap_content"
+		                android:layout_weight="1"
+		                android:text="@string/cancel" 
+		                android:onClick="cancel"/>
+		
+		            <Button
+		                android:id="@+id/PoiCreateButton"
+		                style="?android:buttonBarButtonStyle"
+		                android:drawableLeft="@drawable/ic_action_accept"
+		                android:layout_width="fill_parent"
+		                android:layout_height="wrap_content"
+		                android:layout_weight="1"
+		                android:onClick="createPoi"
+			            android:text="@string/create"
+			            android:visibility="gone"/>
+		            
+		       		<Button
+		                android:id="@+id/PoiUpdateButton"
+		                style="?android:buttonBarButtonStyle"
+		                android:drawableLeft="@drawable/ic_action_accept"
+		                android:layout_width="fill_parent"
+		                android:layout_height="wrap_content"
+		                android:layout_weight="1"
+		                android:onClick="updatePoi"
+			            android:text="@string/update"
+			            android:visibility="gone"/>
+		        </LinearLayout>
+	       </LinearLayout>
+		<!-- End - Bottom button section -->    
+	   	
+    </RelativeLayout>
+</ScrollView>               

@@ -48,32 +48,48 @@
 	        android:scrollbars="none" >
 	    </ExpandableListView>
 
-	    <RelativeLayout
+
+        
+    	<!-- Bottom button section -->
+	    <LinearLayout
 	        android:id="@+id/lytButons"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
-	        android:layout_centerHorizontal="true"
-	        android:layout_centerInParent="false"
-	        android:layout_centerVertical="false"
-	        android:orientation="horizontal" >
-
-			    <Button
-			      android:id="@+id/setFilters"
-			      android:layout_width="wrap_content"
-			      android:layout_height="wrap_content"			            
-			      android:text="@string/ok"
-			      android:onClick="setFilters">
-			    </Button>
-			    
-			    <Button
-		            android:id="@+id/cancel"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_toRightOf="@id/setFilters"					      	
-		            android:onClick="cancel"
-		            android:text="@string/cancel">
-		        </Button>
-        </RelativeLayout>
+	        android:orientation="vertical" >
+	
+	        <View
+	            android:layout_width="match_parent"
+	            android:layout_height="1dp"
+	            android:background="?android:attr/dividerVertical" />
+	
+	        <LinearLayout
+	            style="?android:buttonBarStyle"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content" >
+	
+	            <Button
+	                android:id="@+id/cancelButton"
+	                style="?android:buttonBarButtonStyle"
+	                android:drawableLeft="@drawable/ic_action_cancel"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="@string/cancel" 
+	                android:onClick="cancel"/>
+	
+	            <Button
+	                android:id="@+id/acceptButton"
+	                style="?android:buttonBarButtonStyle"
+	                android:drawableLeft="@drawable/ic_action_accept"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="@string/ok"
+	                android:onClick="setFilters"
+	                 />
+	        </LinearLayout>
+	    </LinearLayout>
+		<!-- End - Bottom button section -->
 	    
 	</RelativeLayout>
