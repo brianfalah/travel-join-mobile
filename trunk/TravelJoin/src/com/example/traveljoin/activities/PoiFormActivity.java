@@ -99,7 +99,6 @@ public class PoiFormActivity extends ActionBarActivity{
             createButton.setVisibility(View.VISIBLE);
         }
         
-        //aca ya tienen que estar cargados los poiEvents
         poiEventsAdapter = new ArrayAdapter<PoiEvent>(this,
 							android.R.layout.simple_list_item_multiple_choice, poiEvents);
         lvEvents.setAdapter(poiEventsAdapter);
