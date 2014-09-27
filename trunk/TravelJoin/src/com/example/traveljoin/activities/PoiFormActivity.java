@@ -44,6 +44,7 @@ public class PoiFormActivity extends ActionBarActivity{
 	TextView tvLongitude;
 	EditText nameField;
 	EditText descField;
+	EditText addressField;
 	Spinner categoryField;
 	Button createButton;
 	Button updateButton;
@@ -70,6 +71,7 @@ public class PoiFormActivity extends ActionBarActivity{
         tvLatitude = (TextView) findViewById(R.id.PoiLatitude);
 		tvLongitude = (TextView) findViewById(R.id.PoiLongitude);
 		nameField = (EditText) findViewById(R.id.PoiName);
+		addressField = (EditText) findViewById(R.id.PoiAddress);
 		descField = (EditText) findViewById(R.id.PoiDescription);
 		categoryField = (Spinner) findViewById(R.id.PoiCategories);
 		createButton = (Button) findViewById(R.id.PoiCreateButton);
@@ -88,6 +90,7 @@ public class PoiFormActivity extends ActionBarActivity{
         	setHiddenFields(point);
         	nameField.setText(poi.getName());
         	descField.setText(poi.getDescription());
+        	addressField.setText(poi.getAddress());
         	updateButton.setVisibility(View.VISIBLE);
         	poiEvents = poi.getPoiEvents();
         }
@@ -157,7 +160,8 @@ public class PoiFormActivity extends ActionBarActivity{
 	        	    "Por favor espere...", true);
 			Poi poi_to_create = new Poi(null, Double.parseDouble(tvLatitude.getText().toString()),
 					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
-					descField.getText().toString(), user.getId(), ((Category)categoryField.getSelectedItem()).getId(),
+					descField.getText().toString(), addressField.getText().toString(),
+					user.getId(), ((Category)categoryField.getSelectedItem()).getId(),
 					"", poiEvents);
 			
 	        String url = getResources().getString(R.string.api_url) + "/pois/create";
@@ -175,8 +179,8 @@ public class PoiFormActivity extends ActionBarActivity{
 	        	    "Por favor espere...", true);
 			poi = new Poi(poi.getId(), Double.parseDouble(tvLatitude.getText().toString()),
 					Double.parseDouble(tvLongitude.getText().toString()), nameField.getText().toString(),
-					descField.getText().toString(), user.getId(), ((Category)categoryField.getSelectedItem()).getId(),
-					"", poiEvents);
+					descField.getText().toString(), addressField.getText().toString(), user.getId(),
+					((Category)categoryField.getSelectedItem()).getId(), "", poiEvents);
 			poi.setPoiEventsToDelete(poiEventsToDelete);
 			
 	        String url = getResources().getString(R.string.api_url) + "/pois/update";
@@ -194,7 +198,7 @@ public class PoiFormActivity extends ActionBarActivity{
 	}
 
 	private Boolean validateFields() {		
-		return validateField(nameField) && validateField(descField) && validateField(categoryField);
+		return validateField(nameField) && validateField(addressField) && validateField(descField) && validateField(categoryField);
 	}
 
 	private Boolean validateField(View field) {

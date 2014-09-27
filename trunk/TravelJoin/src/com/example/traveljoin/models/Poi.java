@@ -19,6 +19,7 @@ public class Poi implements Serializable, GeneralItem{
 	private Double longitude;
 	private String name;
 	private String description;
+	private String address;
 	
 	private Integer userId;
 	private Integer categoryId;
@@ -35,7 +36,7 @@ public class Poi implements Serializable, GeneralItem{
 		
 	//constructor
 	public Poi(Integer id, Double latitude, Double longitude, String name,
-			String description, Integer userId,
+			String description,String address, Integer userId,
 			Integer categoryId, String categoryName, ArrayList<PoiEvent> poiEvents) {
 		super();
 		this.id = id;
@@ -43,6 +44,7 @@ public class Poi implements Serializable, GeneralItem{
 		this.longitude = longitude;
 		this.name = name;
 		this.description = description;
+		this.address = address;
 		this.userId = userId;
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
@@ -80,6 +82,14 @@ public class Poi implements Serializable, GeneralItem{
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public Integer getUserId() {
@@ -124,7 +134,7 @@ public class Poi implements Serializable, GeneralItem{
     	}
 		
 		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"), poiJson.getDouble("longitude"),
-	    		poiJson.getString("name"), poiJson.getString("description"),
+	    		poiJson.getString("name"), poiJson.getString("description"), poiJson.getString("address"),
 	    		poiJson.getInt("user_id"), poiJson.getInt("category_id"), poiJson.getString("category_name"), poiEventsToAdd);				
 		
 		return poi;
@@ -140,6 +150,7 @@ public class Poi implements Serializable, GeneralItem{
 	    	
 	        jsonObject.put("name", getName());
 	        jsonObject.put("description", getDescription());
+	        jsonObject.put("address", getAddress());
 	        jsonObject.put("latitude", getLatitude());
 	        jsonObject.put("longitude", getLongitude());
 	        jsonObject.put("category_id", getCategoryId());

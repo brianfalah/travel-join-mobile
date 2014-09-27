@@ -70,6 +70,14 @@
 	            android:hint="@string/description"
 	            android:inputType="textCapSentences|textAutoCorrect" >
 	        </EditText>
+	        
+	        <EditText
+	            android:id="@+id/PoiAddress"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/address"
+	            android:inputType="textCapSentences" >
+	        </EditText>
 	
 	        <!-- spinner(select) de categorias -->
 	        
