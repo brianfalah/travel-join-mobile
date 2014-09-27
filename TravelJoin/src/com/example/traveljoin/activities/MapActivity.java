@@ -49,6 +49,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,7 +61,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener,
 		com.google.android.gms.location.LocationListener,
-		OnMapLongClickListener, OnCameraChangeListener {
+		OnMapLongClickListener, OnCameraChangeListener, OnMarkerClickListener {
 	
     /*
      * Define a request code to send to Google Play services
@@ -94,6 +95,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 	private static GoogleMap mMap;
 	private static HashMap<Marker, Poi> markerPoiMap;
 	MapFilter mapFilters; 
+	Marker lastOpened = null;
 	private LocationClient mLocationClient;
     boolean mUpdatesRequested;
     SharedPreferences mPrefs;
@@ -236,7 +238,12 @@ public class MapActivity extends SlidingFragmentActivity implements
                     	marker.setPosition(new LatLng(poi.getLatitude(), poi.getLongitude()));
                     }
                 });                
+            	
+            	// Since we are consuming the event this is necessary to
+            	// manage closing opened markers before opening new ones            	
 
+            	mMap.setOnMarkerClickListener(map_activity);
+            	
             	mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
                     
                     @Override
@@ -256,6 +263,31 @@ public class MapActivity extends SlidingFragmentActivity implements
             return rootView;
         }     
         
+    }
+    
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // Check if there is an open info window
+        if (lastOpened != null) {
+            // Close the info window
+            lastOpened.hideInfoWindow();
+
+            // Is the marker the same marker that was already open
+            if (lastOpened.equals(marker)) {
+                // Nullify the lastOpened object
+                lastOpened = null;
+                // Return so that the info window isn't opened again
+                return true;
+            } 
+        }
+
+        // Open the info window for the marker
+        marker.showInfoWindow();
+        // Re-assign the last opened such that we can close it later
+        lastOpened = marker;
+
+        // Event was handled by our code do not launch default behaviour.
+        return true;
     }
     
     @Override

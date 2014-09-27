@@ -39,6 +39,7 @@
     <string name="name">Nombre</string>
     <string name="poi_form_description">Ingrese los datos del punto de interés:</string>
     <string name="poi_categories">Categoría</string>
+    <string name="address">Dirección</string>
     <string-array name="distances_for_filters">
         <item>1</item>
         <item>2</item>
