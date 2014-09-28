@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:orientation="vertical" >
+
+    <!-- descripcion del formulario -->
+
+    <TextView
+        android:id="@+id/formGroupDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/main_group_form_inputs"
+        android:textSize="10pt" >
+    </TextView>
+
+    <!-- nombre -->
+
+    <EditText
+        android:id="@+id/groupName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        android:inputType="textCapSentences|textAutoCorrect" >
+    </EditText>
+
+    <!-- descripcion -->
+
+    <EditText
+        android:id="@+id/groupDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/description"
+        android:inputType="textCapSentences|textAutoCorrect|textMultiLine" >
+    </EditText>
+	
+    <TextView
+        android:id="@+id/group_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/group_type"
+        android:textSize="10pt" >
+    </TextView>
+    
+    <RadioGroup
+        android:id="@+id/radio_group_type"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:checkedButton="@+id/radio_public_group"
+	    android:orientation="horizontal">
+	    <RadioButton android:id="@+id/radio_public_group"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/radio_public_group"/>
+	    <RadioButton android:id="@+id/radio_private_group"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/radio_private_group"/>
+	</RadioGroup>
+	
+    <EditText
+        android:id="@+id/private_group_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/group_password"
+        android:inputType="textPassword" >
+    </EditText>
+    
+</LinearLayout>
