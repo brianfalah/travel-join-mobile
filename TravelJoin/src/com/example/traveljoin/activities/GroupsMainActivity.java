@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
 
-public class GroupsActivity extends Activity implements OnQueryTextListener {
+public class GroupsMainActivity extends Activity implements OnQueryTextListener {
 
 	private ActionBar actionBar;
 	private ListView listView;
@@ -33,7 +33,7 @@ public class GroupsActivity extends Activity implements OnQueryTextListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_groups);
+		setContentView(R.layout.activity_list);
 
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.groups);
@@ -46,7 +46,7 @@ public class GroupsActivity extends Activity implements OnQueryTextListener {
 
 		adapter = new GeneralItemListAdapter(this, groups);
 
-		listView = (ListView) findViewById(R.id.groups_list);
+		listView = (ListView) findViewById(R.id.list);
 		listView.setAdapter(adapter);
 		listView.setTextFilterEnabled(true);
 		registerForContextMenu(listView);

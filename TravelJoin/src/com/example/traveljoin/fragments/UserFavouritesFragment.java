@@ -33,13 +33,13 @@ import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.Tour;
 import com.example.traveljoin.models.User;
 
-public class FavouritesFragment extends Fragment {
+public class UserFavouritesFragment extends Fragment {
 
 	private final static int POIS_GROUP_KEY = 0;
 	private final static int TOURS_GROUP_KEY = 1;
 	private GroupFavouriteItems poisGroup;
 	private GroupFavouriteItems toursGroup;
-	private SparseArray<GroupFavouriteItems> groups = new SparseArray<GroupFavouriteItems>();
+	private SparseArray<GroupFavouriteItems> groups;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,6 +125,7 @@ public class FavouritesFragment extends Fragment {
 	}
 
 	public void createItemsGroups() {
+		groups = new SparseArray<GroupFavouriteItems>();
 		User user = ((GlobalContext) getActivity().getApplicationContext())
 				.getUser();
 		// TODO: Realizar la llamada al servidor para los Tours

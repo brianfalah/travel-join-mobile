@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.AugmentedRealityActivity;
-import com.example.traveljoin.activities.GroupsActivity;
-import com.example.traveljoin.activities.MapActivity;
+import com.example.traveljoin.activities.GroupsMainActivity;
+import com.example.traveljoin.activities.PoisMainActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
 
@@ -53,11 +53,11 @@ public class MainMenuFragment extends ListFragment {
 		if (title.equals(getString(R.string.profile))) {
 			cls = UserProfileActivity.class;	
 		} else if (title.equals(getString(R.string.pois))) {
-			cls = MapActivity.class;
+			cls = PoisMainActivity.class;
 		} else if (title.equals(getString(R.string.tours))) {
 			cls = TourFormActivity.class;
 		} else if (title.equals(getString(R.string.groups))) {
-			cls = GroupsActivity.class;
+			cls = GroupsMainActivity.class;
 		}else if (title.equals(getString(R.string.augmented_reality))) {
 			cls = AugmentedRealityActivity.class;
 		}	

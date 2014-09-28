@@ -1,8 +1,8 @@
 package com.example.traveljoin.activities;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.fragments.FavouritesFragment;
-import com.example.traveljoin.fragments.GroupListFragment;
+import com.example.traveljoin.fragments.UserFavouritesFragment;
+import com.example.traveljoin.fragments.UserGroupListFragment;
 import com.example.traveljoin.fragments.UserInformationFragment;
 import com.facebook.Session;
 
@@ -114,10 +114,10 @@ public class UserProfileActivity extends ActionBarActivity implements
 				fragment = new UserInformationFragment();
 				break;
 			case USER_GROUPS_TAB:
-				fragment = new GroupListFragment();
+				fragment = new UserGroupListFragment();
 				break;
 			case USER_FAVOURITES_TAB:
-				fragment = new FavouritesFragment();
+				fragment = new UserFavouritesFragment();
 				break;
 			default:
 				fragment = new UserInformationFragment();
