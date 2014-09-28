@@ -18,7 +18,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class GroupListFragment extends ListFragment {
+public class UserGroupListFragment extends ListFragment {
 
 	private ArrayList<GeneralItem> groups;
 
