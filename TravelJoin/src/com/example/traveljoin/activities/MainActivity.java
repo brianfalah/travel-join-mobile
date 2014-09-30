@@ -1,6 +1,5 @@
 package com.example.traveljoin.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -70,14 +68,6 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showWellcomeFragment() {
-		ProgressDialog progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getString(R.string.loading));
-		progressDialog.setMessage(getString(R.string.wait));
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setCancelable(false);
-        progressDialog.show();
-		GlobalContext globalContext = (GlobalContext) getApplicationContext();
-		globalContext.initializeContext(this, progressDialog);
 		showAndHideFragment(wellcomeFragment, facebookLoginFragment);
 	}
 	

@@ -2,6 +2,7 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.MapActivity;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.facebook.Session;
 
 import android.content.Intent;
@@ -61,6 +62,14 @@ public class WellcomeFragment extends Fragment {
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		GlobalContext globalContext = (GlobalContext) getActivity().getApplicationContext();
+		globalContext.initializeContext(getActivity());
+	}
+	
 	
 	public void logout() {
 		Session session = Session.getActiveSession();
