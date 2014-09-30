@@ -2,6 +2,7 @@ package com.example.traveljoin.models;
 
 public class Group implements GeneralItem {
 	
+	private Integer id;
 	private String name;
 	private String description;
 	
@@ -11,6 +12,7 @@ public class Group implements GeneralItem {
 		super();
 		this.name = name;
 		this.description = description;
+		this.id = 0;
 	}
 
 	@Override
@@ -21,6 +23,15 @@ public class Group implements GeneralItem {
 	@Override
 	public String getDescription() {
 		return description;
+	}
+	
+	@Override
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

@@ -1,9 +1,10 @@
 package com.example.traveljoin.models;
 
-public class Category {
+public class Category implements GeneralItem{
 
 	public Integer id;
     public String name;
+    public String description;
     
 	public Category(Integer id, String name) {
 		super();
@@ -32,4 +33,9 @@ public class Category {
     public String toString() {
         return this.getName();            // Para que lo usen los adapters
     }
+
+	@Override
+	public String getDescription() {
+		return null;
+	}
 }
