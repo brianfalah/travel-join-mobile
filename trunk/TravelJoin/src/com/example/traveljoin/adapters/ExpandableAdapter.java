@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.auxiliaries.DataHolder;
-import com.example.traveljoin.auxiliaries.Item;
+import com.example.traveljoin.auxiliaries.CheckeableItem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,13 +28,13 @@ import android.widget.TextView;
 public class ExpandableAdapter extends BaseExpandableListAdapter {
 
 	private LayoutInflater layoutInflater;
-	private LinkedHashMap<Item, ArrayList<Item>> groupList;
-	private ArrayList<Item> mainGroup;
+	private LinkedHashMap<CheckeableItem, ArrayList<CheckeableItem>> groupList;
+	private ArrayList<CheckeableItem> mainGroup;
 	private int[] groupStatus;
 	private ExpandableListView listView;
 
 	public ExpandableAdapter(Context context, ExpandableListView listView,
-			LinkedHashMap<Item, ArrayList<Item>> groupsList) {
+			LinkedHashMap<CheckeableItem, ArrayList<CheckeableItem>> groupsList) {
 		layoutInflater = (LayoutInflater) context
 				.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		this.groupList = groupsList;
@@ -43,7 +43,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		listView.setOnGroupExpandListener(new OnGroupExpandListener() {
 
 			public void onGroupExpand(int groupPosition) {
-				Item group = mainGroup.get(groupPosition);
+				CheckeableItem group = mainGroup.get(groupPosition);
 				if (groupList.get(group).size() > 0)
 					groupStatus[groupPosition] = 1;
 
@@ -53,23 +53,23 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		listView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
 
 			public void onGroupCollapse(int groupPosition) {
-				Item group = mainGroup.get(groupPosition);
+				CheckeableItem group = mainGroup.get(groupPosition);
 				if (groupList.get(group).size() > 0)
 					groupStatus[groupPosition] = 0;
 
 			}
 		});
 
-		mainGroup = new ArrayList<Item>();
-		for (Map.Entry<Item, ArrayList<Item>> mapEntry : groupList.entrySet()) {
+		mainGroup = new ArrayList<CheckeableItem>();
+		for (Map.Entry<CheckeableItem, ArrayList<CheckeableItem>> mapEntry : groupList.entrySet()) {
 			mainGroup.add(mapEntry.getKey());
 		}
 
 	}
 
-	public Item getChild(int groupPosition, int childPosition) {
+	public CheckeableItem getChild(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
-		Item item = mainGroup.get(groupPosition);
+		CheckeableItem item = mainGroup.get(groupPosition);
 		return groupList.get(item).get(childPosition);
 
 	}
@@ -93,26 +93,26 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		} else {
 			holder = (ChildHolder) convertView.getTag();
 		}
-		final Item child = getChild(groupPosition, childPosition);
+		final CheckeableItem child = getChild(groupPosition, childPosition);
 		holder.cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				Item parentGroup = getGroup(groupPosition);
-				child.isChecked = isChecked;
+				CheckeableItem parentGroup = getGroup(groupPosition);
+				child.setChecked(isChecked);
 				if (isChecked) {
 					// child.isChecked =true;
-					ArrayList<Item> childList = getChild(parentGroup);
+					ArrayList<CheckeableItem> childList = getChild(parentGroup);
 					int childIndex = childList.indexOf(child);
 					boolean isAllChildClicked = true;
 					for (int i = 0; i < childList.size(); i++) {
 						if (i != childIndex) {
-							Item siblings = childList.get(i);
-							if (!siblings.isChecked) {
+							CheckeableItem siblings = childList.get(i);
+							if (!siblings.isChecked()) {
 								isAllChildClicked = false;
 								//if(DataHolder.checkedChilds.containsKey(child.name)==false){
-									DataHolder.checkedChilds.put(child.name,
-											parentGroup.name);
+									DataHolder.checkedChilds.put(child.getName(),
+											parentGroup.getName());
 							//	}
 								break;
 							}
@@ -120,22 +120,22 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 					}
 
 					if (isAllChildClicked) {
-						parentGroup.isChecked = true;
-						if(!(DataHolder.checkedChilds.containsKey(child.name)==true)){
-							DataHolder.checkedChilds.put(child.name,
-									parentGroup.name);
+						parentGroup.setChecked(true);
+						if(!(DataHolder.checkedChilds.containsKey(child.getName())==true)){
+							DataHolder.checkedChilds.put(child.getName(),
+									parentGroup.getName());
 						}
 						checkAll = false;
 					}
 
 				} else {
-					if (parentGroup.isChecked) {
-						parentGroup.isChecked = false;
+					if (parentGroup.isChecked()) {
+						parentGroup.setChecked(false);
 						checkAll = false;
-						DataHolder.checkedChilds.remove(child.name);
+						DataHolder.checkedChilds.remove(child.getName());
 					} else {
 						checkAll = true;
-						DataHolder.checkedChilds.remove(child.name);
+						DataHolder.checkedChilds.remove(child.getName());
 					}
 					// child.isChecked =false;
 				}
@@ -145,19 +145,19 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
 		});
 
-		holder.cb.setChecked(child.isChecked);
-		holder.title.setText(child.name);
+		holder.cb.setChecked(child.isChecked());
+		holder.title.setText(child.getName());
 		Log.i("childs are", DataHolder.checkedChilds.toString());
 		return convertView;
 	}
 
 	public int getChildrenCount(int groupPosition) {
 		// TODO Auto-generated method stub
-		Item item = mainGroup.get(groupPosition);
+		CheckeableItem item = mainGroup.get(groupPosition);
 		return groupList.get(item).size();
 	}
 
-	public Item getGroup(int groupPosition) {
+	public CheckeableItem getGroup(int groupPosition) {
 		// TODO Auto-generated method stub
 		return mainGroup.get(groupPosition);
 	}
@@ -192,20 +192,20 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		holder.imageView
 				.setImageResource(groupStatus[groupPosition] == 0 ? R.drawable.group_down
 						: R.drawable.group_up);
-		final Item groupItem = getGroup(groupPosition);
+		final CheckeableItem groupItem = getGroup(groupPosition);
 
-		holder.title.setText(groupItem.name);
+		holder.title.setText(groupItem.getName());
 
 		holder.cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (checkAll) {
-					ArrayList<Item> childItem = getChild(groupItem);
-					for (Item children : childItem)
-						children.isChecked = isChecked;
+					ArrayList<CheckeableItem> childItem = getChild(groupItem);
+					for (CheckeableItem children : childItem)
+						children.setChecked(isChecked);
 				}
-				groupItem.isChecked = isChecked;
+				groupItem.setChecked(isChecked);
 				notifyDataSetChanged();
 				new Handler().postDelayed(new Runnable() {
 
@@ -219,13 +219,13 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 			}
 
 		});
-		holder.cb.setChecked(groupItem.isChecked);
+		holder.cb.setChecked(groupItem.isChecked());
 		return convertView;
 	}
 
 	private boolean checkAll = true;
 
-	public ArrayList<Item> getChild(Item group) {
+	public ArrayList<CheckeableItem> getChild(CheckeableItem group) {
 		return groupList.get(group);
 	}
 
