@@ -21,7 +21,8 @@ import com.facebook.model.GraphUser;
 public class GlobalContext extends Application {
 
 	private User user;
-
+	public int taskExcutedInProgressDialog = 1;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -34,9 +35,16 @@ public class GlobalContext extends Application {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public void initializeContext(final FragmentActivity requesterActivity,
-			ProgressDialog progressDialog) {
+	
+	public void initializeContext(final FragmentActivity requesterActivity) {
+		
+		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
+		progressDialog.setTitle(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+        
 		initializeUser(requesterActivity, progressDialog);
 	}
 
@@ -72,6 +80,12 @@ public class GlobalContext extends Application {
 				});
 		request.executeAsync();
 
+	}
+	
+	private void initializeCategories(FragmentActivity requesterActivity,
+			ProgressDialog progressDialog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private class GetOrCreateUserIfNotExistTask extends
@@ -114,7 +128,7 @@ public class GlobalContext extends Application {
 				e.printStackTrace();
 			} finally {
 				if (progressDialog.isShowing()) {
-					progressDialog.dismiss();
+						progressDialog.dismiss();
 				}
 			}
 		}
