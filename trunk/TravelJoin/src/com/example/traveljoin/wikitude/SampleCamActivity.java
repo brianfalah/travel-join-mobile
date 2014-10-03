@@ -47,7 +47,7 @@ public class SampleCamActivity extends AbstractArchitectCamActivity {
 			public void onCompassAccuracyChanged( int accuracy ) {
 				/* UNRELIABLE = 0, LOW = 1, MEDIUM = 2, HIGH = 3 */
 				if ( accuracy < SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM && SampleCamActivity.this != null && !SampleCamActivity.this.isFinishing() && System.currentTimeMillis() - SampleCamActivity.this.lastCalibrationToastShownTimeMillis > 5 * 1000) {
-					Toast.makeText( SampleCamActivity.this, "Sorongo low", Toast.LENGTH_LONG ).show();
+					Toast.makeText( SampleCamActivity.this, "...", Toast.LENGTH_LONG ).show();
 					SampleCamActivity.this.lastCalibrationToastShownTimeMillis = System.currentTimeMillis();
 				}
 			}
