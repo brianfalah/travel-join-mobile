@@ -18,6 +18,7 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
+import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.User;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -28,7 +29,8 @@ public class GlobalContext extends Application {
 
 	private User user;
 	private List<Category> categories;
-	public int taskExcutedInProgressDialog = 2;
+	private List<Interest> interests;
+	public int taskExcutedInProgressDialog = 3;
 
 	@Override
 	public void onCreate() {
@@ -50,7 +52,15 @@ public class GlobalContext extends Application {
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
+	
+	public List<Interest> getInterests() {
+		return interests;
+	}
 
+	public void setInterests(List<Interest> interests) {
+		this.interests = interests;
+	}
+	
 	public void initializeContext(final FragmentActivity requesterActivity) {
 
 		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
@@ -62,6 +72,7 @@ public class GlobalContext extends Application {
 
 		initializeUser(requesterActivity, progressDialog);
 		initializeCategories(requesterActivity, progressDialog);
+		initializeInterests(requesterActivity, progressDialog);
 	}
 
 	private void initializeUser(final FragmentActivity requesterActivity,
@@ -100,8 +111,14 @@ public class GlobalContext extends Application {
 			ProgressDialog progressDialog) {
 		String url = getResources().getString(R.string.api_url)
 				+ "/categories/index.json";
-		GetCategoriesTask httpAsyncTask = new GetCategoriesTask(progressDialog);
-		httpAsyncTask.execute(url);
+		new GetCategoriesTask(progressDialog).execute(url);
+	}
+	
+	private void initializeInterests(FragmentActivity requesterActivity,
+			ProgressDialog progressDialog) {
+		String url = getResources().getString(R.string.api_url)
+				+ "/interests/index.json";
+		new GetInterestsTask(progressDialog).execute(url);
 	}
 
 	private class GetOrCreateUserIfNotExistTask extends
@@ -205,7 +222,61 @@ public class GlobalContext extends Application {
 			return categories;
 		}
 	}
+	
+	private class GetInterestsTask extends AsyncTask<String, Void, String> {
+		private ApiInterface apiInterface = new ApiInterface();
+		private ApiResult apiResult;
+		private ProgressDialog progressDialog;
 
+		public GetInterestsTask(ProgressDialog progressDialog) {
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected String doInBackground(String... urls) {
+			apiResult = apiInterface.GET(urls[0]);
+			return apiResult.getResult();
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			Log.d("InputStream", result);
+			try {
+				if (apiResult.ok()) {
+					List<Interest> interests = getInterestsFromJSON(new JSONArray(
+							result));
+					GlobalContext globalContext = (GlobalContext) getApplicationContext();
+					globalContext.setInterests(interests);
+				}
+			} catch (JSONException e) {
+				// TODO
+				showExceptionError(e);
+
+			} finally {
+				taskExcutedInProgressDialog -= 1;
+				if (progressDialog.isShowing()
+						&& taskExcutedInProgressDialog == 0) {
+					progressDialog.dismiss();
+				}
+			}
+
+		}
+
+		private List<Interest> getInterestsFromJSON(JSONArray interestsJSON)
+				throws JSONException {
+			List<Interest> interests = new ArrayList<Interest>();
+
+			for (int i = 0; i < interestsJSON.length(); i++) {
+				JSONObject interestJSON = interestsJSON.getJSONObject(i);
+				Interest interest = new Interest(interestJSON.getInt("id"),
+						interestJSON.getString("name"));
+				interests.add(interest);
+			}
+
+			return interests;
+		}
+	}
+	
 	// TODO Refactor de showConnectionError y showExceptionError a un Error
 	// Handler si es que siempre se hace lo mismo con las excepciones. Buscar
 	// esos metodos en todo el proyecto
