@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
@@ -75,9 +74,8 @@ public class GroupFormToursFragment extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
 			selectedTour = getTourItem(item);
-			Toast.makeText(getActivity(),
-					"Delete : " + selectedTour.getName(), Toast.LENGTH_SHORT)
-					.show();
+			tours.remove(selectedTour);
+        	toursAdapter.notifyDataSetChanged();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
