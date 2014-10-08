@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
@@ -76,9 +75,8 @@ public class GroupFormPoisFragment extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
 			selectedPoi = getPoiItem(item);
-			Toast.makeText(getActivity(),
-					"Delete : " + selectedPoi.getName(), Toast.LENGTH_SHORT)
-					.show();
+			pois.remove(selectedPoi);
+        	poisAdapter.notifyDataSetChanged();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
