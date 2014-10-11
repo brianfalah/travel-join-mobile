@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.AugmentedRealityActivity;
 import com.example.traveljoin.activities.GroupsMainActivity;
+import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.PoisMainActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
@@ -50,6 +51,7 @@ public class MainMenuFragment extends ListFragment {
 		Class<?> cls = null;
 		String title = ((MainMenuItem) l.getItemAtPosition(position)).tag;		
 		
+		Bundle b = new Bundle();
 		if (title.equals(getString(R.string.profile))) {
 			cls = UserProfileActivity.class;	
 		} else if (title.equals(getString(R.string.pois))) {
@@ -60,9 +62,11 @@ public class MainMenuFragment extends ListFragment {
 			cls = GroupsMainActivity.class;
 		}else if (title.equals(getString(R.string.augmented_reality))) {
 			cls = AugmentedRealityActivity.class;
+			b.putSerializable("pois", MapActivity.markerPoiMap);
 		}	
         
         Intent intent = new Intent(getActivity(), cls);
+        intent.putExtra("b", b); //le pasamos el punto al form
         startActivity(intent);
     }  
 

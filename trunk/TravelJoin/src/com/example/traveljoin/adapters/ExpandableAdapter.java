@@ -190,8 +190,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		}
 
 		holder.imageView
-				.setImageResource(groupStatus[groupPosition] == 0 ? R.drawable.group_down
-						: R.drawable.group_up);
+				.setImageResource(groupStatus[groupPosition] == 0 ? R.drawable.ic_action_expand
+						: R.drawable.ic_action_collapse);
 		final CheckeableItem groupItem = getGroup(groupPosition);
 
 		holder.title.setText(groupItem.getName());
