@@ -191,7 +191,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.traveljoin.GroupsActivity" />
+                android:value="com.example.traveljoin.GroupsMainActivity" />
         </activity>
         
 		<!-- para incluir la libreria de google play services(y google maps) -->

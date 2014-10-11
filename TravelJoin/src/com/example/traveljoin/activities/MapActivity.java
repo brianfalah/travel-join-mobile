@@ -93,7 +93,7 @@ public class MapActivity extends SlidingFragmentActivity implements
 	protected ListFragment mFrag;
 	private static MainMapFragment mapFragment;
 	private static GoogleMap mMap;
-	private static HashMap<Marker, Poi> markerPoiMap;
+	public static HashMap<Marker, Poi> markerPoiMap;
 	MapFilter mapFilters; 
 	Marker lastOpened = null;
 	private LocationClient mLocationClient;
