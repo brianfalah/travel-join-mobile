@@ -1,6 +1,15 @@
 package com.example.traveljoin.activities;
 
+import java.util.ArrayList;
+
 import com.example.traveljoin.R;
+import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.PoiEvent;
+import com.example.traveljoin.models.Tour;
+import com.example.traveljoin.models.TourPoi;
+import com.example.traveljoin.models.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -8,18 +17,64 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-public class TourFormActivity extends ActionBarActivity {
-	
+public class TourFormActivity extends ActionBarActivity {	
+	User user;
 	ProgressDialog progress;
+	EditText nameField;
+	EditText descField;
+	Button createButton;
+	Button updateButton;
+	Tour tour;
+	ArrayList<TourPoi> tourPois; // = new ArrayList<TourPoi>();
+	ArrayAdapter<TourPoi> tourPoisAdapter;
+	ListView lvTourPois;	
+	ArrayList<TourPoi> tourPoisToDelete; // = new ArrayList<TourPoi>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_tour_form);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
+		tourPois = new ArrayList<TourPoi>();
+		tourPoisToDelete = new ArrayList<TourPoi>();
+		initializeViewReferences();
+		initializeUser();
 		
+		tour = (Tour) getIntent().getExtras().get("tour");
+		if (tour != null)
+			initializeViewForEditingMode();
+		else
+			initializeViewForCreatingMode();
+		
+		tourPoisAdapter = new ArrayAdapter<TourPoi>(this,
+				android.R.layout.simple_list_item_multiple_choice, tourPois);
+		lvTourPois.setAdapter(tourPoisAdapter);
+	}
+	
+	private void initializeUser() {
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		user = globalContext.getUser();
+	}
+	
+	private void initializeViewForCreatingMode() {
+		createButton.setVisibility(View.VISIBLE);
+	}
+	
+	private void initializeViewForEditingMode() {
+		nameField.setText(tour.getName());
+		descField.setText(tour.getDescription());
+		addressField.setText(poi.getAddress());
+		updateButton.setVisibility(View.VISIBLE);
+		poiEvents = poi.getPoiEvents();
 	}
 	
 	public void createPoi(View button) { 
