@@ -5,6 +5,7 @@ import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.facebook.Session;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,14 +36,15 @@ public class WellcomeFragment extends Fragment {
 				false);
 
 		Button button_explore = (Button) view.findViewById(R.id.explore_button);
+		
 		button_explore.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view) {			
 				Intent intent = new Intent(getActivity(), MapActivity.class);
 				startActivity(intent);
 			}
 		});
-
+     
 		return view;
 	}
 	
@@ -62,14 +64,6 @@ public class WellcomeFragment extends Fragment {
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		GlobalContext globalContext = (GlobalContext) getActivity().getApplicationContext();
-		globalContext.initializeContext(getActivity());
-	}
-	
 	
 	public void logout() {
 		Session session = Session.getActiveSession();

@@ -194,6 +194,12 @@
                 android:value="com.example.traveljoin.GroupsMainActivity" />
         </activity>
         
+        <!-- Seleccionador de pois -->
+        <activity
+            android:name="com.example.traveljoin.activities.PoisSelectorActivity"
+            android:label="@string/app_name">            
+        </activity>
+        
 		<!-- para incluir la libreria de google play services(y google maps) -->
         <meta-data
             android:name="com.google.android.gms.version"
@@ -219,7 +225,6 @@
 		     <meta-data
                  android:name="android.support.PARENT_ACTIVITY"
                  android:value="com.example.traveljoin.MapActivity" />
-
 		</activity>
 		
         <!-- URL Launcher -->

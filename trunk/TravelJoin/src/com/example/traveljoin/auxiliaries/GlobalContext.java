@@ -30,7 +30,8 @@ public class GlobalContext extends Application {
 	private User user;
 	private List<Category> categories;
 	private List<Interest> interests;
-	public int taskExcutedInProgressDialog = 3;
+	private final int TASK_TO_EXECUTED = 3;
+	private int taskCurrentExcutingInProgressDialog;
 
 	@Override
 	public void onCreate() {
@@ -61,20 +62,24 @@ public class GlobalContext extends Application {
 		this.interests = interests;
 	}
 	
-	public void initializeContext(final FragmentActivity requesterActivity) {
-
+	public void initializeContext(FragmentActivity requesterActivity) {
 		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
 		progressDialog.setTitle(getString(R.string.loading));
 		progressDialog.setMessage(getString(R.string.wait));
 		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setCancelable(false);
 		progressDialog.show();
-
+		
+		resetRunningTaskCounter();
 		initializeUser(requesterActivity, progressDialog);
 		initializeCategories(requesterActivity, progressDialog);
 		initializeInterests(requesterActivity, progressDialog);
 	}
 
+	private void resetRunningTaskCounter() {
+		taskCurrentExcutingInProgressDialog = TASK_TO_EXECUTED;
+	}
+	
 	private void initializeUser(final FragmentActivity requesterActivity,
 			final ProgressDialog progressDialog) {
 		final Session session = Session.getActiveSession();
@@ -160,9 +165,9 @@ public class GlobalContext extends Application {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
-				taskExcutedInProgressDialog -= 1;
+				taskCurrentExcutingInProgressDialog--;
 				if (progressDialog.isShowing()
-						&& taskExcutedInProgressDialog == 0) {
+						&& taskCurrentExcutingInProgressDialog == 0) {
 					progressDialog.dismiss();
 				}
 			}
@@ -199,9 +204,9 @@ public class GlobalContext extends Application {
 				showExceptionError(e);
 
 			} finally {
-				taskExcutedInProgressDialog -= 1;
+				taskCurrentExcutingInProgressDialog--;
 				if (progressDialog.isShowing()
-						&& taskExcutedInProgressDialog == 0) {
+						&& taskCurrentExcutingInProgressDialog == 0) {
 					progressDialog.dismiss();
 				}
 			}
@@ -253,9 +258,9 @@ public class GlobalContext extends Application {
 				showExceptionError(e);
 
 			} finally {
-				taskExcutedInProgressDialog -= 1;
+				taskCurrentExcutingInProgressDialog--;
 				if (progressDialog.isShowing()
-						&& taskExcutedInProgressDialog == 0) {
+						&& taskCurrentExcutingInProgressDialog == 0) {
 					progressDialog.dismiss();
 				}
 			}
