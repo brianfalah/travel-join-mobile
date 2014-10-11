@@ -3,8 +3,8 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.133:3001</string>
-<!--     <string name="api_url">http://travel-join-api.herokuapp.com</string> -->
+<!--     <string name="api_url">http://192.168.1.133:3001</string> -->
+    <string name="api_url">http://travel-join-api.herokuapp.com</string>
     <string name="create">Crear</string>
     <string name="edit">Editar</string>
     <string name="update">Actualizar</string>
