@@ -106,7 +106,7 @@
     <!-- FIN General item list context menu -->
     
     <!-- Group item list context menu -->
-	<string name="group_context_menu_join">Unirse</string>
+	<string name="group_context_menu_join">Unirse al grupo</string>
 	<string name="group_context_menu_disjoin">Dejar el grupo</string>    
     <!-- FIN Group item list context menu -->
     

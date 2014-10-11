@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -108,8 +109,11 @@ public class MainActivity extends ActionBarActivity {
 		// Only make changes if the activity is visible
 		if (isResumed) {
 			clearBackStack();
-			if (state.isOpened())
+			if (state.isOpened()) {
 				showWellcomeFragment();
+				GlobalContext globalContext = (GlobalContext) getApplicationContext();
+				globalContext.initializeContext(this);
+			}
 			else if (state.isClosed())
 				showFacebookLoginFragment();
 		}
