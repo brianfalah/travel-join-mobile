@@ -1,7 +1,12 @@
 package com.example.traveljoin.fragments;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +23,8 @@ import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.PoisMainActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
+import com.example.traveljoin.models.CollectionSerialized;
+import com.example.traveljoin.models.Poi;
 
 public class MainMenuFragment extends ListFragment {
 
@@ -62,7 +69,8 @@ public class MainMenuFragment extends ListFragment {
 			cls = GroupsMainActivity.class;
 		}else if (title.equals(getString(R.string.augmented_reality))) {
 			cls = AugmentedRealityActivity.class;
-			b.putSerializable("pois", MapActivity.markerPoiMap);
+			ArrayList<Poi> pois = new ArrayList<Poi>(MapActivity.markerPoiMap.values());			
+			b.putSerializable("pois", pois);
 		}	
         
         Intent intent = new Intent(getActivity(), cls);

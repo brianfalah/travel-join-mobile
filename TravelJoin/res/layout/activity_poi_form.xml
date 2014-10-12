@@ -102,14 +102,15 @@
 		            android:text="+"
 		            android:onClick="addEvent" />
 	            
-	             <Button
-		            android:id="@+id/deleteEvent"
-		            style="?android:attr/buttonStyleSmall"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_toRightOf="@+id/addEvent"
-		            android:text="-"
-		            android:onClick="deleteEvent" />
+	            <Button
+	                  android:id="@+id/deleteEvent"
+	                  style="?android:attr/buttonStyleSmall"
+	                  android:layout_width="wrap_content"
+	                  android:layout_height="wrap_content"
+	                  android:layout_alignParentTop="true"
+	                  android:layout_toRightOf="@+id/addEvent"
+	                  android:onClick="deleteEvent"
+	                  android:text="-" />
 	             
 	              <ListView
 			            android:id="@+id/lvEvents"
@@ -117,6 +118,7 @@
 			            android:layout_height="120dp"
 			            android:layout_below="@+id/addEvent" >
 			      </ListView>
+
 	        </RelativeLayout>
 	        
 	    </LinearLayout>
