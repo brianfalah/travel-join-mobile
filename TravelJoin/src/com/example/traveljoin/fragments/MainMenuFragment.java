@@ -23,7 +23,6 @@ import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.PoisMainActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
-import com.example.traveljoin.models.CollectionSerialized;
 import com.example.traveljoin.models.Poi;
 
 public class MainMenuFragment extends ListFragment {
