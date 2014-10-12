@@ -1,5 +1,6 @@
 package com.example.traveljoin.activities;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -13,17 +14,25 @@ import android.widget.Toast;
 import com.example.traveljoin.R;
 import com.example.traveljoin.wikitude.LocationProvider;
 import com.example.traveljoin.wikitude.SampleCamActivity;
+import com.google.android.gms.maps.model.Marker;
+import com.example.traveljoin.models.Poi;
 
 public class AugmentedRealityActivity extends SampleCamActivity {
 
 	protected JSONArray poiData;
 	protected boolean isLoading = false;
+	protected Collection poisCurrentSelection;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Bundle b = getIntent().getExtras();
+		HashMap<Marker,Poi> markerPoiMap = (HashMap<Marker,Poi>) b.get("pois");
+			
+		poisCurrentSelection = markerPoiMap.values();
+		
+		
 		this.locationListener = new LocationListener() {
 
 			@Override
@@ -107,9 +116,7 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 				// TODO: you may replace this dummy implementation and instead
 				// load POI information e.g. from your database
 				AugmentedRealityActivity.this.poiData = AugmentedRealityActivity
-						.getPoiInformation(
-								AugmentedRealityActivity.this.lastKnownLocaton,
-								20);
+						.getPoiInformation(poisCurrentSelection);
 				AugmentedRealityActivity.this.callJavaScript(
 						"World.loadPoisFromJsonData",
 						new String[] { AugmentedRealityActivity.this.poiData
@@ -159,12 +166,9 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 	 *            number of places to load (at max)
 	 * @return POI information in JSONArray
 	 */
-	public static JSONArray getPoiInformation(final Location userLocation,
-			final int numberOfPlaces) {
+	public static JSONArray getPoiInformation(final Collection<Poi> poisCollection) {
 
-		if (userLocation == null) {
-			return null;
-		}
+	 
 
 		final JSONArray pois = new JSONArray();
 
@@ -177,18 +181,14 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 		final String ATTR_LONGITUDE = "longitude";
 		final String ATTR_ALTITUDE = "altitude";
 
-		for (int i = 1; i <= numberOfPlaces; i++) {
+		for (Poi poi : poisCollection) {
 			final HashMap<String, String> poiInformation = new HashMap<String, String>();
-			poiInformation.put(ATTR_ID, String.valueOf(i));
-			poiInformation.put(ATTR_NAME, "POI#" + i);
-			poiInformation.put(ATTR_DESCRIPTION,
-					"This is the description of POI#" + i);
-			double[] poiLocationLatLon = getRandomLatLonNearby(
-					userLocation.getLatitude(), userLocation.getLongitude());
-			poiInformation.put(ATTR_LATITUDE,
-					String.valueOf(poiLocationLatLon[0]));
-			poiInformation.put(ATTR_LONGITUDE,
-					String.valueOf(poiLocationLatLon[1]));
+			poiInformation.put(ATTR_ID, poi.getId().toString());
+			poiInformation.put(ATTR_NAME, poi.getName());
+			poiInformation.put(ATTR_DESCRIPTION, poi.getDescription());
+			poiInformation.put(ATTR_LATITUDE,poi.getLatitude().toString());
+			poiInformation.put(ATTR_LONGITUDE, poi.getLongitude().toString());	
+			
 			final float UNKNOWN_ALTITUDE = -32768f; // equals
 													// "AR.CONST.UNKNOWN_ALTITUDE"
 													// in JavaScript (compare
@@ -205,19 +205,6 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 		return pois;
 	}
 
-	/**
-	 * helper for creation of dummy places.
-	 * 
-	 * @param lat
-	 *            center latitude
-	 * @param lon
-	 *            center longitude
-	 * @return lat/lon values in given position's vicinity
-	 */
-	private static double[] getRandomLatLonNearby(final double lat,
-			final double lon) {
-		return new double[] { lat + Math.random() / 5 - 0.1,
-				lon + Math.random() / 5 - 0.1 };
-	}
+	
 
 }
