@@ -20,7 +20,7 @@ public class GeneralItemListAdapter extends BaseAdapter implements Filterable {
 	private Context context;
     private GeneralItemListFilter generalItemListFilter;
     private ArrayList<GeneralItem> generalItemList;
-    private ArrayList<GeneralItem> filteredGeneralItemList;
+	private ArrayList<GeneralItem> filteredGeneralItemList;
     
 	public GeneralItemListAdapter(Context context, ArrayList<GeneralItem> items) {
 		this.context = context;
@@ -71,6 +71,14 @@ public class GeneralItemListAdapter extends BaseAdapter implements Filterable {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+	
+	public Context getContext() {
+		return context;
+	}
+	
+	public ArrayList<GeneralItem> getGeneralItemList() {
+		return generalItemList;
 	}
 	
 	private class GeneralItemListFilter extends Filter {
