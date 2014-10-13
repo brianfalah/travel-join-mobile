@@ -2,57 +2,62 @@ package com.example.traveljoin.activities;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.fragments.PoiFormEventsFragment;
+import com.example.traveljoin.fragments.PoiFormInformationFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
+import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.PoiEvent;
 import com.example.traveljoin.models.User;
 import com.google.android.gms.maps.model.LatLng;
 
-public class PoiFormActivity extends ActionBarActivity {
+public class PoiFormActivity extends ActionBarActivity implements
+	ActionBar.TabListener{
+	
+	private SmartFragmentStatePagerAdapter adapterViewPager;
+	private ViewPager viewPager;
+	private ActionBar actionBar;
+	PoiFormInformationFragment info_fragment;
+	
 	User user;
 	ProgressDialog progress;
-	TextView tvLatitude;
-	TextView tvLongitude;
-	EditText nameField;
-	EditText descField;
-	EditText addressField;
-	Spinner poiCategoriesSpinnerField;
+	
 	Button createButton;
 	Button updateButton;
-	Poi poi;
-	ArrayList<PoiEvent> poiEvents;
-	ArrayList<PoiEvent> poiEventsToDelete;
+	public LatLng point;
+	public Poi poi;
+	public ArrayList<GeneralItem> poiEvents;
+	public ArrayList<PoiEvent> poiEventsToDelete;
 	ArrayAdapter<PoiEvent> poiEventsAdapter;
-	ListView lvEvents;
+//	ListView lvEvents;
 
 	private static final int ADD_POI_METHOD = 1;
 	private static final int UPDATE_POI_METHOD = 2;
@@ -60,106 +65,130 @@ public class PoiFormActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.activity_poi_form);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		poiEvents = new ArrayList<PoiEvent>();
-		poiEventsToDelete = new ArrayList<PoiEvent>();
-		initializeViewReferences();
 		initializeUser();
-
+		initializeViewReferences();
+		
+		adapterViewPager = new MyPagerAdapter(
+				getSupportFragmentManager());
+		actionBar = getActionBar();
+		actionBar.setSubtitle(R.string.edit_poi);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+				
+		viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager.setAdapter(adapterViewPager);
+		viewPager
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						actionBar.setSelectedNavigationItem(position);
+					}
+				});
+		
+		actionBar.addTab(actionBar.newTab().setText(getString(R.string.general_user_profile_tab))
+				.setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText(getString(R.string.events))
+				.setTabListener(this));				
+		
+		poiEvents = new ArrayList<GeneralItem>();
+		poiEventsToDelete = new ArrayList<PoiEvent>();
+				
+		//si viene del mapa, se esta creando, y por eso solo llega el latlng
+		point = (LatLng) getIntent().getExtras().get("point");
 		poi = (Poi) getIntent().getExtras().get("poi");
+		
+
+//		poiEventsAdapter = new ArrayAdapter<PoiEvent>(this,
+//				android.R.layout.simple_list_item_multiple_choice, poiEvents);
+//		lvEvents.setAdapter(poiEventsAdapter);
+	}
+	
+	@Override
+	protected void onStart() {
+	    super.onStart();  // Always call the superclass method first
+//	    info_fragment = (PoiFormInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		if (poi != null)
 			initializeViewForEditingMode();
 		else
-			initializeViewForCreatingMode();
-
-		poiEventsAdapter = new ArrayAdapter<PoiEvent>(this,
-				android.R.layout.simple_list_item_multiple_choice, poiEvents);
-		lvEvents.setAdapter(poiEventsAdapter);
+			initializeViewForCreatingMode();	    
 	}
 
 	private void initializeUser() {
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
 	}
+	
+	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic ViewPager items
+    public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
+    	private static int NUM_ITEMS = 2;
+		public static final int POI_INFORMATION_TAB = 0;
+		public static final int POI_EVENTS_TAB = 1;
 
-	private void initializeViewForCreatingMode() {
-		LatLng point = (LatLng) getIntent().getExtras().get("point");
-		setHiddenFields(point);
+        public MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        // Returns the fragment to display for that page
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+            case POI_INFORMATION_TAB: // Fragment # 0 - This will show FirstFragment
+                return new PoiFormInformationFragment();
+            case POI_EVENTS_TAB: // Fragment # 0 - This will show FirstFragment different title
+                return new PoiFormEventsFragment();
+            default:
+                return null;
+            }
+        }
+
+        // Returns the page title for the top indicator
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Page " + position;
+        }
+
+    }
+
+	private void initializeViewForCreatingMode() {		
 		createButton.setVisibility(View.VISIBLE);
+//		LatLng point = new LatLng(poi.getLatitude(), poi.getLongitude());
+//		info_fragment.setHiddenFields(point);
 	}
 
 	private void initializeViewForEditingMode() {
-		LatLng point = new LatLng(poi.getLatitude(), poi.getLongitude());
-		setHiddenFields(point);
-		nameField.setText(poi.getName());
-		descField.setText(poi.getDescription());
-		addressField.setText(poi.getAddress());
+//		LatLng point = new LatLng(poi.getLatitude(), poi.getLongitude());
+//		info_fragment.setHiddenFields(point);
+//        info_fragment.setFields();        
+		
 		updateButton.setVisibility(View.VISIBLE);
-		poiEvents = poi.getPoiEvents();
-		poiCategoriesSpinnerField.setSelection(getIndex(poiCategoriesSpinnerField,
-				poi.getCategoryId()));
+		poiEvents.addAll(poi.getPoiEvents());		
 	}
 
 	private void initializeViewReferences() {
-		tvLatitude = (TextView) findViewById(R.id.PoiLatitude);
-		tvLongitude = (TextView) findViewById(R.id.PoiLongitude);
-		nameField = (EditText) findViewById(R.id.PoiName);
-		addressField = (EditText) findViewById(R.id.PoiAddress);
-		descField = (EditText) findViewById(R.id.PoiDescription);
-		poiCategoriesSpinnerField = (Spinner) findViewById(R.id.PoiCategories);
 		createButton = (Button) findViewById(R.id.PoiCreateButton);
-		updateButton = (Button) findViewById(R.id.PoiUpdateButton);
-		lvEvents = (ListView) findViewById(R.id.lvEvents);
-		lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		initializePoiCategoriesSpinner();
-	}
-
-	private void setHiddenFields(LatLng point) {
-		tvLatitude.setText(String.valueOf(point.latitude));
-		tvLongitude.setText(String.valueOf(point.longitude));
-	}
-
-	private void initializePoiCategoriesSpinner() {
-		GlobalContext globalContext = (GlobalContext) getApplicationContext();
-		List<Category> categories = globalContext.getCategories();
-		ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(
-				this, android.R.layout.simple_spinner_item, categories);
-		categoryAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		poiCategoriesSpinnerField = (Spinner) findViewById(R.id.PoiCategories);
-		poiCategoriesSpinnerField.setAdapter(categoryAdapter);
-	}
-
-	private int getIndex(Spinner spinner, Integer category_id) {
-		int index = 0;
-
-		for (int i = 0; i < spinner.getCount(); i++) {
-			if (((Category) spinner.getItemAtPosition(i)).getId().equals(
-					category_id)) {
-				index = i;
-				i = spinner.getCount();// will stop the loop, kind of break, by
-										// making condition false
-			}
-		}
-		return index;
+		updateButton = (Button) findViewById(R.id.PoiUpdateButton);	
 	}
 
 	// cuando se clickea el boton crear viene aca!
 	public void createPoi(View button) {
-		Boolean valid = validateFields();
+		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, "Cargando",
 					"Por favor espere...", true);
-			Poi poi_to_create = new Poi(null, Double.parseDouble(tvLatitude
-					.getText().toString()), Double.parseDouble(tvLongitude
-					.getText().toString()), nameField.getText().toString(),
-					descField.getText().toString(), addressField.getText()
+			
+			Poi poi_to_create = new Poi(null, Double.parseDouble(info_fragment.tvLatitude
+					.getText().toString()), Double.parseDouble(info_fragment.tvLongitude
+					.getText().toString()), info_fragment.nameField.getText().toString(),
+					info_fragment.descField.getText().toString(), info_fragment.addressField.getText()
 							.toString(), user.getId(),
-					((Category) poiCategoriesSpinnerField.getSelectedItem()).getId(), "",
+					((Category) info_fragment.poiCategoriesSpinnerField.getSelectedItem()).getId(), "",
 					poiEvents);
 
 			String url = getResources().getString(R.string.api_url)
@@ -173,16 +202,16 @@ public class PoiFormActivity extends ActionBarActivity {
 
 	// cuando se clickea el boton actualizar viene aca!
 	public void updatePoi(View button) {
-		Boolean valid = validateFields();
+		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, "Cargando",
 					"Por favor espere...", true);
-			poi = new Poi(poi.getId(), Double.parseDouble(tvLatitude.getText()
-					.toString()), Double.parseDouble(tvLongitude.getText()
-					.toString()), nameField.getText().toString(), descField
-					.getText().toString(), addressField.getText().toString(),
+			poi = new Poi(poi.getId(), Double.parseDouble(info_fragment.tvLatitude.getText()
+					.toString()), Double.parseDouble(info_fragment.tvLongitude.getText()
+					.toString()), info_fragment.nameField.getText().toString(), info_fragment.descField
+					.getText().toString(), info_fragment.addressField.getText().toString(),
 					user.getId(),
-					((Category) poiCategoriesSpinnerField.getSelectedItem()).getId(), "",
+					((Category) info_fragment.poiCategoriesSpinnerField.getSelectedItem()).getId(), "",
 					poiEvents);
 			poi.setPoiEventsToDelete(poiEventsToDelete);
 
@@ -202,40 +231,6 @@ public class PoiFormActivity extends ActionBarActivity {
 		finish();
 	}
 
-	private Boolean validateFields() {
-		return validateField(nameField) && validateField(addressField)
-				&& validateField(descField) && validateField(poiCategoriesSpinnerField);
-	}
-
-	private Boolean validateField(View field) {
-		Boolean valid = null;
-		if (field instanceof EditText) {
-			EditText edit_text_field = (EditText) field;
-			if (TextUtils.isEmpty(edit_text_field.getText().toString())) {
-				edit_text_field.requestFocus();
-				edit_text_field.setError(edit_text_field.getHint()
-						+ " es requerido!");
-				valid = false;
-			} else {
-				edit_text_field.setError(null);
-				valid = true;
-			}
-		} else {
-			if (field instanceof Spinner) {
-				Spinner spinner_field = (Spinner) field;
-				if (TextUtils.isEmpty(((Category) spinner_field
-						.getSelectedItem()).getName())) {
-					Toast.makeText(this,
-							spinner_field.getPrompt() + " es requerido!",
-							Toast.LENGTH_SHORT).show();
-					valid = false;
-				} else {
-					valid = true;
-				}
-			}
-		}
-		return valid;
-	}
 
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
@@ -337,67 +332,6 @@ public class PoiFormActivity extends ActionBarActivity {
 		if (progress != null)
 			progress.dismiss();
 	}
-
-	// EVENTOS!!!
-	public void addEvent(View button) {
-		Intent intent = new Intent(this, EventFormActivity.class);
-		if (poi != null) {
-			intent.putExtra("poi_id", poi.getId());
-		}
-		// va al form para crear un evento y espera un result_code(para saber si
-		// se creo o no)
-		// y el evento creado
-		startActivityForResult(intent, ADD_EVENT_REQUEST);
-	}
-
-	public void deleteEvent(View button) {
-		SparseBooleanArray checked = lvEvents.getCheckedItemPositions();
-		ArrayList<PoiEvent> eventsToDelete = new ArrayList<PoiEvent>();
-		for (int i = 0; i < checked.size(); i++) {
-			// Item position in adapter
-			int position = checked.keyAt(i);
-			// borrar evento si esta checkeado
-			if (checked.valueAt(i)) {
-				PoiEvent poiEventToDelete = (PoiEvent) lvEvents
-						.getItemAtPosition(position);
-				poiEventToDelete.markAsDeleted();
-				eventsToDelete.add(poiEventToDelete);
-			}
-		}
-		poiEvents.removeAll(eventsToDelete);
-		poiEventsAdapter.notifyDataSetChanged();
-		poiEventsToDelete.addAll(eventsToDelete);
-	}
-
-	/*
-	 * Cuando vuelve de un activity empezado con un startActivityForResult viene
-	 * aca
-	 */
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Decide what to do based on the original request code
-		switch (requestCode) {
-		// PARA CUANDO SE VUELVE DE CREAR UN EVENTO
-		case ADD_EVENT_REQUEST:
-			/*
-			 * If the result code is Activity.RESULT_OK, agregar punto al mapa
-			 */
-			switch (resultCode) {
-			case Activity.RESULT_OK:
-				Bundle b = data.getExtras();
-				PoiEvent poiEvent = (PoiEvent) b.get("poiEvent");
-				poiEvents.add(poiEvent);
-				poiEventsAdapter.notifyDataSetChanged();
-				break;
-			case Activity.RESULT_CANCELED:
-
-				break;
-			}
-			break;
-
-		}
-
-	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -408,6 +342,22 @@ public class PoiFormActivity extends ActionBarActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	public void onTabUnselected(ActionBar.Tab tab,
+			FragmentTransaction fragmentTransaction) {
+	}
+
+	@Override
+	public void onTabSelected(ActionBar.Tab tab,
+			FragmentTransaction fragmentTransaction) {
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabReselected(ActionBar.Tab tab,
+			FragmentTransaction fragmentTransaction) {
 	}
 	
 }
