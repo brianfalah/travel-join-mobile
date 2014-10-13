@@ -7,7 +7,7 @@ import java.util.Calendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PoiEvent implements Serializable{
+public class PoiEvent implements Serializable, GeneralItem{
 	/**
 	 * 
 	 */
