@@ -27,6 +27,7 @@
     <!-- Otros subtitulos  -->
     <string name="groups_creation">Nuevo grupo</string>
     <string name="pois_view">Ver detalle</string>
+    <string name="tours_creation">Nuevo circuito</string>
 	<!-- FIN Otros sutitulos  -->
 	
 	<string name="action_logout">Cerrar sesión</string>
