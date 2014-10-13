@@ -28,7 +28,8 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle b = getIntent().getExtras();
+		Bundle bundle = getIntent().getExtras();
+		Bundle b = (Bundle) bundle.get("b");
 		poisCurrentSelection = (ArrayList<Poi>) b.get("pois");
 			
 		
@@ -181,9 +182,7 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 		final String ATTR_LONGITUDE = "longitude";
 		final String ATTR_ALTITUDE = "altitude";
 		
-
-
-		for (int i=1;i <= poisCollection.size() ; i++) {
+		for (int i=0;i < poisCollection.size() ; i++) {
 			final HashMap<String, String> poiInformation = new HashMap<String, String>();
 			poiInformation.put(ATTR_ID, poisCollection.get(i).getId().toString());
 			poiInformation.put(ATTR_NAME, poisCollection.get(i).getName());
