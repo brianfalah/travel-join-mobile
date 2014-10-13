@@ -80,8 +80,8 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 
 	private Boolean validateFields() {				
 		return validateField(nameField) && validateField(descField) &&
-				validateDateField(dateFromTv, timeFrom) && validateDateField(dateToTv, timeTo);
-		//TODO validar que se hayan seleccionado las fechas, que ambas sean mayores al dia y hora de hoy, y que la de fin sea mayor a la de inicio
+				validateDateField(dateFromTv, timeFrom) && validateDateField(dateToTv, timeTo)
+				&& validateTimeToBiggest(dateToTv, timeFrom, timeTo);
 	}
 
 	private Boolean validateField(View field) {
@@ -89,6 +89,7 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		if (field instanceof EditText) {
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty( edit_text_field.getText().toString() ) ){
+				edit_text_field.requestFocus();
 				edit_text_field.setError(edit_text_field.getHint() + " es requerido!");
 				valid = false;
 			} else {
@@ -116,10 +117,36 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		
 		TextView edit_text_field = (TextView) field;
 		if (time == null){
+			edit_text_field.requestFocus();
 			edit_text_field.setError(edit_text_field.getText() + " es requerido!");
 			valid = false;
 		} else {
-			edit_text_field.setError(null);
+			Calendar now = Calendar.getInstance();
+			now.add(Calendar.MONTH ,1);
+			if(time.compareTo(now) < 0){
+				edit_text_field.requestFocus();
+				edit_text_field.setError("La fecha y hora debe ser mayor a la hora actual");
+				valid = false;
+			}
+			else{
+				edit_text_field.setError(null);
+				valid = true;
+			}
+		}
+		
+		return valid;		
+	}
+	
+	private Boolean validateTimeToBiggest(View field, Calendar timeFrom, Calendar timeTo){
+		Boolean valid = null;
+		
+		TextView edit_text_field = (TextView) field;
+		if (timeFrom != null && timeTo != null && timeTo.compareTo(timeFrom) <= 0){
+			edit_text_field.requestFocus();
+			edit_text_field.setError("El día y la hora de fin debe ser mayor al día y la hora de inicio");
+			valid = false;
+		}	
+		else{
 			valid = true;
 		}
 		
@@ -147,14 +174,14 @@ public class EventFormActivity extends ActionBarActivity implements DateTimePick
 		if ( DATE_FROM.equals(field) ){
 			timeFrom = time;
 			dateFromTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
-				+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
+				+ " " + String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
 			dateFromTv.setError(null);
 		}
 		else{
 			if ( DATE_TO.equals(field) ){
 				timeTo = time;
 				dateToTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
-						+ " " + time.get(Calendar.HOUR_OF_DAY) + ":" + time.get(Calendar.MINUTE));
+						+ " " + String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
 				dateToTv.setError(null);
 			}
 		}

@@ -42,7 +42,7 @@
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="@string/description"
-	            android:inputType="textCapSentences|textAutoCorrect" >
+	            android:inputType="textCapSentences|textAutoCorrect|textMultiLine" >
 	        </EditText>
 			
 	        <RelativeLayout

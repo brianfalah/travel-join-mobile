@@ -24,8 +24,9 @@
     <string name="augmented_reality">Realidad Aumentada</string>
     <!-- FIN Menu -->
     
-    <!-- Otros sutitulos  -->
+    <!-- Otros subtitulos  -->
     <string name="groups_creation">Nuevo grupo</string>
+    <string name="pois_view">Ver detalle</string>
 	<!-- FIN Otros sutitulos  -->
 	
 	<string name="action_logout">Cerrar sesión</string>
@@ -36,7 +37,7 @@
     <string name="search_hint">Buscar en la lista</string>
     <string name="explore_button">Explorar!</string>
     
-    <!-- POIs -->
+    <!-- POIs -->    
     <string name="description">Descripción</string>
     <string name="name">Nombre</string>
     <string name="poi_form_description">Ingrese los datos del punto de interés:</string>
@@ -51,6 +52,7 @@
     <!-- FIN pois -->
 
     <!-- events -->
+    <string name="events">Eventos</string>
     <string name="event_form_description">Ingrese los datos del evento:</string>
     <string name="select_date_time_start">Fecha y hora de inicio</string>
     <string name="select_date_time_end">Fecha y hora de fin</string>
