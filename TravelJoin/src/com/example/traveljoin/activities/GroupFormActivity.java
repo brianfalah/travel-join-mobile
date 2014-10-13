@@ -61,12 +61,6 @@ public class GroupFormActivity extends ActionBarActivity implements
 				.setTabListener(this));
 	}
 
-	public void cancel(View button) {
-		Intent output = new Intent();
-		setResult(Activity.RESULT_CANCELED, output);
-		finish();
-	}
-
 	public void onCancelButtonClicked(View button) {
 		Intent output = new Intent();
 		setResult(Activity.RESULT_CANCELED, output);

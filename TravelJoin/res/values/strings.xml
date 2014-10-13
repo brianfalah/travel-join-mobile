@@ -58,6 +58,8 @@
     
     <!-- Tours -->
     <string name="tour_form_description">Ingrese los datos del circuito:</string>
+    <string name="tour_general_information_tab">General</string>
+    <string name="tour_pois_tab">Puntos de interés</string>
     <!-- FIN tours -->
 	
 	<!-- Groups -->
