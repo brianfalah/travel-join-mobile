@@ -26,6 +26,8 @@ import android.content.DialogInterface;
 
 import com.example.traveljoin.activities.UserProfileActivity.AppSectionsPagerAdapter;
 import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
+import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.fragments.PoiEventsFragment;
 import com.example.traveljoin.fragments.PoiInformationFragment;
 import com.example.traveljoin.fragments.UserFavouritesFragment;
 import com.example.traveljoin.fragments.UserGroupListFragment;
@@ -34,6 +36,7 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.User;
 import com.google.android.gms.maps.model.LatLng;
 
 public class PoiDetailsActivity extends ActionBarActivity implements
@@ -47,11 +50,13 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	
 	ProgressDialog progress;
 	public Poi poi;
+	User user;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_details);
+        initializeUser();
         adapterViewPager = new MyPagerAdapter(
 				getSupportFragmentManager());
 		actionBar = getActionBar();
@@ -82,12 +87,19 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.poi_view_actions, menu);
+		if ( !user.getId().equals(poi.getUserId()) ){
+			menu.removeItem(R.id.action_edit);
+			menu.removeItem(R.id.action_delete);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home: 
+			onBackPressed();
+			return true;
 		case R.id.action_edit:
 			editPoi();
 			return true;
@@ -147,7 +159,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
             case POI_INFORMATION_TAB: // Fragment # 0 - This will show FirstFragment
                 return new PoiInformationFragment();
             case POI_EVENTS_TAB: // Fragment # 0 - This will show FirstFragment different title
-                return new PoiInformationFragment();
+                return new PoiEventsFragment();
             default:
                 return null;
             }
@@ -208,23 +220,12 @@ public class PoiDetailsActivity extends ActionBarActivity implements
     	// Decide what to do based on the original request code
     	switch (requestCode) {
 	    	case EDIT_POI_REQUEST :
-	    		/*
-	    		 * Handle results returned to the FragmentActivity
-	    		 * by Google Play services
-	    		 * If the result code is Activity.RESULT_OK, try
-	    		 * to connect again
-	    		 */
 	    		switch (resultCode) {
 		    		case Activity.RESULT_OK :
 		    	        Bundle b = data.getExtras(); // gets the previously created intent
 		    	        poi = (Poi) b.get("poi_created_or_updated"); 
 		    	        PoiInformationFragment info_fragment = (PoiInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		    	        info_fragment.setFields();
-//		    	        LatLng point = new LatLng(poi.getLatitude(), poi.getLongitude());
-//		    	        info_fragment.setHiddenFields(point);
-//		    	        info_fragment.tvName.setText(poi.getName());
-//		    	        info_fragment.tvDesc.setText(poi.getDescription());
-//		    	        info_fragment.tvCategory.setText(poi.getCategoryName());
 		    		break;
 	    		}
 	    	break;	    	
@@ -246,7 +247,6 @@ public class PoiDetailsActivity extends ActionBarActivity implements
     	
         @Override
         protected String doInBackground(String... urls) {  
-        	String result = "";
         	//despues de cualquiera de estos metodo vuelve al postexecute de aca
         	switch (this.from_method) {
 	        	case DELETE_POI_METHOD :
@@ -283,4 +283,9 @@ public class PoiDetailsActivity extends ActionBarActivity implements
     	if(progress != null)
     		progress.dismiss();	
     }  	
+    
+	private void initializeUser() {
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		user = globalContext.getUser();
+	}
 }

@@ -252,7 +252,6 @@ public class MapActivity extends SlidingFragmentActivity implements
                 		Intent intent = new Intent(getActivity(), PoiDetailsActivity.class);
                 		Poi poi = markerPoiMap.get(marker);
                 		intent.putExtra("poi", poi); //le pasamos el punto a la activity
-                		//hace un startActivityForResult para que cuando vuelva del detalle se actualice el punto en el mapa si hubo algun cambio
                 		startActivity(intent);	
                     }
                 });
