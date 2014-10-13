@@ -86,7 +86,7 @@ var World = {
 
 		// request data if not already present
 		if (!World.initiallyLoadedData) {
-			World.requestDataFromServer(lat, lon);
+			
 			World.initiallyLoadedData = true;
 		} else if (World.locationUpdateCounter === 0) {
 			// update placemark distance information frequently, you max also update distances only every 10m with some more effort
@@ -158,27 +158,7 @@ var World = {
 		You have to update 'ServerInformation' data to use your own own server. Also ensure the JSON format is same as in previous sample's 'myJsonData.js'-file.
 	*/
 
-	// request POI data
-	requestDataFromServer: function requestDataFromServerFn(lat, lon) {
-
-		// set helper var to avoid requesting places while loading
-		World.isRequestingData = true;
-		World.updateStatusMessage('Requesting places from web-service');
-
-		// server-url to JSON content provider
-		var serverUrl = ServerInformation.POIDATA_SERVER + "?" + ServerInformation.POIDATA_SERVER_ARG_LAT + "=" + lat + "&" + ServerInformation.POIDATA_SERVER_ARG_LON + "=" + lon + "&" + ServerInformation.POIDATA_SERVER_ARG_NR_POIS + "=20";
-
-		var jqxhr = $.getJSON(serverUrl, function(data) {
-				World.loadPoisFromJsonData(data);
-			})
-			.error(function(err) {
-				World.updateStatusMessage("Invalid web-service response.", true);
-				World.isRequestingData = false;
-			})
-			.complete(function() {
-				World.isRequestingData = false;
-			});
-	},
+	
 
 	// helper to sort places by distance
 	sortByDistanceSorting: function(a, b) {
