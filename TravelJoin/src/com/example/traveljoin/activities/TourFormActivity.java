@@ -29,7 +29,7 @@ public class TourFormActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tour_form);
 		actionBar = getActionBar();
-		actionBar.setSubtitle(R.string.groups_creation);
+		actionBar.setSubtitle(R.string.tours_creation);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		appSectionsPagerAdapter = new AppSectionsPagerAdapter(
