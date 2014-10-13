@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
@@ -20,27 +22,21 @@ import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
 
-//TODO: Generalizar en una superclase junto con GroupFormToursFragment. Y luego ver si no convertir a todas los fragmentos en privados
 public class GroupFormPoisFragment extends ListFragment {
 	private ArrayList<GeneralItem> pois;
 	private GeneralItemListAdapter poisAdapter;
-	private static final int ADD_POI_REQUEST = 1;
-	
+	private static final int ADD_POIS_REQUEST = 1;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		pois = new ArrayList<GeneralItem>();
-
-		pois.add(new Poi("POI 1", "Descripcion 1"));
-		pois.add(new Poi("POI 2", "Descripcion 2"));
-		pois.add(new Poi("POI 3", "Descripcion 3"));
-
 		poisAdapter = new GeneralItemListAdapter(getActivity(), pois);
 		setListAdapter(poisAdapter);
 		registerForContextMenu(getListView());
@@ -56,8 +52,10 @@ public class GroupFormPoisFragment extends ListFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.item_add:			
-			Intent intent = new Intent(getActivity(), PoisSelectorActivity.class);
-			startActivityForResult(intent, ADD_POI_REQUEST);
+			Intent intent = new Intent(getActivity(),
+					PoisSelectorActivity.class);
+			intent.putExtra("alreadySelectedPois", pois);
+			startActivityForResult(intent, ADD_POIS_REQUEST);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -93,15 +91,16 @@ public class GroupFormPoisFragment extends ListFragment {
 		return poi;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case ADD_POI_REQUEST:
+		case ADD_POIS_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				Bundle b = data.getExtras();
-				Poi selectedPoi = (Poi) b.get("selectedPoi");
-				pois.add(selectedPoi);
+				Bundle bundle = data.getExtras();
+				pois.clear();
+				pois.addAll((ArrayList<GeneralItem>) bundle.get("newSelectedPois"));
 				poisAdapter.notifyDataSetChanged();
 				break;
 			case Activity.RESULT_CANCELED:

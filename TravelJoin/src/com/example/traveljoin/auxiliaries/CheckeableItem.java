@@ -3,16 +3,16 @@ package com.example.traveljoin.auxiliaries;
 import com.example.traveljoin.models.GeneralItem;
 
 public class CheckeableItem implements GeneralItem{
-	private GeneralItem wrappedItem;	
+	private GeneralItem item;	
 	private boolean isChecked;
 	
 	public CheckeableItem(GeneralItem item) {
-		this.wrappedItem = item;
+		this.item = item;
 		this.isChecked = false;
 	}
 	
 	public CheckeableItem(GeneralItem item, Boolean isChecked) {
-		this.wrappedItem = item;
+		this.item = item;
 		this.isChecked = isChecked; 
 	}
 	
@@ -25,15 +25,19 @@ public class CheckeableItem implements GeneralItem{
 	}
 	
 	public Integer getId() {
-		return wrappedItem.getId();
+		return item.getId();
 	}
 	
 	public String getName() {
-		return wrappedItem.getName();
+		return item.getName();
 	}
 	
 	public String getDescription() {
-		return wrappedItem.getDescription();
+		return item.getDescription();
+	}
+
+	public GeneralItem getItem() {
+		return item;
 	}
 
 }
