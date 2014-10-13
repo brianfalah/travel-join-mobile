@@ -211,6 +211,7 @@ public class PoiFormActivity extends ActionBarActivity {
 		if (field instanceof EditText) {
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty(edit_text_field.getText().toString())) {
+				edit_text_field.requestFocus();
 				edit_text_field.setError(edit_text_field.getHint()
 						+ " es requerido!");
 				valid = false;
