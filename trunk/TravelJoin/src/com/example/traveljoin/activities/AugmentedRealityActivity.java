@@ -2,6 +2,7 @@ package com.example.traveljoin.activities;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,16 +22,16 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 
 	protected JSONArray poiData;
 	protected boolean isLoading = false;
-	protected Collection poisCurrentSelection;
+	protected ArrayList<Poi> poisCurrentSelection;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle b = getIntent().getExtras();
-		HashMap<Marker,Poi> markerPoiMap = (HashMap<Marker,Poi>) b.get("pois");
+		poisCurrentSelection = (ArrayList<Poi>) b.get("pois");
 			
-		poisCurrentSelection = markerPoiMap.values();
+		
 		
 		
 		this.locationListener = new LocationListener() {
@@ -116,7 +117,7 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 				// TODO: you may replace this dummy implementation and instead
 				// load POI information e.g. from your database
 				AugmentedRealityActivity.this.poiData = AugmentedRealityActivity
-						.getPoiInformation(poisCurrentSelection);
+						.getPoiInformation(AugmentedRealityActivity.this.poisCurrentSelection);
 				AugmentedRealityActivity.this.callJavaScript(
 						"World.loadPoisFromJsonData",
 						new String[] { AugmentedRealityActivity.this.poiData
@@ -166,9 +167,8 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 	 *            number of places to load (at max)
 	 * @return POI information in JSONArray
 	 */
-	public static JSONArray getPoiInformation(final Collection<Poi> poisCollection) {
+	public static JSONArray getPoiInformation(ArrayList<Poi> poisCollection) {
 
-	 
 
 		final JSONArray pois = new JSONArray();
 
@@ -180,14 +180,16 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 		final String ATTR_LATITUDE = "latitude";
 		final String ATTR_LONGITUDE = "longitude";
 		final String ATTR_ALTITUDE = "altitude";
+		
 
-		for (Poi poi : poisCollection) {
+
+		for (int i=1;i <= poisCollection.size() ; i++) {
 			final HashMap<String, String> poiInformation = new HashMap<String, String>();
-			poiInformation.put(ATTR_ID, poi.getId().toString());
-			poiInformation.put(ATTR_NAME, poi.getName());
-			poiInformation.put(ATTR_DESCRIPTION, poi.getDescription());
-			poiInformation.put(ATTR_LATITUDE,poi.getLatitude().toString());
-			poiInformation.put(ATTR_LONGITUDE, poi.getLongitude().toString());	
+			poiInformation.put(ATTR_ID, poisCollection.get(i).getId().toString());
+			poiInformation.put(ATTR_NAME, poisCollection.get(i).getName());
+			poiInformation.put(ATTR_DESCRIPTION, poisCollection.get(i).getDescription());
+			poiInformation.put(ATTR_LATITUDE,poisCollection.get(i).getLatitude().toString());
+			poiInformation.put(ATTR_LONGITUDE, poisCollection.get(i).getLongitude().toString());	
 			
 			final float UNKNOWN_ALTITUDE = -32768f; // equals
 													// "AR.CONST.UNKNOWN_ALTITUDE"
@@ -201,10 +203,8 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 			poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
 			pois.put(new JSONObject(poiInformation));
 		}
-
 		return pois;
-	}
+	}}
 
 	
 
-}
