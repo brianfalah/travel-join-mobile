@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:orientation="vertical" >
+
+    <!-- descripcion del formulario -->
+
+    <TextView
+        android:id="@+id/FormTourDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/main_group_form_inputs"
+        android:textSize="10pt" >
+    </TextView>
+
+    <!-- nombre -->
+
+    <EditText
+        android:id="@+id/TourName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        android:inputType="textCapSentences|textAutoCorrect" >
+    </EditText>
+
+    <!-- descripcion -->
+
+    <EditText
+        android:id="@+id/TourDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/description"
+        android:inputType="textCapSentences|textAutoCorrect|textMultiLine" >
+    </EditText>
+	
+</LinearLayout>
