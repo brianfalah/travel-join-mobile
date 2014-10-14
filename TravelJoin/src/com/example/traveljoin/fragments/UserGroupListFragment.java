@@ -27,10 +27,6 @@ public class UserGroupListFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		groups = new ArrayList<GeneralItem>();
 
-		groups.add(new Group("Prueba 1", "Descripcion 1"));
-		groups.add(new Group("Prueba 2", "Descripcion 2"));
-		groups.add(new Group("Prueba 3", "Descripcion 3"));
-
 		GeneralItemListAdapter adapter = new GeneralItemListAdapter(
 				getActivity(), groups);
 		setListAdapter(adapter);

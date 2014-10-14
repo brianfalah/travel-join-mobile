@@ -1,6 +1,7 @@
 package com.example.traveljoin.fragments;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -86,6 +87,12 @@ public class GroupFormToursFragment extends ListFragment {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		Tour tour = (Tour) tours.get(info.position);
 		return tour;
+	}
+	
+	public ArrayList<Tour> getTours() {
+		ArrayList<Tour> auxTours = new ArrayList<Tour>();
+		auxTours.addAll((Collection<? extends Tour>) tours);		
+		return auxTours;
 	}
 
 }

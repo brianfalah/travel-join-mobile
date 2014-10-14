@@ -41,7 +41,7 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_action_accept"
                 android:onClick="onAcceptButtonClicked"
-                android:text="@string/ok" />
+                android:text="@string/add" />
         </LinearLayout>
     </LinearLayout>
     <!-- End - Bottom button section -->
