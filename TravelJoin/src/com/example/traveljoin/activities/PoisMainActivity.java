@@ -23,9 +23,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView.OnQueryTextListener;
 
 import com.example.traveljoin.R;
@@ -47,15 +50,23 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 	private GeneralItemListAdapter adapter;
 	private ArrayList<GeneralItem> pois;
 	private static final int EDIT_POI_REQUEST = 1;
-	//para el asynctask
+	// para el asynctask
 	protected static final int GET_POIS_METHOD = 1;
 	protected static final int DELETE_POI_METHOD = 2;
-	
+
+	OnItemClickListener poiItemClickListener = new OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			startPoiDetailActivity((Poi) adapter.getItem(position));
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		
+
 		initializeUser();
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.pois);
@@ -69,7 +80,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		listView.setTextFilterEnabled(true);
 		registerForContextMenu(listView);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.poi_activity_actions, menu);
@@ -110,15 +121,15 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);		
+		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.poi_list_item_context_menu, menu);
-		
+
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-	    Poi poi = (Poi) listView.getItemAtPosition(info.position);
-	    if (!poi.getUserId().equals(user.getId())){
-	    	menu.removeItem(R.id.poi_context_menu_edit);
-	    	menu.removeItem(R.id.poi_context_menu_delete);
-	    }
+		Poi poi = (Poi) listView.getItemAtPosition(info.position);
+		if (!poi.getUserId().equals(user.getId())) {
+			menu.removeItem(R.id.poi_context_menu_edit);
+			menu.removeItem(R.id.poi_context_menu_delete);
+		}
 	}
 
 	@Override
@@ -126,66 +137,84 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		final Poi selectedPoi = getPoiItem(item);
 		switch (item.getItemId()) {
 		case R.id.poi_context_menu_view:
-			Intent intent = new Intent(this, PoiDetailsActivity.class);
-    		intent.putExtra("poi", selectedPoi); //le pasamos el punto a la activity
-    		startActivity(intent);	
+			startPoiDetailActivity(selectedPoi);
 			return true;
-		case R.id.poi_context_menu_edit:			
+		case R.id.poi_context_menu_edit:
 			Intent intent_edit = new Intent(this, PoiFormActivity.class);
-			intent_edit.putExtra("poi", selectedPoi); //le pasamos el punto al form
-			//va al form para editarlo
+			intent_edit.putExtra("poi", selectedPoi); // le pasamos el punto al
+														// form
+			// va al form para editarlo
 			startActivityForResult(intent_edit, EDIT_POI_REQUEST);
 			return true;
 		case R.id.poi_context_menu_delete:
-			AlertDialog.Builder dialog = new AlertDialog.Builder(PoisMainActivity.this);
+			AlertDialog.Builder dialog = new AlertDialog.Builder(
+					PoisMainActivity.this);
 			dialog.setTitle("Borrar punto")
-	        .setMessage("¿Esta seguro de que desea borrar este punto?")
-	        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int which) {
-	            	progress = ProgressDialog.show(PoisMainActivity.this, "Cargando",
-	                	    "Por favor espere...", true);
-	            	String url = getResources().getString(R.string.api_url) + "/pois/destroy";
-	    	        HttpAsyncTask httpAsyncTask = new HttpAsyncTask(DELETE_POI_METHOD, selectedPoi); 
-	    	        httpAsyncTask.execute(url);
-	    	        //sigue en HttpAsyncTask en doInBackground en DELETE_POI_METHOD
-	            	
-	            }
-	         })
-	         .setNegativeButton("No", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int which) { 
-	                // do nothing
-	            }
-	         })
-			.setIcon(android.R.drawable.ic_dialog_alert)
-	         .show();			
+					.setMessage("¿Está seguro de que desea borrar este punto?")
+					.setPositiveButton("Si",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									progress = ProgressDialog.show(
+											PoisMainActivity.this, "Cargando",
+											"Por favor espere...", true);
+									String url = getResources().getString(
+											R.string.api_url)
+											+ "/pois/destroy";
+									HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+											DELETE_POI_METHOD, selectedPoi);
+									httpAsyncTask.execute(url);
+									// sigue en HttpAsyncTask en doInBackground
+									// en DELETE_POI_METHOD
+
+								}
+							})
+					.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// do nothing
+								}
+							}).setIcon(android.R.drawable.ic_dialog_alert)
+					.show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
+	private void startPoiDetailActivity(final Poi selectedPoi) {
+		Intent intent = new Intent(this, PoiDetailsActivity.class);
+		intent.putExtra("poi", selectedPoi); // le pasamos el punto a la
+												// activity
+		startActivity(intent);
+	}
+
 	private Poi getPoiItem(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
 		Poi poi = (Poi) pois.get(info.position);
 		return poi;
 	}
-	
-    /*Cuando vuelve de un activity empezado con un startActivityForResult viene aca*/
-    @Override
-    protected void onActivityResult(
-    		int requestCode, int resultCode, Intent data) {
-    	// Decide what to do based on the original request code
-    	switch (requestCode) {
-	    	case EDIT_POI_REQUEST :
-	    		switch (resultCode) {
-		    		case Activity.RESULT_OK :
-		    			getPoisFromServer();
-		    		break;
-	    		}
-	    	break;	    	
-	    }
 
-    }
+	/*
+	 * Cuando vuelve de un activity empezado con un startActivityForResult viene
+	 * aca
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Decide what to do based on the original request code
+		switch (requestCode) {
+		case EDIT_POI_REQUEST:
+			switch (resultCode) {
+			case Activity.RESULT_OK:
+				getPoisFromServer();
+				break;
+			}
+			break;
+		}
+
+	}
 
 	private void getPoisFromServer() {
 		progress = ProgressDialog.show(this, getString(R.string.loading),
@@ -198,76 +227,81 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
-    	private Integer from_method;
-    	private Object object_to_send;
-    	private ApiResult api_result;
-    	
-    	//contructor para setearle info extra
-    	public HttpAsyncTask(Integer from_method, Object object_to_send) {
+		private Integer from_method;
+		private Object object_to_send;
+		private ApiResult api_result;
+
+		// contructor para setearle info extra
+		public HttpAsyncTask(Integer from_method, Object object_to_send) {
 			this.from_method = from_method;
-			this.object_to_send = object_to_send;  
+			this.object_to_send = object_to_send;
 		}
 
 		@Override
 		protected String doInBackground(String... urls) {
-        	//despues de cualquiera de estos metodo vuelve al postexecute de aca
-        	switch (this.from_method) {
-	        	case GET_POIS_METHOD :
-	        		api_result = apiInterface.GET(urls[0]);
-	        	break;
-	        	case DELETE_POI_METHOD :
-	        		api_result = apiInterface.POST(urls[0], object_to_send, "delete");
-	        	break;
-        	}
-        	
-        	return api_result.getResult();           				
+			// despues de cualquiera de estos metodo vuelve al postexecute de
+			// aca
+			switch (this.from_method) {
+			case GET_POIS_METHOD:
+				api_result = apiInterface.GET(urls[0]);
+				break;
+			case DELETE_POI_METHOD:
+				api_result = apiInterface.POST(urls[0], object_to_send,
+						"delete");
+				break;
+			}
+
+			return api_result.getResult();
 		}
 
 		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
 			Log.d("InputStream", result);
-        	switch (this.from_method) {   
-	        	case GET_POIS_METHOD :
-	    			if (api_result.ok()) {
-	    				try {
-	    					pois.clear();
-	    					JSONArray poisJson = new JSONArray(result);
-	    					for (int i = 0; i < poisJson.length(); i++) {
-	    						JSONObject poiJson = poisJson.getJSONObject(i);
-	    						Poi poi = Poi.fromJSON(poiJson);	    						
-	    						pois.add(poi);
-	    					}
-	    					adapter.notifyDataSetChanged();
-	    					progress.dismiss();
+			switch (this.from_method) {
+			case GET_POIS_METHOD:
+				if (api_result.ok()) {
+					try {
+						pois.clear();
+						JSONArray poisJson = new JSONArray(result);
+						for (int i = 0; i < poisJson.length(); i++) {
+							JSONObject poiJson = poisJson.getJSONObject(i);
+							Poi poi = Poi.fromJSON(poiJson);
+							pois.add(poi);
+						}
+						listView.setOnItemClickListener(poiItemClickListener);
+						adapter.notifyDataSetChanged();
+						progress.dismiss();
 
-	    				} catch (JSONException e) {
-	    					// TODO: Handlear
-	    					progress.dismiss();
-	    					e.printStackTrace();
-	    				} catch (ParseException e) {
-	    					// TODO: Handlear
-	    					e.printStackTrace();
-	    				}
-	    			} else {
-	    				// showConnectionError();
-	    				// TODO si no se pudieron obtener las categorias mostrar cartel
-	    				// para reintentar
-	    			}
-			    break;
-	        	case DELETE_POI_METHOD :
-	        		progress.dismiss(); 
-					if (api_result.ok())												
-						getPoisFromServer();
-					else{
-						CustomTravelJoinException exception = new CustomTravelJoinException("No se ha podido borrar el punto correctamente.");
-						exception.alertExceptionMessage(PoisMainActivity.this);
-					}								
-			    break;	
-	    	}        	
+					} catch (JSONException e) {
+						// TODO: Handlear
+						progress.dismiss();
+						e.printStackTrace();
+					} catch (ParseException e) {
+						// TODO: Handlear
+						e.printStackTrace();
+					}
+				} else {
+					// showConnectionError();
+					// TODO si no se pudieron obtener las categorias mostrar
+					// cartel
+					// para reintentar
+				}
+				break;
+			case DELETE_POI_METHOD:
+				progress.dismiss();
+				if (api_result.ok())
+					getPoisFromServer();
+				else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							"No se ha podido borrar el punto correctamente.");
+					exception.alertExceptionMessage(PoisMainActivity.this);
+				}
+				break;
+			}
 		}
 	}
-	
+
 	private void initializeUser() {
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
