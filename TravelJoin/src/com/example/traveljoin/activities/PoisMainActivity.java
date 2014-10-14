@@ -83,9 +83,9 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.poi_activity_actions, menu);
+		getMenuInflater().inflate(R.menu.general_item_selector_activity_actions, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.poi_search)
+		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
 
 		searchView.setSearchableInfo(searchManager
@@ -99,7 +99,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.poi_search:
+		case R.id.search:
 			// Already handled in search listener
 			return true;
 		default:

@@ -47,7 +47,7 @@
     <!-- End - Bottom button section -->
 
     <ListView
-        android:id="@+id/poiList"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/buttons" >

@@ -28,6 +28,7 @@
     <string name="map_filter">Filtros del mapa</string>
     <string name="groups_creation">Nuevo grupo</string>
     <string name="pois_selector">Selección de puntos de interés</string>
+    <string name="tours_selector">Selección de circuitos</string>
     <string name="pois_view">Detalle del punto</string>
     <string name="tours_view">Detalle del circuito</string>
     <string name="tours_creation">Nuevo circuito</string>

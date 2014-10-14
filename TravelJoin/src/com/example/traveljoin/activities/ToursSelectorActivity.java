@@ -7,6 +7,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.traveljoin.R;
+import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
+import com.example.traveljoin.adapters.GeneralItemListAdapter;
+import com.example.traveljoin.models.ApiInterface;
+import com.example.traveljoin.models.ApiResult;
+import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Tour;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -22,27 +30,19 @@ import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.SearchView.OnQueryTextListener;
 
-import com.example.traveljoin.R;
-import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
-import com.example.traveljoin.adapters.GeneralItemListAdapter;
-import com.example.traveljoin.models.ApiInterface;
-import com.example.traveljoin.models.ApiResult;
-import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Poi;
-
-public class PoisSelectorActivity extends Activity implements
+public class ToursSelectorActivity extends Activity implements
 		OnQueryTextListener {
 
-	private ProgressDialog progress;
+	private ProgressDialog progressDialog;
 	private ActionBar actionBar;
 	private ListView listView;
 	private GeneralItemCheckeableListAdapter adapter;
-	private ArrayList<GeneralItem> selectedPois;
+	private ArrayList<GeneralItem> selectedTours;
 
-	OnItemClickListener poiItemClickListener = new OnItemClickListener() {
+	OnItemClickListener tourItemClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -60,13 +60,13 @@ public class PoisSelectorActivity extends Activity implements
 		setContentView(R.layout.activity_general_item_selector);
 
 		actionBar = getActionBar();
-		actionBar.setSubtitle(R.string.pois_selector);
+		actionBar.setSubtitle(R.string.tours_selector);
 
-		selectedPois = new ArrayList<GeneralItem>();
-		ArrayList<GeneralItem> alreadySelectedPois = (ArrayList<GeneralItem>) getIntent()
-				.getExtras().get("alreadySelectedPois");
+		selectedTours = new ArrayList<GeneralItem>();
+		ArrayList<GeneralItem> alreadySelectedTours = (ArrayList<GeneralItem>) getIntent()
+				.getExtras().get("alreadySelectedTours");
 
-		getPoisFromServer(alreadySelectedPois);
+		getToursFromServer(alreadySelectedTours);
 
 		listView = (ListView) findViewById(R.id.list);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -111,13 +111,13 @@ public class PoisSelectorActivity extends Activity implements
 		return false;
 	}
 
-	private void getPoisFromServer(ArrayList<GeneralItem> alreadySelectedPois) {
-		progress = ProgressDialog.show(this, getString(R.string.loading),
+	private void getToursFromServer(ArrayList<GeneralItem> alreadySelectedTours) {
+		progressDialog = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/pois/indexAll.json";
-		GetPoisTask getPoisTask = new GetPoisTask(alreadySelectedPois);
-		getPoisTask.execute(url);
+				+ "/tours/indexAll.json";
+		GetToursTask getToursTask = new GetToursTask(alreadySelectedTours);
+		getToursTask.execute(url);
 	}
 
 	public void onCancelButtonClicked(View button) {
@@ -131,19 +131,19 @@ public class PoisSelectorActivity extends Activity implements
 		// se deba seleccionar uno
 
 		Intent output = new Intent();
-		output.putExtra("newSelectedPois", adapter.getSelectedItems());
+		output.putExtra("newSelectedTours", adapter.getSelectedItems());
 
 		setResult(Activity.RESULT_OK, output);
 		finish();
 	}
 
-	private class GetPoisTask extends AsyncTask<String, Void, String> {
+	private class GetToursTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
 		private ApiResult api_result;
-		private ArrayList<GeneralItem> alreadySelectedPois;
+		private ArrayList<GeneralItem> alreadySelectedTours;
 
-		public GetPoisTask(ArrayList<GeneralItem> alreadySelectedPois) {
-			this.alreadySelectedPois = alreadySelectedPois;
+		public GetToursTask(ArrayList<GeneralItem> alreadySelectedTours) {
+			this.alreadySelectedTours = alreadySelectedTours;
 		}
 
 		@Override
@@ -152,29 +152,28 @@ public class PoisSelectorActivity extends Activity implements
 			return api_result.getResult();
 		}
 
-		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
 			if (api_result.ok()) {
 				try {
-					JSONArray poisJson = new JSONArray(result);
-					for (int i = 0; i < poisJson.length(); i++) {
-						JSONObject poiJson = poisJson.getJSONObject(i);
-						Poi poi = Poi.fromJSON(poiJson);
-						selectedPois.add(poi);
+					JSONArray toursJson = new JSONArray(result);
+					for (int i = 0; i < toursJson.length(); i++) {
+						JSONObject tourJson = toursJson.getJSONObject(i);
+						Tour tour = Tour.fromJSON(tourJson);
+						selectedTours.add(tour);
 					}
 					adapter = new GeneralItemCheckeableListAdapter(
 							new GeneralItemListAdapter(
-									PoisSelectorActivity.this, selectedPois),
-							alreadySelectedPois);
+									ToursSelectorActivity.this, selectedTours),
+									alreadySelectedTours);
 					listView.setAdapter(adapter);
-					listView.setOnItemClickListener(poiItemClickListener);
+					listView.setOnItemClickListener(tourItemClickListener);
 					adapter.notifyDataSetChanged();
-					progress.dismiss();
+					progressDialog.dismiss();
 
 				} catch (JSONException e) {
 					// TODO: Handlear
-					progress.dismiss();
+					progressDialog.dismiss();
 					e.printStackTrace();
 				} catch (ParseException e) {
 					// TODO: Handlear
