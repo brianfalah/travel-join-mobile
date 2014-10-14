@@ -2,9 +2,6 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.PoiDetailsActivity;
-import com.example.traveljoin.auxiliaries.GlobalContext;
-import com.example.traveljoin.models.User;
-import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.os.Bundle;
