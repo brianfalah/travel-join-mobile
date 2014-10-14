@@ -130,6 +130,16 @@ public class ApiInterface {
             if (object instanceof User) {
             	jsonObject = ((User) object).toJSON();
             }
+            
+            if (object instanceof Tour){
+            	if (method == "delete"){
+            		jsonObject = new JSONObject();
+            		jsonObject.put("id", ((Tour) object).getId() );
+            	}
+            	else{
+            		jsonObject = ((Tour) object).toJSON();	
+            	}            	
+            }
             	
 
             // 4. convert JSONObject to JSON to String

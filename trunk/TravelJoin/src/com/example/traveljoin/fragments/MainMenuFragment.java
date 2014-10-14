@@ -22,6 +22,7 @@ import com.example.traveljoin.activities.GroupsMainActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.PoisMainActivity;
 import com.example.traveljoin.activities.TourFormActivity;
+import com.example.traveljoin.activities.ToursMainActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
 import com.example.traveljoin.models.Poi;
 
@@ -63,7 +64,7 @@ public class MainMenuFragment extends ListFragment {
 		} else if (title.equals(getString(R.string.pois))) {
 			cls = PoisMainActivity.class;
 		} else if (title.equals(getString(R.string.tours))) {
-			cls = TourFormActivity.class;
+			cls = ToursMainActivity.class;
 		} else if (title.equals(getString(R.string.groups))) {
 			cls = GroupsMainActivity.class;
 		}else if (title.equals(getString(R.string.augmented_reality))) {
