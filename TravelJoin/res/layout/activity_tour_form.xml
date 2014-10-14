@@ -7,7 +7,7 @@
     <!-- Bottom button section -->
 
     <LinearLayout
-        android:id="@+id/LinearLayourTourForm"
+        android:id="@+id/buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -53,8 +53,9 @@
                 android:layout_weight="1"
                 android:onClick="updateTour"
 	            android:text="@string/update"
-	            android:visibility="gone"/>
+	            android:visibility="gone"/>       		
         </LinearLayout>
+        
     </LinearLayout>
     <!-- End - Bottom button section -->
 

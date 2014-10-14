@@ -23,6 +23,7 @@ public class TourPoi implements Serializable, GeneralItem{
 		this.tourId = tourId;
 		this.poiId = poiId;
 		this.poiName = poiName;
+		this.poiDescription = poiDescription;
 		this.orderNumber = orderNumber;
 	}
 

@@ -25,7 +25,7 @@ import com.example.traveljoin.models.TourPoi;
 public class TourFormPoisFragment extends ListFragment {
 	TourFormActivity tourFormActivity;
 	private ArrayList<GeneralItem> fragmentTourPois;
-	private GeneralItemListAdapter poisAdapter;
+	private GeneralItemListAdapter tourPoisAdapter;
 	private static final int ADD_POI_REQUEST = 1;
 	
 	@Override
@@ -41,8 +41,8 @@ public class TourFormPoisFragment extends ListFragment {
 		fragmentTourPois = new ArrayList<GeneralItem>();
 		fragmentTourPois.clear();
 		fragmentTourPois.addAll(tourFormActivity.tourPois);
-		poisAdapter = new GeneralItemListAdapter(tourFormActivity, fragmentTourPois);
-		setListAdapter(poisAdapter);
+		tourPoisAdapter = new GeneralItemListAdapter(tourFormActivity, fragmentTourPois);
+		setListAdapter(tourPoisAdapter);
 		registerForContextMenu(getListView());
 	}
 
@@ -75,23 +75,26 @@ public class TourFormPoisFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		Poi selectedPoi;
+		TourPoi selectedTourPoi;
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
-			selectedPoi = getPoiItem(item);
-			fragmentTourPois.remove(selectedPoi);
-			poisAdapter.notifyDataSetChanged();
+			selectedTourPoi = getTourPoiItem(item);
+			selectedTourPoi.setDeleted(true);
+			tourFormActivity.tourPoisToDelete.add(selectedTourPoi);
+			fragmentTourPois.remove(selectedTourPoi);
+			tourFormActivity.tourPois.remove(selectedTourPoi);
+			tourPoisAdapter.notifyDataSetChanged();			
 			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
 
-	private Poi getPoiItem(MenuItem item) {
+	private TourPoi getTourPoiItem(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		Poi poi = (Poi) fragmentTourPois.get(info.position);
-		return poi;
+		TourPoi tourPoi = (TourPoi) fragmentTourPois.get(info.position);
+		return tourPoi;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -103,19 +106,39 @@ public class TourFormPoisFragment extends ListFragment {
 			case Activity.RESULT_OK:
 				Bundle bundle = data.getExtras();
 				ArrayList<GeneralItem> newSelectedPois = (ArrayList<GeneralItem>) bundle.get("newSelectedPois");
+				ArrayList<TourPoi> newSelectedTourPois = new ArrayList<TourPoi>();
+				ArrayList<Integer> newSelectedPoiIds = new ArrayList<Integer>();
+				
+				ArrayList<Integer> oldSelectedPoiIds = new ArrayList<Integer>();
+								
+				
+				for (int j = 0; j < newSelectedPois.size(); j++) {					
+					Integer tourId = (tourFormActivity.tour != null) ? tourFormActivity.tour.getId() : null;
+					TourPoi tourPoiToAdd = new TourPoi(null, tourId, newSelectedPois.get(j).getId(), newSelectedPois.get(j).getName(), newSelectedPois.get(j).getDescription(), null);
+					newSelectedTourPois.add(tourPoiToAdd);
+					newSelectedPoiIds.add(newSelectedPois.get(j).getId());
+				}
+				
 				for (int i = 0; i < fragmentTourPois.size(); i++) {
 					TourPoi tourPoi = (TourPoi) fragmentTourPois.get(i);
-					if(!newSelectedPois.contains(tourPoi))
+					oldSelectedPoiIds.add(tourPoi.getPoiId());
+					
+					if(!newSelectedPoiIds.contains(tourPoi.getPoiId()))
 					{
 						tourPoi.setDeleted(true);
+						fragmentTourPois.remove(i);
 						tourFormActivity.tourPoisToDelete.add(tourPoi);
 					}
 				}
-				fragmentTourPois.clear();
-				tourFormActivity.tourPois.clear();
-				fragmentTourPois.addAll(newSelectedPois);
-				tourFormActivity.tourPois.addAll(newSelectedPois);
-				poisAdapter.notifyDataSetChanged();
+				
+				for (int i = 0; i < newSelectedTourPois.size(); i++) {
+					if ( !oldSelectedPoiIds.contains(newSelectedTourPois.get(i).getPoiId() ) ){						
+						fragmentTourPois.add(newSelectedTourPois.get(i));
+						tourFormActivity.tourPois.add(newSelectedTourPois.get(i));
+					}
+				}
+
+				tourPoisAdapter.notifyDataSetChanged();
 				break;
 			case Activity.RESULT_CANCELED:
 				break;
