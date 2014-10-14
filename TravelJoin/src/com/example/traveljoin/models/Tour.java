@@ -3,6 +3,7 @@ package com.example.traveljoin.models;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,19 +24,21 @@ public class Tour implements Serializable, GeneralItem {
 	// Presentacion de interfaces de usuario
 	public Tour(String name, String description) {
 		super();
-		this.setName(name);
-		this.setDescription(description);
-		this.setId(0);
+		this.name = name;
+		this.description = description;
+		this.id = 0;
 	}
 	
-	public Tour(Integer id, String name, String description, Integer userId, ArrayList<TourPoi> tourPois) {
+	public Tour(Integer id, String name, String description, Integer userId, ArrayList<GeneralItem> tourPois) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
-		this.setTourPois(tourPois);
-		setTourPoisToDelete(new ArrayList<TourPoi>());
+		this.tourPois = new ArrayList<TourPoi>();
+		this.tourPois.clear();
+		this.tourPois.addAll((Collection<? extends TourPoi>) tourPois);
+		this.tourPoisToDelete = new ArrayList<TourPoi>();
 	}
 
 	@Override
@@ -77,8 +80,9 @@ public class Tour implements Serializable, GeneralItem {
 		return tourPois;
 	}
 
-	public void setTourPois(ArrayList<TourPoi> tourPois) {
-		this.tourPois = tourPois;
+	public void setTourPois(ArrayList<GeneralItem> tourPois) {
+		this.tourPois.clear();
+		this.tourPois.addAll((Collection<? extends TourPoi>) tourPois);
 	}
 
 	public ArrayList<TourPoi> getTourPoisToDelete() {
@@ -90,7 +94,7 @@ public class Tour implements Serializable, GeneralItem {
 	}
 
 	public static Tour fromJSON(JSONObject tourJson) throws JSONException, ParseException{	
-		ArrayList<TourPoi> tourPoisToAdd = new ArrayList<TourPoi>();
+		ArrayList<GeneralItem> tourPoisToAdd = new ArrayList<GeneralItem>();
 		JSONArray tourPoisJson = tourJson.getJSONArray("pois");
 		
 		for (int i = 0; i < tourPoisJson.length(); i++) {
@@ -119,7 +123,9 @@ public class Tour implements Serializable, GeneralItem {
 	        
 	        JSONArray tourPoisJson = new JSONArray();	        
 	        for (int i = 0; i < getTourPois().size(); i++) {
-	        	tourPoisJson.put(getTourPois().get(i).toJSON());
+	        	TourPoi tourPoi = getTourPois().get(i);
+	        	tourPoi.setOrderNumber(i+1);
+	        	tourPoisJson.put(tourPoi.toJSON());
 			}
 	        	        
 	        for (int i = 0; i < getTourPoisToDelete().size(); i++) {
@@ -139,4 +145,20 @@ public class Tour implements Serializable, GeneralItem {
 	    }
 
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Tour)) {
+			return false;
+		}
+		Tour tour = (Tour) object;
+		return this.id.equals(tour.name);
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.id.hashCode();
+	}
+	
+	
 }

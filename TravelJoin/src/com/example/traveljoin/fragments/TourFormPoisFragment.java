@@ -16,12 +16,15 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.PoisSelectorActivity;
+import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.TourPoi;
 
 public class TourFormPoisFragment extends ListFragment {
-	private ArrayList<GeneralItem> pois;
+	TourFormActivity tourFormActivity;
+	private ArrayList<GeneralItem> fragmentTourPois;
 	private GeneralItemListAdapter poisAdapter;
 	private static final int ADD_POI_REQUEST = 1;
 	
@@ -34,13 +37,11 @@ public class TourFormPoisFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		pois = new ArrayList<GeneralItem>();
-
-		pois.add(new Poi("POI 1", "Descripcion 1"));
-		pois.add(new Poi("POI 2", "Descripcion 2"));
-		pois.add(new Poi("POI 3", "Descripcion 3"));
-
-		poisAdapter = new GeneralItemListAdapter(getActivity(), pois);
+		tourFormActivity = (TourFormActivity) getActivity();
+		fragmentTourPois = new ArrayList<GeneralItem>();
+		fragmentTourPois.clear();
+		fragmentTourPois.addAll(tourFormActivity.tourPois);
+		poisAdapter = new GeneralItemListAdapter(tourFormActivity, fragmentTourPois);
 		setListAdapter(poisAdapter);
 		registerForContextMenu(getListView());
 	}
@@ -55,7 +56,8 @@ public class TourFormPoisFragment extends ListFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.item_add:			
-			Intent intent = new Intent(getActivity(), PoisSelectorActivity.class);
+			Intent intent = new Intent(tourFormActivity, PoisSelectorActivity.class);
+			intent.putExtra("alreadySelectedPois", fragmentTourPois);
 			startActivityForResult(intent, ADD_POI_REQUEST);
 			return true;
 		default:
@@ -77,7 +79,7 @@ public class TourFormPoisFragment extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
 			selectedPoi = getPoiItem(item);
-			pois.remove(selectedPoi);
+			fragmentTourPois.remove(selectedPoi);
 			poisAdapter.notifyDataSetChanged();
 			return true;
 		default:
@@ -88,19 +90,31 @@ public class TourFormPoisFragment extends ListFragment {
 	private Poi getPoiItem(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		Poi poi = (Poi) pois.get(info.position);
+		Poi poi = (Poi) fragmentTourPois.get(info.position);
 		return poi;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case ADD_POI_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				Bundle b = data.getExtras();
-				Poi selectedPoi = (Poi) b.get("selectedPoi");
-				pois.add(selectedPoi);
+				Bundle bundle = data.getExtras();
+				ArrayList<GeneralItem> newSelectedPois = (ArrayList<GeneralItem>) bundle.get("newSelectedPois");
+				for (int i = 0; i < fragmentTourPois.size(); i++) {
+					TourPoi tourPoi = (TourPoi) fragmentTourPois.get(i);
+					if(!newSelectedPois.contains(tourPoi))
+					{
+						tourPoi.setDeleted(true);
+						tourFormActivity.tourPoisToDelete.add(tourPoi);
+					}
+				}
+				fragmentTourPois.clear();
+				tourFormActivity.tourPois.clear();
+				fragmentTourPois.addAll(newSelectedPois);
+				tourFormActivity.tourPois.addAll(newSelectedPois);
 				poisAdapter.notifyDataSetChanged();
 				break;
 			case Activity.RESULT_CANCELED:
