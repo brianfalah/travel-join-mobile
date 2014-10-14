@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ScrollViewPoiDetails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,8 +14,7 @@
    	    android:paddingLeft="15dp"
    	    android:paddingRight="15dp" >				
 		
-		<!-- 		nombre -->
-		
+		<!-- 		nombre -->	
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
@@ -67,7 +67,46 @@
 		    android:text=""
 		    android:textAppearance="?android:attr/textAppearanceMedium"
 		    android:textColor="@android:color/darker_gray">
-		</TextView>				
- 
+		</TextView>
+						
+ 		<!-- Owner -->
+		<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="ADMINISTRADOR"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
+
+            <com.facebook.widget.ProfilePictureView
+                android:id="@+id/selection_profile_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                facebook:preset_size="small" />
+
+            <TextView
+                android:id="@+id/selection_owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+            	android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+        
     </LinearLayout>
 </ScrollView>
