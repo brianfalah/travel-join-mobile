@@ -1,5 +1,6 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -157,6 +158,9 @@ public class MapFilterActivity extends ActionBarActivity {
 					loadGroups(groups);
 				} catch (JSONException e) {
 					showExceptionError(e);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			} else {
 				showConnectionError();
@@ -164,7 +168,7 @@ public class MapFilterActivity extends ActionBarActivity {
 		}
 	}
 
-	private void loadGroups(JSONArray groups) throws JSONException {
+	private void loadGroups(JSONArray groups) throws JSONException, ParseException {
 		ArrayList<Integer> groupIds = mapFilter.getGroupsIds();
 		groupFatherItem = new CheckeableItem(new Category(2, "Grupos"));
 		ArrayList<CheckeableItem> groupsItems = new ArrayList<CheckeableItem>();

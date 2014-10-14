@@ -93,7 +93,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 				appSectionsPagerAdapter.getInterests(),
 				appSectionsPagerAdapter.getPois(),
 				appSectionsPagerAdapter.getTours(),
-				globalContext.getUser());
+				globalContext.getUser().getId());
 		
 		progressDialog = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
