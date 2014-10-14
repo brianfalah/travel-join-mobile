@@ -178,12 +178,12 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	//cuando se clickea el boton borrar viene aca!
 	public void deleteTour() { 
 		AlertDialog.Builder dialog = new AlertDialog.Builder(TourDetailsActivity.this);
-		dialog.setTitle("Borrar punto")
-        .setMessage("¿Esta seguro de que desea borrar este circuito?")
-        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+		dialog.setTitle(getString(R.string.delete_tour))
+        .setMessage(getString(R.string.delete_poi_message))
+        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-            	progress = ProgressDialog.show(TourDetailsActivity.this, "Cargando",
-                	    "Por favor espere...", true);
+            	progress = ProgressDialog.show(TourDetailsActivity.this, getString(R.string.loading),
+            			getString(R.string.wait), true);
             	String url = getResources().getString(R.string.api_url) + "/tours/destroy";
     	        HttpAsyncTask httpAsyncTask = new HttpAsyncTask(DELETE_TOUR_METHOD, tour); 
     	        httpAsyncTask.execute(url);
@@ -191,7 +191,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
             	
             }
          })
-         .setNegativeButton("No", new DialogInterface.OnClickListener() {
+         .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) { 
                 // do nothing
             }
@@ -203,7 +203,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
     public void calificateTour(){
     	final Dialog dialog = new Dialog(this);
 		dialog.setContentView(R.layout.calificate);		
-		dialog.setTitle("Calificar circuito");	
+		dialog.setTitle(getString(R.string.rank_tour));	
 		dialog.show();
     }	
     
@@ -263,7 +263,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 						if (api_result.ok())												
 							finish();
 						else{
-							CustomTravelJoinException exception = new CustomTravelJoinException("No se ha podido borrar el circuito correctamente.");
+							CustomTravelJoinException exception = new CustomTravelJoinException(getString(R.string.delete_tour_error_message));
 							exception.alertExceptionMessage(TourDetailsActivity.this);
 						}
 							

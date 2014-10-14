@@ -2,10 +2,8 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.MapActivity;
-import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.facebook.Session;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

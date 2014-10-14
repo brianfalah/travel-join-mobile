@@ -5,6 +5,9 @@
     <string name="app_name">TravelJoin</string>
 <!--     <string name="api_url">http://192.168.1.133:3001</string> -->
     <string name="api_url">http://travel-join-api.herokuapp.com</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="append_required">es requerido</string>
     <string name="create">Crear</string>
     <string name="edit">Editar</string>
     <string name="update">Actualizar</string>
@@ -13,7 +16,7 @@
     <string name="cancel">Cancelar</string>   
     <string name="ok">Aceptar</string>
     <string name="loading">Cargando</string>
-    <string name="wait">Por favor espere.</string>
+    <string name="wait">Por favor espere...</string>
     <!-- FIN Generales -->
 	
     <!-- Menu -->
@@ -24,17 +27,30 @@
     <string name="augmented_reality">Realidad Aumentada</string>
     <!-- FIN Menu -->
     
-    <!-- Otros subtitulos  -->
+    <!-- Map -->
+    <string name="connected">Conectado</string>
+    <string name="disconnected">Desconectado. Por favor, re-conectarse.</string>
+    <!-- FIN Map -->
+    
+    <!-- Map filters -->
+    <string name="categories_filter">Categorías</string>
+    <string name="groups_filter">Grupos</string>
+    <!-- FIN Map filters -->
+    
+    <!-- Subtitulos  -->
     <string name="map_filter">Filtros del mapa</string>
     <string name="groups_creation">Nuevo grupo</string>
     <string name="pois_selector">Selección de puntos de interés</string>
     <string name="tours_selector">Selección de circuitos</string>
     <string name="pois_view">Detalle del punto</string>
+    <string name="pois_creation">Nuevo punto de interés</string>
+    <string name="pois_edition">Editar punto de interés</string>
     <string name="tours_view">Detalle del circuito</string>
     <string name="tours_creation">Nuevo circuito</string>
     <string name="tours_edition">Editar circuito</string>
-	<!-- FIN Otros sutitulos  -->
+	<!-- FIN Sutitulos  -->
 	
+	<!-- Actions -->
 	<string name="action_logout">Cerrar sesión</string>
     <string name="action_settings">Configuraciones</string>
     <string name="action_search">Buscar</string>
@@ -42,9 +58,14 @@
 	<string name="action_add">Agregar</string>
     <string name="search_hint">Buscar en la lista</string>
     <string name="explore_button">Explorar!</string>
+    <!-- FIN Actions -->
     
     <!-- POIs -->    
     <string name="edit_poi">Editar punto</string>
+    <string name="delete_poi">Borrar punto</string>
+    <string name="delete_poi_message">¿Está seguro de que desea borrar este punto?</string>
+    <string name="delete_poi_error_message">No se ha podido borrar el punto correctamente.</string>
+    <string name="rank_poi">Calificar punto</string>
     <string name="description">Descripción</string>
     <string name="name">Nombre</string>
     <string name="poi_form_description">Ingrese los datos del punto de interés:</string>
@@ -63,10 +84,15 @@
     <string name="event_form_description">Ingrese los datos del evento:</string>
     <string name="select_date_time_start">Fecha y hora de inicio</string>
     <string name="select_date_time_end">Fecha y hora de fin</string>
+    <string name="date_time_picker_message">Seleccione el día y la hora del evento</string>
     <!-- FIN events -->
     
     <!-- Tours -->
     <string name="tour_form_description">Ingrese los datos del circuito:</string>
+    <string name="delete_tour">Borrar circuito</string>
+    <string name="delete_tour_message">¿Está seguro de que desea borrar este circuito?</string>
+    <string name="delete_tour_error_message">No se ha podido borrar el circuito correctamente.</string>
+    <string name="rank_tour">Calificar circuito</string>
     <string name="tour_general_information_tab">General</string>
     <string name="tour_pois_tab">Puntos de interés</string>
     <!-- FIN tours -->
@@ -120,5 +146,14 @@
 	<string name="group_context_menu_join">Unirse al grupo</string>
 	<string name="group_context_menu_disjoin">Dejar el grupo</string>    
     <!-- FIN Group item list context menu -->
+    
+    <!-- Augmented reality -->
+	<string name="finding_location">Encontrando ubicación</string>
+    <!-- FIN Augmented reality -->
+    
+    <!-- Exception mesaages -->
+	<string name="retry_message">"Intente de nuevo"</string>
+	<string name="connection_error_message">Ha ocurrido un problema con la conexión a los servidores. Por favor, intente de nuevo.</string>    
+    <!-- FIN Exception mesaages -->
     
 </resources>

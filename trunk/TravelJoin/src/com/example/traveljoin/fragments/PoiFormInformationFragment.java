@@ -3,7 +3,6 @@ package com.example.traveljoin.fragments;
 import java.util.List;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.activities.PoiDetailsActivity;
 import com.example.traveljoin.activities.PoiFormActivity;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.Category;
@@ -16,12 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 public class PoiFormInformationFragment extends Fragment {
@@ -32,7 +28,7 @@ public class PoiFormInformationFragment extends Fragment {
 	public EditText descField;
 	public EditText addressField;
 	public Spinner poiCategoriesSpinnerField;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -40,38 +36,38 @@ public class PoiFormInformationFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_poi_form_information,
 				container, false);
 
-		activity = (PoiFormActivity) getActivity();		
+		activity = (PoiFormActivity) getActivity();
 		initializeViewReferences(view);
-		
-		if (activity.poi != null){
-			setHiddenFields(new LatLng(activity.poi.getLatitude(), activity.poi.getLongitude()));
+
+		if (activity.poi != null) {
+			setHiddenFields(new LatLng(activity.poi.getLatitude(),
+					activity.poi.getLongitude()));
 			setFields();
-		}
-		else{
+		} else {
 			setHiddenFields(activity.point);
-		}		
+		}
 
 		return view;
 	}
-	
+
 	private void initializeViewReferences(View view) {
 		tvLatitude = (TextView) view.findViewById(R.id.PoiLatitude);
 		tvLongitude = (TextView) view.findViewById(R.id.PoiLongitude);
 		nameField = (EditText) view.findViewById(R.id.PoiName);
 		addressField = (EditText) view.findViewById(R.id.PoiAddress);
 		descField = (EditText) view.findViewById(R.id.PoiDescription);
-		poiCategoriesSpinnerField = (Spinner) view.findViewById(R.id.PoiCategories);
+		poiCategoriesSpinnerField = (Spinner) view
+				.findViewById(R.id.PoiCategories);
 		initializePoiCategoriesSpinner(view);
 	}
-	
-	public void setFields(){
+
+	public void setFields() {
 		nameField.setText(activity.poi.getName());
 		descField.setText(activity.poi.getDescription());
 		addressField.setText(activity.poi.getAddress());
-		poiCategoriesSpinnerField.setSelection(getIndex(poiCategoriesSpinnerField,
-				activity.poi.getCategoryId()));        
+		poiCategoriesSpinnerField.setSelection(getIndex(
+				poiCategoriesSpinnerField, activity.poi.getCategoryId()));
 	}
-	
 
 	private int getIndex(Spinner spinner, Integer category_id) {
 		int index = 0;
@@ -86,26 +82,29 @@ public class PoiFormInformationFragment extends Fragment {
 		}
 		return index;
 	}
-	
+
 	private void initializePoiCategoriesSpinner(View view) {
-		GlobalContext globalContext = (GlobalContext) activity.getApplicationContext();
+		GlobalContext globalContext = (GlobalContext) activity
+				.getApplicationContext();
 		List<Category> categories = globalContext.getCategories();
 		ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(
 				activity, android.R.layout.simple_spinner_item, categories);
 		categoryAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		poiCategoriesSpinnerField = (Spinner) view.findViewById(R.id.PoiCategories);
+		poiCategoriesSpinnerField = (Spinner) view
+				.findViewById(R.id.PoiCategories);
 		poiCategoriesSpinnerField.setAdapter(categoryAdapter);
 	}
-	
+
 	public void setHiddenFields(LatLng point) {
 		tvLatitude.setText(String.valueOf(point.latitude));
 		tvLongitude.setText(String.valueOf(point.longitude));
 	}
-	
+
 	public Boolean validateFields() {
 		return validateField(nameField) && validateField(addressField)
-				&& validateField(descField) && validateField(poiCategoriesSpinnerField);
+				&& validateField(descField)
+				&& validateField(poiCategoriesSpinnerField);
 	}
 
 	public Boolean validateField(View field) {
@@ -115,7 +114,7 @@ public class PoiFormInformationFragment extends Fragment {
 			if (TextUtils.isEmpty(edit_text_field.getText().toString())) {
 				edit_text_field.requestFocus();
 				edit_text_field.setError(edit_text_field.getHint()
-						+ " es requerido!");
+						+ getString(R.string.append_required));
 				valid = false;
 			} else {
 				edit_text_field.setError(null);
@@ -126,8 +125,10 @@ public class PoiFormInformationFragment extends Fragment {
 				Spinner spinner_field = (Spinner) field;
 				if (TextUtils.isEmpty(((Category) spinner_field
 						.getSelectedItem()).getName())) {
-					Toast.makeText(activity,
-							spinner_field.getPrompt() + " es requerido!",
+					Toast.makeText(
+							activity,
+							spinner_field.getPrompt()
+									+ getString(R.string.append_required),
 							Toast.LENGTH_SHORT).show();
 					valid = false;
 				} else {
@@ -137,5 +138,5 @@ public class PoiFormInformationFragment extends Fragment {
 		}
 		return valid;
 	}
-	
+
 }

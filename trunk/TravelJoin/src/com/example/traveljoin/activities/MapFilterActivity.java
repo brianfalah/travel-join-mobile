@@ -115,7 +115,7 @@ public class MapFilterActivity extends ActionBarActivity {
 
 	private void initCategoriesList() {
 		ArrayList<Integer> categoriesIds = mapFilter.getCategoriesIds();
-		categoryFatherItem = new CheckeableItem(new Category(1, "Categorías"));
+		categoryFatherItem = new CheckeableItem(new Category(1, getString(R.string.categories_filter)));
 		ArrayList<CheckeableItem> categoriesItems = new ArrayList<CheckeableItem>();
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		for (Category category : globalContext.getCategories()) {
@@ -170,7 +170,7 @@ public class MapFilterActivity extends ActionBarActivity {
 
 	private void loadGroups(JSONArray groups) throws JSONException, ParseException {
 		ArrayList<Integer> groupIds = mapFilter.getGroupsIds();
-		groupFatherItem = new CheckeableItem(new Category(2, "Grupos"));
+		groupFatherItem = new CheckeableItem(new Category(2, getString(R.string.groups_filter)));
 		ArrayList<CheckeableItem> groupsItems = new ArrayList<CheckeableItem>();
 		for (int i = 0; i < groups.length(); i++) {
 			JSONObject groupJson = groups.getJSONObject(i);

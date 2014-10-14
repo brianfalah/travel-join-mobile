@@ -13,14 +13,14 @@ public class Group implements Serializable, GeneralItem {
 	private Integer id;
 	private String name;
 	private String description;
-	private String type;
+	private Integer type;
 	private String password;
 	private ArrayList<Interest> interests;
 	private ArrayList<Poi> pois;
 	private ArrayList<Tour> tours;
 	private Integer userId;
 	
-	public Group(String name, String description, String type, String password,
+	public Group(String name, String description, Integer type, String password,
 			ArrayList<Interest> interests, ArrayList<Poi> pois,
 			ArrayList<Tour> tours, Integer userId) {
 		this.name = name;
@@ -60,11 +60,11 @@ public class Group implements Serializable, GeneralItem {
 		this.id = id;
 	}
 
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 
@@ -136,7 +136,7 @@ public class Group implements Serializable, GeneralItem {
 
 		Group group = new Group(groupJson.getString("name"),
 				groupJson.getString("description"),
-				groupJson.getString("group_type"),
+				groupJson.getInt("group_type"),
 				groupJson.getString("password"), interests, pois, tours,
 				groupJson.getInt("user_id"));
 
@@ -180,6 +180,18 @@ public class Group implements Serializable, GeneralItem {
 
 			if (poisJson.length() > 0) {
 				jsonObject.put("groups_pois_attributes", poisJson);
+			}
+			
+			JSONArray toursJson = new JSONArray();
+			JSONObject tourJson = new JSONObject();
+			for (Poi poi : getPois()) {
+				tourJson.put("group_id", getId());
+				tourJson.put("tour_id", poi.getId());
+				toursJson.put(tourJson);
+			}
+
+			if (toursJson.length() > 0) {
+				jsonObject.put("groups_tours_attributes", tourJson);
 			}
 
 			JSONObject groupJson = new JSONObject();

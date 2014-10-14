@@ -1,12 +1,9 @@
 package com.example.traveljoin.fragments;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +18,6 @@ import com.example.traveljoin.activities.AugmentedRealityActivity;
 import com.example.traveljoin.activities.GroupsMainActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.PoisMainActivity;
-import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.activities.ToursMainActivity;
 import com.example.traveljoin.activities.UserProfileActivity;
 import com.example.traveljoin.models.Poi;

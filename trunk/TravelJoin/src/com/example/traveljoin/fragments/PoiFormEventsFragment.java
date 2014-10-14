@@ -5,18 +5,14 @@ import java.util.ArrayList;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.EventFormActivity;
 import com.example.traveljoin.activities.PoiFormActivity;
-import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.PoiEvent;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;

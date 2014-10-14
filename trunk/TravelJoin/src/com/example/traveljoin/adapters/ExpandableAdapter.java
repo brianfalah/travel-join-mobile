@@ -11,7 +11,6 @@ import com.example.traveljoin.auxiliaries.CheckeableItem;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	private LinkedHashMap<CheckeableItem, ArrayList<CheckeableItem>> groupList;
 	private ArrayList<CheckeableItem> mainGroup;
 	private int[] groupStatus;
-	private ExpandableListView listView;
 
 	public ExpandableAdapter(Context context, ExpandableListView listView,
 			LinkedHashMap<CheckeableItem, ArrayList<CheckeableItem>> groupsList) {
@@ -147,7 +145,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
 		holder.cb.setChecked(child.isChecked());
 		holder.title.setText(child.getName());
-		Log.i("childs are", DataHolder.checkedChilds.toString());
 		return convertView;
 	}
 

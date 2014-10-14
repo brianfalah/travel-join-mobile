@@ -19,9 +19,7 @@ import com.example.traveljoin.R;
 import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.Poi;
-import com.example.traveljoin.models.Tour;
 
 public class GroupFormPoisFragment extends ListFragment {
 	private ArrayList<GeneralItem> pois;
