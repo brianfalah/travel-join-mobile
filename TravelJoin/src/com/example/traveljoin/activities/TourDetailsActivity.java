@@ -25,7 +25,8 @@ import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.PoiEventsFragment;
 import com.example.traveljoin.fragments.PoiInformationFragment;
-import com.example.traveljoin.fragments.TourInformationFragment;
+import com.example.traveljoin.fragments.TourDetailInformationFragment;
+import com.example.traveljoin.fragments.TourDetailPoisFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
@@ -150,9 +151,9 @@ public class TourDetailsActivity extends ActionBarActivity implements
         public Fragment getItem(int position) {
             switch (position) {
             case TOUR_INFORMATION_TAB: // Fragment # 0 - This will show FirstFragment
-                return new TourInformationFragment();
+                return new TourDetailInformationFragment();
             case POIS_TAB: // Fragment # 0 - This will show FirstFragment different title
-                return new PoiEventsFragment();
+                return new TourDetailPoisFragment();
             default:
                 return null;
             }
