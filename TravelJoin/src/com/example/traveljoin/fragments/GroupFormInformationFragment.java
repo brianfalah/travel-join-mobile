@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class GroupFormInformationFragment extends Fragment {
 
-	private static String PUBLIC = "public";
-	private static String PRIVATE = "private";
+	private static Integer PUBLIC = 0;
+	private static Integer PRIVATE = 1;
 	private EditText groupNameField;
 	private EditText groupDescriptionField;
 	private RadioGroup radioGroup;
@@ -48,15 +47,10 @@ public class GroupFormInformationFragment extends Fragment {
 					// TODO
 					passwordField.setEnabled(false);
 					passwordField.setVisibility(View.GONE);
-					Toast.makeText(getActivity(), "Publico", Toast.LENGTH_SHORT)
-							.show();
-					break;
 				case R.id.radio_private_group:
 					// TODO
 					passwordField.setEnabled(true);
 					passwordField.setVisibility(View.VISIBLE);
-					Toast.makeText(getActivity(), "Privado", Toast.LENGTH_SHORT)
-							.show();
 					break;
 				}
 
@@ -74,8 +68,8 @@ public class GroupFormInformationFragment extends Fragment {
 		return groupDescriptionField.getText().toString();
 	}
 	
-	public String getGroupType() {
-		String groupType = null;
+	public Integer getGroupType() {
+		Integer groupType = null;
 		switch (radioGroup.getCheckedRadioButtonId()) {
 		case R.id.radio_public_group:
 			groupType = PUBLIC;

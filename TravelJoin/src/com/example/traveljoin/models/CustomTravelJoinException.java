@@ -1,5 +1,7 @@
 package com.example.traveljoin.models;
 
+import com.example.traveljoin.R;
+
 import android.app.AlertDialog;
 import android.content.Context;
 
@@ -25,7 +27,7 @@ public class CustomTravelJoinException extends Exception{
 
     public void alertExceptionMessage(Context context){
         AlertDialog.Builder dialog = new AlertDialog.Builder(context); 
-        dialog.setTitle("Intente de nuevo");
+        dialog.setTitle(R.string.retry_message);
         dialog.setMessage(this.getMessage());
         dialog.setNeutralButton("Ok", null);
         dialog.create().show();
@@ -33,8 +35,8 @@ public class CustomTravelJoinException extends Exception{
     
     public void alertConnectionProblem(Context context){
         AlertDialog.Builder dialog = new AlertDialog.Builder(context); 
-        dialog.setTitle("Intente de nuevo");
-        dialog.setMessage("Ha ocurrido un problema con la conexión a los servidores. Por favor, intente de nuevo.");
+        dialog.setTitle(R.string.retry_message);
+        dialog.setMessage(R.string.connection_error_message);
         dialog.setNeutralButton("Ok", null);
         dialog.create().show();
     }

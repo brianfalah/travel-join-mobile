@@ -1,6 +1,5 @@
 package com.example.traveljoin.activities;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import com.example.traveljoin.R;
 import com.example.traveljoin.wikitude.LocationProvider;
 import com.example.traveljoin.wikitude.SampleCamActivity;
-import com.google.android.gms.maps.model.Marker;
 import com.example.traveljoin.models.Poi;
 
 public class AugmentedRealityActivity extends SampleCamActivity {
@@ -102,7 +100,7 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 					@Override
 					public void run() {
 						Toast.makeText(AugmentedRealityActivity.this,
-								"Encontrando ubicación", Toast.LENGTH_SHORT).show();
+								R.string.augmented_reality, Toast.LENGTH_SHORT).show();
 					}
 				});
 

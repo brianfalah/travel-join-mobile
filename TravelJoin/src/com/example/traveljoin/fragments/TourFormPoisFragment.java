@@ -19,7 +19,6 @@ import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.TourPoi;
 
 public class TourFormPoisFragment extends ListFragment {

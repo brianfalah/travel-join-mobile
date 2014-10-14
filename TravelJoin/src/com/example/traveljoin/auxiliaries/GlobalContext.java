@@ -287,14 +287,14 @@ public class GlobalContext extends Application {
 	// esos metodos en todo el proyecto
 	public void showConnectionError() {
 		CustomTravelJoinException exception = new CustomTravelJoinException();
-		exception.alertConnectionProblem(getApplicationContext());
+		exception.alertConnectionProblem(this);
 		// e.printStackTrace();
 	}
 
 	public void showExceptionError(Exception e) {
 		CustomTravelJoinException exception = new CustomTravelJoinException(
 				e.getMessage());
-		exception.alertExceptionMessage(getApplicationContext());
+		exception.alertExceptionMessage(this);
 		e.printStackTrace();
 	}
 }

@@ -367,7 +367,7 @@ public class MapActivity extends SlidingFragmentActivity implements
     @Override
     public void onConnected(Bundle dataBundle) {
     	// Display the connection status
-        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.connected, Toast.LENGTH_SHORT).show();
         // If already requested, start periodic updates
         if (mUpdatesRequested) {
             mLocationClient.requestLocationUpdates(mLocationRequest, (com.google.android.gms.location.LocationListener) this);            
@@ -465,8 +465,8 @@ public class MapActivity extends SlidingFragmentActivity implements
     @Override
     protected void onStart() {
     	super.onStart();    	
-    	progress = ProgressDialog.show(this, "Cargando",
-        	    "Por favor espere...", true);
+    	progress = ProgressDialog.show(this, getString(R.string.loading),
+    			getString(R.string.wait), true);
     	
     	if(mPrefs== null){    		    
 	        // Open the shared preferences
@@ -556,7 +556,7 @@ public class MapActivity extends SlidingFragmentActivity implements
     
 	public void showConnectionError(){
 		CustomTravelJoinException exception = new CustomTravelJoinException();
-		exception.alertConnectionProblem(getApplicationContext());
+		exception.alertConnectionProblem(this);
 		//e.printStackTrace();
 	}
 	
@@ -624,7 +624,7 @@ public class MapActivity extends SlidingFragmentActivity implements
     @Override
     public void onDisconnected() {
         // Display the connection status
-        Toast.makeText(this, "Disconnected. Please re-connect.",
+        Toast.makeText(this, R.string.disconnected,
                 Toast.LENGTH_SHORT).show();
     }
     

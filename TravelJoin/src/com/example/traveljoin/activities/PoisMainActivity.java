@@ -24,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -83,7 +82,8 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.general_item_selector_activity_actions, menu);
+		getMenuInflater().inflate(
+				R.menu.general_item_selector_activity_actions, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
@@ -149,15 +149,16 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		case R.id.poi_context_menu_delete:
 			AlertDialog.Builder dialog = new AlertDialog.Builder(
 					PoisMainActivity.this);
-			dialog.setTitle("Borrar punto")
-					.setMessage("¿Está seguro de que desea borrar este punto?")
-					.setPositiveButton("Si",
+			dialog.setTitle(getString(R.string.delete_poi))
+					.setMessage(getString(R.string.delete_poi_message))
+					.setPositiveButton(getString(R.string.yes),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) {
 									progress = ProgressDialog.show(
-											PoisMainActivity.this, "Cargando",
-											"Por favor espere...", true);
+											PoisMainActivity.this,
+											getString(R.string.loading),
+											getString(R.string.wait), true);
 									String url = getResources().getString(
 											R.string.api_url)
 											+ "/pois/destroy";
@@ -169,7 +170,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 
 								}
 							})
-					.setNegativeButton("No",
+					.setNegativeButton(getString(R.string.no),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) {
@@ -294,7 +295,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 					getPoisFromServer();
 				else {
 					CustomTravelJoinException exception = new CustomTravelJoinException(
-							"No se ha podido borrar el punto correctamente.");
+							getString(R.string.delete_poi_error_message));
 					exception.alertExceptionMessage(PoisMainActivity.this);
 				}
 				break;

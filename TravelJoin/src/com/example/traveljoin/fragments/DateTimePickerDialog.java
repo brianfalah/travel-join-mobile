@@ -37,7 +37,7 @@ public class DateTimePickerDialog  extends DialogFragment{
     	View view = inflater.inflate(R.layout.custom_datetime_picker, container);
 		dp = (DatePicker)view.findViewById(R.id.datePicker);
 		tp = (TimePicker)view.findViewById(R.id.timePicker);
-        getDialog().setTitle("Seleccione el día y la hora del evento");
+        getDialog().setTitle(getString(R.string.date_time_picker_message));
         
         btnOK = (Button) view.findViewById(R.id.setDateTime);
         btnOK.setOnClickListener(new OnClickListener() {

@@ -51,10 +51,9 @@ public class TourFormActivity extends ActionBarActivity implements
 	public ArrayList<GeneralItem> tourPois;
 	public ArrayList<TourPoi> tourPoisToDelete;
 	ArrayAdapter<TourPoi> tourPoisAdapter;
-	
+
 	private static final int ADD_TOUR_METHOD = 1;
 	private static final int UPDATE_TOUR_METHOD = 2;
-	private static final int ADD_POI_REQUEST = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +61,12 @@ public class TourFormActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_tour_form);
 		initializeUser();
 		initializeViewReferences();
-		
-		actionBar = getActionBar();		
+
+		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		adapterViewPager = new MyPagerAdapter(
-				getSupportFragmentManager());
-		
+		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+
 		viewPager = (ViewPager) findViewById(R.id.TourPager);
 		viewPager.setAdapter(adapterViewPager);
 		viewPager
@@ -88,14 +86,13 @@ public class TourFormActivity extends ActionBarActivity implements
 
 		tourPois = new ArrayList<GeneralItem>();
 		tourPoisToDelete = new ArrayList<TourPoi>();
-		
-		if (getIntent().getExtras() != null){
+
+		if (getIntent().getExtras() != null) {
 			actionBar.setSubtitle(R.string.tours_edition);
 			tour = (Tour) getIntent().getExtras().get("tour");
 			updateButton.setVisibility(View.VISIBLE);
 			tourPois.addAll(tour.getTourPois());
-		}
-		else{
+		} else {
 			actionBar.setSubtitle(R.string.tours_creation);
 			tour = null;
 			createButton.setVisibility(View.VISIBLE);
@@ -104,7 +101,7 @@ public class TourFormActivity extends ActionBarActivity implements
 
 	private void initializeViewReferences() {
 		createButton = (Button) findViewById(R.id.TourCreateButton);
-		updateButton = (Button) findViewById(R.id.TourUpdateButton);	
+		updateButton = (Button) findViewById(R.id.TourUpdateButton);
 	}
 
 	private void initializeUser() {
@@ -125,53 +122,58 @@ public class TourFormActivity extends ActionBarActivity implements
 	public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
 	}
 
-	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic ViewPager items
-    public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
-    	private static int NUM_ITEMS = 2;
+	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic
+	// ViewPager items
+	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
+		private static int NUM_ITEMS = 2;
 		public static final int TOUR_INFORMATION_TAB = 0;
 		public static final int TOUR_POIS_TAB = 1;
 
-        public MyPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
+		public MyPagerAdapter(FragmentManager fragmentManager) {
+			super(fragmentManager);
+		}
 
-        // Returns total number of pages
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
-        }
+		// Returns total number of pages
+		@Override
+		public int getCount() {
+			return NUM_ITEMS;
+		}
 
-        // Returns the fragment to display for that page
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-            case TOUR_INFORMATION_TAB: // Fragment # 0 - This will show FirstFragment
-                return new TourFormInformationFragment();
-            case TOUR_POIS_TAB: // Fragment # 0 - This will show FirstFragment different title
-                return new TourFormPoisFragment();
-            default:
-                return null;
-            }
-        }
+		// Returns the fragment to display for that page
+		@Override
+		public Fragment getItem(int position) {
+			switch (position) {
+			case TOUR_INFORMATION_TAB: // Fragment # 0 - This will show
+										// FirstFragment
+				return new TourFormInformationFragment();
+			case TOUR_POIS_TAB: // Fragment # 0 - This will show FirstFragment
+								// different title
+				return new TourFormPoisFragment();
+			default:
+				return null;
+			}
+		}
 
-        // Returns the page title for the top indicator
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Page " + position;
-        }
+		// Returns the page title for the top indicator
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return "Page " + position;
+		}
 
-    }
+	}
 
- // cuando se clickea el boton crear viene aca!
- 	public void createTour(View button) {
- 		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager.getRegisteredFragment(0);
+	// cuando se clickea el boton crear viene aca!
+	public void createTour(View button) {
+		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager
+				.getRegisteredFragment(0);
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
-			progress = ProgressDialog.show(this, "Cargando",
-					"Por favor espere...", true);
-			
-			Tour tour_to_create = new Tour(null, info_fragment.nameField.getText().toString(),
-					info_fragment.descField.getText().toString(), user.getId(), tourPois);
+			progress = ProgressDialog.show(this, getString(R.string.loading),
+					getString(R.string.wait), true);
+
+			Tour tour_to_create = new Tour(null, info_fragment.nameField
+					.getText().toString(), info_fragment.descField.getText()
+					.toString(), user.getId(), tourPois);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/tours/create";
@@ -179,19 +181,21 @@ public class TourFormActivity extends ActionBarActivity implements
 					tour_to_create);
 			httpAsyncTask.execute(url);
 			// sigue en onPostExecute, en la parte de ADD_TOUR_METHOD
- 		}
-		
- 	}
-		
+		}
+
+	}
+
 	// cuando se clickea el boton actualizar viene aca!
 	public void updateTour(View button) {
-		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager.getRegisteredFragment(0);
+		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager
+				.getRegisteredFragment(0);
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
-			progress = ProgressDialog.show(this, "Cargando",
-					"Por favor espere...", true);
-			tour = new Tour(tour.getId(), info_fragment.nameField.getText().toString(),
-					info_fragment.descField.getText().toString(), user.getId(), tourPois);
+			progress = ProgressDialog.show(this, getString(R.string.loading),
+					getString(R.string.wait), true);
+			tour = new Tour(tour.getId(), info_fragment.nameField.getText()
+					.toString(), info_fragment.descField.getText().toString(),
+					user.getId(), tourPois);
 			tour.setTourPoisToDelete(tourPoisToDelete);
 
 			String url = getResources().getString(R.string.api_url)
@@ -201,16 +205,16 @@ public class TourFormActivity extends ActionBarActivity implements
 			httpAsyncTask.execute(url);
 			// sigue en HttpAsyncTask en doInBackground en UPDATE_TOUR_METHOD
 		}
-		
+
 	}
-	
+
 	// cuando se clickea el boton cancelar viene aca!
 	public void cancel(View button) {
 		Intent output = new Intent();
 		setResult(Activity.RESULT_CANCELED, output);
 		finish();
 	}
-		
+
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
 		private Integer from_method;
@@ -282,17 +286,17 @@ public class TourFormActivity extends ActionBarActivity implements
 			}
 		}
 	}
-		
+
 	public void showConnectionError() {
 		CustomTravelJoinException exception = new CustomTravelJoinException();
-		exception.alertConnectionProblem(getApplicationContext());
+		exception.alertConnectionProblem(this);
 		// e.printStackTrace();
 	}
 
 	public void showExceptionError(Exception e) {
 		CustomTravelJoinException exception = new CustomTravelJoinException(
 				e.getMessage());
-		exception.alertExceptionMessage(getApplicationContext());
+		exception.alertExceptionMessage(this);
 		e.printStackTrace();
 	}
 
@@ -311,16 +315,16 @@ public class TourFormActivity extends ActionBarActivity implements
 		if (progress != null)
 			progress.dismiss();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home: 
+		case android.R.id.home:
 			onBackPressed();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 }

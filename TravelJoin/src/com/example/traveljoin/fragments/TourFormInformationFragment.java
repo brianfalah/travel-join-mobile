@@ -55,7 +55,7 @@ public class TourFormInformationFragment extends Fragment {
 			if (TextUtils.isEmpty(edit_text_field.getText().toString())) {
 				edit_text_field.requestFocus();
 				edit_text_field.setError(edit_text_field.getHint()
-						+ " es requerido!");
+						+ getString(R.string.append_required));
 				valid = false;
 			} else {
 				edit_text_field.setError(null);

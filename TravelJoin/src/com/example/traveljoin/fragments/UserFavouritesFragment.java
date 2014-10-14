@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -158,9 +157,6 @@ public class UserFavouritesFragment extends Fragment {
 		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
-			// Toast.makeText(getBaseContext(), "Received!",
-			// Toast.LENGTH_LONG).show();
-			Log.d("InputStream", result);
 			if (api_result.ok()) {
 				try {
 					JSONArray pois = new JSONArray(result);
