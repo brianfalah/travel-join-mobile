@@ -264,6 +264,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 	    						Tour tour = Tour.fromJSON(tourJson);	    						
 	    						tours.add(tour);
 	    					}
+	    					listView.setOnItemClickListener(tourItemClickListener);
 	    					adapter.notifyDataSetChanged();
 	    					progress.dismiss();
 
