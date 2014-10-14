@@ -6,23 +6,24 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TourPoi implements Serializable{
+public class TourPoi implements Serializable, GeneralItem{
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer tourId;
 	private Integer poiId;
 	private String poiName;
+	private String poiDescription;
 	private Integer orderNumber;
 	private boolean deleted;
 	
 	public TourPoi(Integer id, Integer tourId, Integer poiId,
-			String poiName, Integer orderNumber) {
+			String poiName, String poiDescription, Integer orderNumber) {
 		super();
-		this.setId(id);
-		this.setTourId(tourId);
-		this.setPoiId(poiId);
-		this.setPoiName(poiName);
-		this.setOrderNumber(orderNumber);
+		this.id = id;
+		this.tourId = tourId;
+		this.poiId = poiId;
+		this.poiName = poiName;
+		this.orderNumber = orderNumber;
 	}
 
 	public Integer getId() {
@@ -65,12 +66,21 @@ public class TourPoi implements Serializable{
 		this.orderNumber = orderNumber;
 	}
 
+	public String getPoiDescription() {
+		return poiDescription;
+	}
+
+	public void setPoiDescription(String poiDescription) {
+		this.poiDescription = poiDescription;
+	}
+
 	public static TourPoi fromJSON(JSONObject tourPoiJson) throws JSONException, ParseException{	
 		
-		TourPoi poiEvent = new TourPoi(tourPoiJson.getInt("id"), tourPoiJson.getInt("tour_id"),
-				tourPoiJson.getInt("poi_id"), tourPoiJson.getString("poi_name"), tourPoiJson.getInt("order_number"));
+		TourPoi tourPoi = new TourPoi(tourPoiJson.getInt("id"), tourPoiJson.getInt("tour_id"),
+				tourPoiJson.getInt("poi_id"), tourPoiJson.getString("poi_name"),
+				tourPoiJson.getString("poi_description"), tourPoiJson.getInt("order_number"));
 						
-		return poiEvent;
+		return tourPoi;
 	}
 	
 	public JSONObject toJSON(){
@@ -83,7 +93,6 @@ public class TourPoi implements Serializable{
 	    	
 	    	jsonObject.put("tour_id", getTourId());
 	        jsonObject.put("poi_id", getPoiId());
-	        jsonObject.put("poi_name", getPoiName());
 	        jsonObject.put("order_number", getOrderNumber());
 	        if (isDeleted() == true){
 	    		jsonObject.put("_destroy", "true");
@@ -113,5 +122,15 @@ public class TourPoi implements Serializable{
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	@Override
+	public String getName() {
+		return this.getPoiName();
+	}
+
+	@Override
+	public String getDescription() {
+		return this.getPoiDescription();
 	}
 }
