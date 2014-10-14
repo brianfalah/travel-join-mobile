@@ -1,26 +1,27 @@
 package com.example.traveljoin.fragments;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.Tour;
 
 public class GroupFormPoisFragment extends ListFragment {
 	private ArrayList<GeneralItem> pois;
@@ -91,6 +92,12 @@ public class GroupFormPoisFragment extends ListFragment {
 		return poi;
 	}
 
+	public ArrayList<Poi> getPois() {
+		ArrayList<Poi> auxPois = new ArrayList<Poi>();
+		auxPois.addAll((Collection<? extends Poi>) pois);		
+		return auxPois;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -107,8 +114,7 @@ public class GroupFormPoisFragment extends ListFragment {
 				break;
 			}
 			break;
-
 		}
-
 	}
+
 }

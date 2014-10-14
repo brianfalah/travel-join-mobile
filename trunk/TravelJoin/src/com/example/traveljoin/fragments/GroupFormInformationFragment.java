@@ -14,22 +14,31 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class GroupFormInformationFragment extends Fragment {
 
+	private static String PUBLIC = "public";
+	private static String PRIVATE = "private";
+	private EditText groupNameField;
+	private EditText groupDescriptionField;
+	private RadioGroup radioGroup;
 	private EditText passwordField;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_group_form_information,
 				container, false);
-
-		RadioGroup radioGroup = (RadioGroup) view
+		
+		groupNameField = (EditText) view
+				.findViewById(R.id.groupName);
+		groupDescriptionField = (EditText) view
+				.findViewById(R.id.groupDescription);
+		radioGroup = (RadioGroup) view
 				.findViewById(R.id.radio_group_type);
-
 		passwordField = (EditText) view
 				.findViewById(R.id.private_group_password);
 		passwordField.setEnabled(false);
-
+		passwordField.setVisibility(View.GONE);
+		
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -38,12 +47,14 @@ public class GroupFormInformationFragment extends Fragment {
 				case R.id.radio_public_group:
 					// TODO
 					passwordField.setEnabled(false);
+					passwordField.setVisibility(View.GONE);
 					Toast.makeText(getActivity(), "Publico", Toast.LENGTH_SHORT)
 							.show();
 					break;
 				case R.id.radio_private_group:
 					// TODO
 					passwordField.setEnabled(true);
+					passwordField.setVisibility(View.VISIBLE);
 					Toast.makeText(getActivity(), "Privado", Toast.LENGTH_SHORT)
 							.show();
 					break;
@@ -53,6 +64,31 @@ public class GroupFormInformationFragment extends Fragment {
 		});
 
 		return view;
+	}
+	
+	public String getGroupName() {
+		return groupNameField.getText().toString();
+	}
+	
+	public String getGroupDescription() {
+		return groupDescriptionField.getText().toString();
+	}
+	
+	public String getGroupType() {
+		String groupType = null;
+		switch (radioGroup.getCheckedRadioButtonId()) {
+		case R.id.radio_public_group:
+			groupType = PUBLIC;
+			break;
+		case R.id.radio_private_group:
+			groupType = PRIVATE;
+			break;
+		}
+		return groupType;
+	}
+	
+	public String getPassword() {
+		return passwordField.getText().toString();
 	}
 
 }

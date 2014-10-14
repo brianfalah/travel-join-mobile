@@ -51,6 +51,8 @@ public class MapFilterActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map_filter);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setSubtitle(R.string.map_filter);
+		
 		Bundle b = getIntent().getExtras(); // gets the previously created
 											// intent
 		mapFilter = (MapFilter) b.get("mapFilters");
@@ -66,7 +68,7 @@ public class MapFilterActivity extends ActionBarActivity {
 				.toString());
 		spnDistances.setSelection(selectedPosition);
 
-		progress = ProgressDialog.show(this, "Cargando", "Por favor espere...",
+		progress = ProgressDialog.show(this, getString(R.string.loading), getString(R.string.wait),
 				true);
 
 		filtersList = new LinkedHashMap<CheckeableItem, ArrayList<CheckeableItem>>();
@@ -168,9 +170,7 @@ public class MapFilterActivity extends ActionBarActivity {
 		ArrayList<CheckeableItem> groupsItems = new ArrayList<CheckeableItem>();
 		for (int i = 0; i < groups.length(); i++) {
 			JSONObject groupJson = groups.getJSONObject(i);
-			// TODO: Cambiar por Group.fromJSON
-			Group group = new Group(groupJson.getString("name"), null);
-			group.setId(groupJson.getInt("id"));
+			Group group = Group.fromJSON(groupJson);
 			// si en los filtros actuales estaba seleccionada este grupo, lo
 			// checkeamos
 			Boolean checked = false;

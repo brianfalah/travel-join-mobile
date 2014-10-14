@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.example.traveljoin.models.Interest;
 public class GroupFormInterestsFragment extends Fragment {
 	
 	private ListView interestsListView;
-	private ArrayList<Interest> interests;
 	private ArrayAdapter<Interest> interestsAdapter;
 	
 	@Override
@@ -28,7 +28,7 @@ public class GroupFormInterestsFragment extends Fragment {
 				container, false);
 		
 		GlobalContext globalContext = (GlobalContext) getActivity().getApplicationContext();
-		interests = (ArrayList<Interest>) globalContext.getInterests();
+		ArrayList<Interest> interests = (ArrayList<Interest>) globalContext.getInterests();
 
 		interestsAdapter = new ArrayAdapter<Interest>(getActivity(),
 				android.R.layout.simple_list_item_multiple_choice, interests);
@@ -38,5 +38,15 @@ public class GroupFormInterestsFragment extends Fragment {
 		interestsListView.setAdapter(interestsAdapter);
 
 		return view;
+	}
+	
+	public ArrayList<Interest> getInterests() {	
+		ArrayList<Interest> interests = new ArrayList<Interest>();
+		SparseBooleanArray checkedInterests = interestsListView.getCheckedItemPositions();
+		for (int index = 0; index < interestsListView.getCount(); index++) {
+		    if(checkedInterests.get(index))
+		    	interests.add(interestsAdapter.getItem(index));	        
+		}
+		return interests;
 	}
 }

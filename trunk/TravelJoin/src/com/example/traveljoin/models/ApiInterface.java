@@ -127,6 +127,10 @@ public class ApiInterface {
             	}            	
             }
             
+            if (object instanceof Group) {
+            	jsonObject = ((Group) object).toJSON();
+            }
+            
             if (object instanceof User) {
             	jsonObject = ((User) object).toJSON();
             }

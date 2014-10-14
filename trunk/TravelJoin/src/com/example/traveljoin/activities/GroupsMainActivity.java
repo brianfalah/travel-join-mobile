@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Group;
 
 import android.os.Bundle;
 import android.app.ActionBar;
@@ -37,13 +36,8 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.groups);
-
-		groups = new ArrayList<GeneralItem>();
-
-		groups.add(new Group("Prueba 1", "Descripcion 1"));
-		groups.add(new Group("Sorongo", "Descripcion 2"));
-		groups.add(new Group("Todos los perros van al cielo", "Descripcion 3"));
-
+		
+		groups = new ArrayList<GeneralItem>(); 
 		adapter = new GeneralItemListAdapter(this, groups);
 
 		listView = (ListView) findViewById(R.id.list);
