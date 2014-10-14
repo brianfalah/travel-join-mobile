@@ -95,7 +95,7 @@ public class Tour implements Serializable, GeneralItem {
 
 	public static Tour fromJSON(JSONObject tourJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> tourPoisToAdd = new ArrayList<GeneralItem>();
-		JSONArray tourPoisJson = tourJson.getJSONArray("pois");
+		JSONArray tourPoisJson = tourJson.getJSONArray("tours_pois");
 		
 		for (int i = 0; i < tourPoisJson.length(); i++) {
     	    JSONObject tourPoiJson = tourPoisJson.getJSONObject(i);    	        

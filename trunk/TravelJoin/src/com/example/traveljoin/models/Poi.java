@@ -193,14 +193,22 @@ public class Poi implements Serializable, GeneralItem{
 	
 	@Override
 	public boolean equals(Object object) {
-		if (!(object instanceof Poi)) {
-			return false;
+		if (object instanceof Poi) {
+			Poi poi = (Poi) object;
+			return this.name.equals(poi.name)
+					&& this.description.equals(poi.description)
+					&& this.latitude.equals(poi.latitude)
+					&& this.longitude.equals(poi.longitude);
 		}
-		Poi poi = (Poi) object;
-		return this.name.equals(poi.name)
-				&& this.description.equals(poi.description)
-				&& this.latitude.equals(poi.latitude)
-				&& this.longitude.equals(poi.longitude);
+		else{
+			if (object instanceof TourPoi) {
+				TourPoi tourPoi = (TourPoi) object;
+				return this.id.equals(tourPoi.getPoiId());
+			}
+			else{
+				return false;
+			}
+		}		
 	}
 
 	@Override

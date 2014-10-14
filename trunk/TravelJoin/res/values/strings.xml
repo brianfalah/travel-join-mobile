@@ -32,6 +32,7 @@
     <string name="pois_view">Detalle del punto</string>
     <string name="tours_view">Detalle del circuito</string>
     <string name="tours_creation">Nuevo circuito</string>
+    <string name="tours_edition">Editar circuito</string>
 	<!-- FIN Otros sutitulos  -->
 	
 	<string name="action_logout">Cerrar sesión</string>

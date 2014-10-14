@@ -63,8 +63,7 @@ public class TourFormActivity extends ActionBarActivity implements
 		initializeUser();
 		initializeViewReferences();
 		
-		actionBar = getActionBar();
-		actionBar.setSubtitle(R.string.tours_creation);
+		actionBar = getActionBar();		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		adapterViewPager = new MyPagerAdapter(
@@ -91,13 +90,16 @@ public class TourFormActivity extends ActionBarActivity implements
 		tourPoisToDelete = new ArrayList<TourPoi>();
 		
 		if (getIntent().getExtras() != null){
+			actionBar.setSubtitle(R.string.tours_edition);
 			tour = (Tour) getIntent().getExtras().get("tour");
 			updateButton.setVisibility(View.VISIBLE);
 			tourPois.addAll(tour.getTourPois());
 		}
-		else
+		else{
+			actionBar.setSubtitle(R.string.tours_creation);
 			tour = null;
 			createButton.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void initializeViewReferences() {
@@ -108,16 +110,6 @@ public class TourFormActivity extends ActionBarActivity implements
 	private void initializeUser() {
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
-	}
-
-	public void onCancelButtonClicked(View button) {
-		Intent output = new Intent();
-		setResult(Activity.RESULT_CANCELED, output);
-		finish();
-	}
-
-	public void onAcceptButtonClicked(View button) {
-		// TODO
 	}
 
 	@Override
