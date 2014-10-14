@@ -1,14 +1,26 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
+import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.models.ApiInterface;
+import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
+import com.example.traveljoin.models.User;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +40,8 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 	private ListView listView;
 	private GeneralItemListAdapter adapter;
 	private ArrayList<GeneralItem> groups;
+	private User user;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +50,10 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.groups);
-		
-		groups = new ArrayList<GeneralItem>(); 
+
+		initializeUser();
+		groups = new ArrayList<GeneralItem>();
+		getGroupsFromServer();
 		adapter = new GeneralItemListAdapter(this, groups);
 
 		listView = (ListView) findViewById(R.id.list);
@@ -120,4 +136,59 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 			return super.onContextItemSelected(item);
 		}
 	}
+
+	private void initializeUser() {
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		user = globalContext.getUser();
+	}
+
+	private void getGroupsFromServer() {
+		progressDialog = ProgressDialog.show(this, getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/groups/index.json";
+		GetGroupsTask task = new GetGroupsTask();
+		task.execute(url);
+	}
+
+	private class GetGroupsTask extends AsyncTask<String, Void, String> {
+		private ApiInterface apiInterface = new ApiInterface();
+		private ApiResult api_result;
+
+		@Override
+		protected String doInBackground(String... urls) {
+			api_result = apiInterface.GET(urls[0]);
+			return api_result.getResult();
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if (api_result.ok()) {
+				try {
+					groups.clear();
+					JSONArray groupsJson = new JSONArray(result);
+					for (int i = 0; i < groupsJson.length(); i++) {
+						JSONObject groupJson = groupsJson.getJSONObject(i);
+						Group group = Group.fromJSON(groupJson);
+						groups.add(group);
+					}
+					adapter.notifyDataSetChanged();
+					progressDialog.dismiss();
+
+				} catch (JSONException e) {
+					// TODO: Handlear
+					progressDialog.dismiss();
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				// showConnectionError();
+				// TODO si no se pudieron obtener las categorias mostrar cartel
+				// para reintentar
+			}
+		}
+	}
+
 }
