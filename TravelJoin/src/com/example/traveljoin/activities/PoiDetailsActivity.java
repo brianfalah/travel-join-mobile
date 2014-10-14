@@ -224,8 +224,10 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		    		case Activity.RESULT_OK :
 		    	        Bundle b = data.getExtras(); // gets the previously created intent
 		    	        poi = (Poi) b.get("poi_created_or_updated"); 
-		    	        PoiInformationFragment info_fragment = (PoiInformationFragment) adapterViewPager.getRegisteredFragment(0);
-		    	        info_fragment.setFields();
+		    	        PoiInformationFragment infoFragment = (PoiInformationFragment) adapterViewPager.getRegisteredFragment(0);
+		    	        infoFragment.setFields();
+		    	        PoiEventsFragment eventsFragment = (PoiEventsFragment) adapterViewPager.getRegisteredFragment(1);
+		    	        eventsFragment.refreshList();
 		    		break;
 	    		}
 	    	break;	    	

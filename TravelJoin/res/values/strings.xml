@@ -27,7 +27,7 @@
     <!-- Otros subtitulos  -->
     <string name="groups_creation">Nuevo grupo</string>
     <string name="pois_selector">Selección de puntos de interés</string>
-    <string name="pois_view">Ver detalle</string>
+    <string name="pois_view">Detalle del punto</string>
     <string name="tours_creation">Nuevo circuito</string>
 	<!-- FIN Otros sutitulos  -->
 	

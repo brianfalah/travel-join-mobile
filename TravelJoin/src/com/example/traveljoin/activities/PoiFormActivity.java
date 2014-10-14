@@ -29,6 +29,7 @@ import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.PoiFormEventsFragment;
 import com.example.traveljoin.fragments.PoiFormInformationFragment;
+import com.example.traveljoin.fragments.PoiInformationFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
@@ -97,21 +98,14 @@ public class PoiFormActivity extends ActionBarActivity implements
 		//si viene del mapa, se esta creando, y por eso solo llega el latlng
 		point = (LatLng) getIntent().getExtras().get("point");
 		poi = (Poi) getIntent().getExtras().get("poi");
-		
+		if (poi != null)
+			initializeViewForEditingMode();
+		else
+			initializeViewForCreatingMode();
 
 //		poiEventsAdapter = new ArrayAdapter<PoiEvent>(this,
 //				android.R.layout.simple_list_item_multiple_choice, poiEvents);
 //		lvEvents.setAdapter(poiEventsAdapter);
-	}
-	
-	@Override
-	protected void onStart() {
-	    super.onStart();  // Always call the superclass method first
-//	    info_fragment = (PoiFormInformationFragment) adapterViewPager.getRegisteredFragment(0);
-		if (poi != null)
-			initializeViewForEditingMode();
-		else
-			initializeViewForCreatingMode();	    
 	}
 
 	private void initializeUser() {
@@ -178,6 +172,7 @@ public class PoiFormActivity extends ActionBarActivity implements
 
 	// cuando se clickea el boton crear viene aca!
 	public void createPoi(View button) {
+		PoiFormInformationFragment info_fragment = (PoiFormInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, "Cargando",
@@ -202,6 +197,7 @@ public class PoiFormActivity extends ActionBarActivity implements
 
 	// cuando se clickea el boton actualizar viene aca!
 	public void updatePoi(View button) {
+		PoiFormInformationFragment info_fragment = (PoiFormInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, "Cargando",

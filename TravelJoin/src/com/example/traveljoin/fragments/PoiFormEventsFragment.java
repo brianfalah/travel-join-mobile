@@ -80,6 +80,7 @@ public class PoiFormEventsFragment extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
 			selectedPoiEvent = getPoiEventItem(item);
+			selectedPoiEvent.setDeleted(true);
 			activity.poiEventsToDelete.add(selectedPoiEvent);
 			fragmentPoiEvents.remove(selectedPoiEvent);
 			activity.poiEvents.remove(selectedPoiEvent);
