@@ -1,143 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ScrollViewPoiDetails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical" >
 
-   	<LinearLayout
-   	    android:layout_width="match_parent"
-   	    android:layout_height="wrap_content"
-   	    android:orientation="vertical"
-   	    android:paddingLeft="15dp"
-   	    android:paddingRight="15dp" >
-		
-		<!-- 		latitud(invisible al usuario) -->
-		<TextView
-		    android:id="@+id/PoiLatitude"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text=""
-		    android:visibility="gone">
-		</TextView>
-		
-		<!-- 		longitud(invisible al usuario) -->
-		<TextView
-		    android:id="@+id/PoiLongitude"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text=""
-		    android:visibility="gone">
-		</TextView>
-		
-		<!-- 		nombre -->
-		
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:paddingRight="5dp"
-		    android:paddingTop="15dp"
-		    android:text="NOMBRE"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:textColor="@android:color/holo_blue_light" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
 
-		</TextView>
-		
+        <!-- latitud(invisible al usuario) -->
+
+        <TextView
+            android:id="@+id/PoiLatitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone" >
+        </TextView>
+
+        <!-- longitud(invisible al usuario) -->
+
+        <TextView
+            android:id="@+id/PoiLongitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone" >
+        </TextView>
+
+        <!-- nombre -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="NOMBRE"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="?android:attr/dividerVertical" />
-        		
 
-		<TextView
-		    android:id="@+id/PoiName"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="Un Lugar"
-		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@android:color/darker_gray" >
+        <TextView
+            android:id="@+id/PoiName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Un Lugar"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
 
-		</TextView>
-		
-		<!-- 		descripcion -->
-		
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:paddingRight="5dp"
-		    android:paddingTop="15dp"
-		    android:text="DESCRIPCIÓN"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:textColor="@android:color/holo_blue_light" >
+        <!-- descripcion -->
 
-		</TextView>
-		
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="DESCRIPCIÓN"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="?android:attr/dividerVertical" />
-		
-		<TextView
-		    android:id="@+id/PoiDescription"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="Una descripcion askds"
-		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@android:color/darker_gray">
-		</TextView>
-		
-		<!-- 		direccion -->
-		
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:paddingRight="5dp"
-		    android:paddingTop="15dp"
-		    android:text="DIRECCIÓN"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:textColor="@android:color/holo_blue_light" >
 
-		</TextView>
-		
+        <TextView
+            android:id="@+id/PoiDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Una descripcion askds"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <!-- direccion -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="DIRECCIÓN"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="?android:attr/dividerVertical" />
+
+        <TextView
+            android:id="@+id/PoiAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <!-- categoria -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:text="CATEGORÍA"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <TextView
+            android:id="@+id/PoiCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <!-- Owner -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:text="ADMINISTRADOR"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
+
+            <com.facebook.widget.ProfilePictureView
+                android:id="@+id/selection_profile_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                facebook:preset_size="small" />
+
+            <TextView
+                android:id="@+id/selection_owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+            	android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
         
-		<TextView
-		    android:id="@+id/PoiAddress"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text=""
-		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@android:color/darker_gray">
-		</TextView>		
-		
-		<!-- 		categoria -->
-		
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:paddingRight="5dp"
-		    android:text="CATEGORÍA"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:textColor="@android:color/holo_blue_light" >
-
-		</TextView>
-		
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="?android:attr/dividerVertical" />
-		<TextView
-		    android:id="@+id/PoiCategory"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text=""
-		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@android:color/darker_gray">
-		</TextView>
- 
     </LinearLayout>
+
 </ScrollView>

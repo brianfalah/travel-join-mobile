@@ -2,6 +2,9 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.PoiDetailsActivity;
+import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.models.User;
+import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.os.Bundle;
@@ -36,8 +39,22 @@ public class PoiInformationFragment  extends Fragment {
 		tvCategory = (TextView) view.findViewById(R.id.PoiCategory);
 		tvAddress = (TextView) view.findViewById(R.id.PoiAddress);
 		setFields();       
-
+		initializeOwnerInformation(view);
+		
 		return view;
+	}
+	
+	private void initializeOwnerInformation(View view) {
+		ProfilePictureView  profilePictureView = (ProfilePictureView) view
+				.findViewById(R.id.selection_profile_pic);
+		profilePictureView.setCropped(true);
+		TextView userOwnerNameView = (TextView) view.findViewById(R.id.selection_owner_name);
+
+		GlobalContext globalContext = (GlobalContext) getActivity()
+				.getApplicationContext();
+		User owner = globalContext.getUser();
+		profilePictureView.setProfileId(owner.getFacebookId());
+		userOwnerNameView.setText(owner.getFullName());
 	}
 	
 	public void setFields(){
