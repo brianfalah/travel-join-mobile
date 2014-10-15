@@ -55,14 +55,6 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 	protected static final int GET_TOURS_METHOD = 1;
 	protected static final int DELETE_TOUR_METHOD = 2;
 
-	OnItemClickListener tourItemClickListener = new OnItemClickListener() {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			startTourDetailActivity((Tour) adapter.getItem(position));
-		}
-	};
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -136,6 +128,14 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		}
 	}
 
+	OnItemClickListener tourItemClickListener = new OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			startTourDetailActivity((Tour) adapter.getItem(position));
+		}
+	};
+	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		final Tour selectedTour = getTourItem(item);
@@ -145,9 +145,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 			return true;
 		case R.id.tour_context_menu_edit:
 			Intent intent_edit = new Intent(this, TourFormActivity.class);
-			intent_edit.putExtra("tour", selectedTour); // le pasamos el punto
-														// al form
-			// va al form para editarlo
+			intent_edit.putExtra("tour", selectedTour);
 			startActivityForResult(intent_edit, EDIT_TOUR_REQUEST);
 			return true;
 		case R.id.tour_context_menu_delete:

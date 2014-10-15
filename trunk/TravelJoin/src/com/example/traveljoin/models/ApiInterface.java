@@ -127,8 +127,14 @@ public class ApiInterface {
             	}            	
             }
             
-            if (object instanceof Group) {
-            	jsonObject = ((Group) object).toJSON();
+            if (object instanceof Group){
+            	if (method == "delete"){
+            		jsonObject = new JSONObject();
+            		jsonObject.put("id", ((Group) object).getId() );
+            	}
+            	else{
+            		jsonObject = ((Group) object).toJSON();	
+            	}            	
             }
             
             if (object instanceof User) {

@@ -1,6 +1,7 @@
 package com.example.traveljoin.auxiliaries;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,6 +19,8 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
+import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.GroupPoi;
 import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.User;
 import com.facebook.Request;
@@ -29,7 +32,7 @@ public class GlobalContext extends Application {
 
 	private User user;
 	private List<Category> categories;
-	private List<Interest> interests;
+	private ArrayList<GeneralItem> interests;
 	private final int TASK_TO_EXECUTED = 3;
 	private int taskCurrentExcutingInProgressDialog;
 
@@ -54,12 +57,14 @@ public class GlobalContext extends Application {
 		this.categories = categories;
 	}
 	
-	public List<Interest> getInterests() {
+	public ArrayList<GeneralItem> getInterests() {
 		return interests;
 	}
 
-	public void setInterests(List<Interest> interests) {
+	public void setInterests(ArrayList<GeneralItem> interests) {
 		this.interests = interests;
+//		this.interests.clear();
+//		this.interests.addAll((Collection<? extends Interest>) interests);
 	}
 	
 	public void initializeContext(FragmentActivity requesterActivity) {
@@ -248,7 +253,7 @@ public class GlobalContext extends Application {
 			Log.d("InputStream", result);
 			try {
 				if (apiResult.ok()) {
-					List<Interest> interests = getInterestsFromJSON(new JSONArray(
+					ArrayList<GeneralItem> interests = getInterestsFromJSON(new JSONArray(
 							result));
 					GlobalContext globalContext = (GlobalContext) getApplicationContext();
 					globalContext.setInterests(interests);
@@ -267,9 +272,9 @@ public class GlobalContext extends Application {
 
 		}
 
-		private List<Interest> getInterestsFromJSON(JSONArray interestsJSON)
+		private ArrayList<GeneralItem> getInterestsFromJSON(JSONArray interestsJSON)
 				throws JSONException {
-			List<Interest> interests = new ArrayList<Interest>();
+			ArrayList<GeneralItem> interests = new ArrayList<GeneralItem>();
 
 			for (int i = 0; i < interestsJSON.length(); i++) {
 				JSONObject interestJSON = interestsJSON.getJSONObject(i);

@@ -3,6 +3,7 @@ package com.example.traveljoin.models;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,22 +16,42 @@ public class Group implements Serializable, GeneralItem {
 	private String description;
 	private Integer type;
 	private String password;
-	private ArrayList<Interest> interests;
-	private ArrayList<Poi> pois;
-	private ArrayList<Tour> tours;
 	private Integer userId;
 	
-	public Group(String name, String description, Integer type, String password,
-			ArrayList<Interest> interests, ArrayList<Poi> pois,
-			ArrayList<Tour> tours, Integer userId) {
+	private ArrayList<GroupInterest> groupInterests;
+	private ArrayList<GroupInterest> groupInterestsToDelete;
+	private ArrayList<GroupPoi> groupPois;
+	private ArrayList<GroupPoi> groupPoisToDelete;	
+	private ArrayList<GroupTour> groupTours;
+	private ArrayList<GroupTour> groupToursToDelete;
+	
+
+	
+	
+	public Group(Integer id, String name, String description, Integer type, String password,
+			Integer userId, ArrayList<GeneralItem> groupInterests,
+			ArrayList<GeneralItem> groupPois, ArrayList<GeneralItem> groupTours) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.type = type;
 		this.password = password;
-		this.interests = interests;
-		this.pois = pois;
-		this.tours = tours;
 		this.userId = userId;
+		
+		this.groupInterests = new ArrayList<GroupInterest>();
+		this.groupInterests.clear();
+		this.groupInterests.addAll((Collection<? extends GroupInterest>) groupInterests);
+		this.groupInterestsToDelete = new ArrayList<GroupInterest>();
+		
+		this.groupPois= new ArrayList<GroupPoi>();
+		this.groupPois.clear();
+		this.groupPois.addAll((Collection<? extends GroupPoi>) groupPois);
+		this.groupPoisToDelete = new ArrayList<GroupPoi>();		
+		
+		this.groupTours = new ArrayList<GroupTour>();
+		this.groupTours.clear();
+		this.groupTours.addAll((Collection<? extends GroupTour>) groupTours);
+		this.groupToursToDelete = new ArrayList<GroupTour>();
 	}
 
 	@Override
@@ -76,30 +97,6 @@ public class Group implements Serializable, GeneralItem {
 		this.password = password;
 	}
 
-	public ArrayList<Interest> getInterests() {
-		return interests;
-	}
-
-	public void setInterests(ArrayList<Interest> interests) {
-		this.interests = interests;
-	}
-
-	public ArrayList<Poi> getPois() {
-		return pois;
-	}
-
-	public void setPois(ArrayList<Poi> pois) {
-		this.pois = pois;
-	}
-
-	public ArrayList<Tour> getTours() {
-		return tours;
-	}
-
-	public void setTours(ArrayList<Tour> tours) {
-		this.tours = tours;
-	}
-
 	public Integer getUserId() {
 		return userId;
 	}
@@ -107,40 +104,100 @@ public class Group implements Serializable, GeneralItem {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	
+	
+	
+	public ArrayList<GroupPoi> getGroupPois() {
+		return groupPois;
+	}
+
+	public void setGroupPois(ArrayList<GeneralItem> groupPois) {
+		this.groupPois.clear();
+		this.groupPois.addAll((Collection<? extends GroupPoi>) groupPois);
+	}
+
+	public ArrayList<GroupPoi> getGroupPoisToDelete() {
+		return groupPoisToDelete;
+	}
+
+	public void setGroupPoisToDelete(ArrayList<GroupPoi> groupPoisToDelete) {
+		this.groupPoisToDelete = groupPoisToDelete;
+	}
+	
+	
+
+	public ArrayList<GroupInterest> getGroupInterests() {
+		return groupInterests;
+	}
+
+	public void setGroupInterests(ArrayList<GeneralItem> groupInterests) {
+		this.groupInterests.clear();
+		this.groupInterests.addAll((Collection<? extends GroupInterest>) groupInterests);
+	}
+
+	public ArrayList<GroupInterest> getGroupInterestsToDelete() {
+		return groupInterestsToDelete;
+	}
+
+	public void setGroupInterestsToDelete(
+			ArrayList<GroupInterest> groupInterestsToDelete) {
+		this.groupInterestsToDelete = groupInterestsToDelete;
+	}
+
+	public ArrayList<GroupTour> getGroupTours() {
+		return groupTours;
+	}
+
+	public void setGroupTours(ArrayList<GeneralItem> groupTours) {
+		this.groupTours.clear();
+		this.groupTours.addAll((Collection<? extends GroupTour>) groupTours);
+	}
+
+	public ArrayList<GroupTour> getGroupToursToDelete() {
+		return groupToursToDelete;
+	}
+
+	public void setGroupToursToDelete(ArrayList<GroupTour> groupToursToDelete) {
+		this.groupToursToDelete = groupToursToDelete;
+	}
 
 	public static Group fromJSON(JSONObject groupJson) throws JSONException, ParseException {
-		JSONArray interestsJson = groupJson.getJSONArray("interests");
-		JSONArray poisJson = groupJson.getJSONArray("pois");
-		JSONArray toursJson = groupJson.getJSONArray("tours");
-		ArrayList<Interest> interests = new ArrayList<Interest>();
-		ArrayList<Poi> pois = new ArrayList<Poi>();
-		ArrayList<Tour> tours = new ArrayList<Tour>();
+		JSONArray groupsInterestsJson = groupJson.getJSONArray("groups_interests");
+		JSONArray groupsPoisJson = groupJson.getJSONArray("groups_pois");
+		JSONArray groupsToursJson = groupJson.getJSONArray("groups_tours");
+				
+		ArrayList<GeneralItem> groupInterestsToAdd = new ArrayList<GeneralItem>();
+		ArrayList<GeneralItem> groupPoisToAdd = new ArrayList<GeneralItem>();
+		ArrayList<GeneralItem> groupToursToAdd = new ArrayList<GeneralItem>();
 
-		for (int index = 0; index < interestsJson.length(); index++) {
-			JSONObject interestJson = interestsJson.getJSONObject(index);
-			Interest interest = Interest.fromJSON(interestJson);
-			interests.add(interest);
+		for (int index = 0; index < groupsInterestsJson.length(); index++) {
+			JSONObject groupsInterestJson = groupsInterestsJson.getJSONObject(index);
+			GroupInterest groupInterest = GroupInterest.fromJSON(groupsInterestJson);
+			groupInterestsToAdd.add(groupInterest);
 		}
 		
-		for (int index = 0; index < poisJson.length(); index++) {
-			JSONObject poiJson = poisJson.getJSONObject(index);
-			Poi poi = Poi.fromJSON(poiJson);
-			pois.add(poi);
+		for (int index = 0; index < groupsPoisJson.length(); index++) {
+			JSONObject groupsPoiJson = groupsPoisJson.getJSONObject(index);
+			GroupPoi groupPoi = GroupPoi.fromJSON(groupsPoiJson);
+			groupPoisToAdd.add(groupPoi);
 		}
 		
-		for (int index = 0; index < toursJson.length(); index++) {
-			JSONObject tourJson = toursJson.getJSONObject(index);
-			Tour tour = Tour.fromJSON(tourJson);
-			tours.add(tour);
+		for (int index = 0; index < groupsToursJson.length(); index++) {
+			JSONObject groupsTourJson = groupsToursJson.getJSONObject(index);
+			GroupTour groupTour = GroupTour.fromJSON(groupsTourJson);
+			groupToursToAdd.add(groupTour);
 		}
 
-		Group group = new Group(groupJson.getString("name"),
+		Group group = new Group(groupJson.getInt("id"),
+				groupJson.getString("name"),
 				groupJson.getString("description"),
 				groupJson.getInt("group_type"),
-				groupJson.getString("password"), interests, pois, tours,
-				groupJson.getInt("user_id"));
+				groupJson.getString("password"),
+				groupJson.getInt("user_id"),
+				groupInterestsToAdd,
+				groupPoisToAdd,
+				groupToursToAdd);
 
-		group.setId(groupJson.getInt("id"));
 		return group;
 	}
 
@@ -158,42 +215,48 @@ public class Group implements Serializable, GeneralItem {
 			jsonObject.put("password", getPassword());
 			jsonObject.put("user_id", getUserId());
 
-			JSONArray interestsJson = new JSONArray();
-			JSONObject interestJson = new JSONObject();
-			for (Interest interest : getInterests()) {
-				interestJson.put("group_id", getId());
-				interestJson.put("interest_id", interest.getId());
-				interestsJson.put(interestJson);
+			JSONArray groupInterestsJson = new JSONArray();	        
+			for (int i = 0; i < getGroupInterests().size(); i++) {
+	        	GroupInterest groupInterest = getGroupInterests().get(i);
+	        	groupInterestsJson.put(groupInterest.toJSON());
 			}
-
-			if (interestsJson.length() > 0) {
-				jsonObject.put("groups_interests_attributes", interestsJson);
+	        	        
+	        for (int i = 0; i < getGroupInterestsToDelete().size(); i++) {
+	        	groupInterestsJson.put(getGroupInterestsToDelete().get(i).toJSON());
 			}
-
-			JSONArray poisJson = new JSONArray();
-			JSONObject poiJson = new JSONObject();
-			for (Poi poi : getPois()) {
-				poiJson.put("group_id", getId());
-				poiJson.put("poi_id", poi.getId());
-				poisJson.put(poiJson);
+	        if(groupInterestsJson.length() > 0){
+	        	jsonObject.put("groups_interests_attributes", groupInterestsJson);
+	        }
+	        
+	        
+	        JSONArray groupPoisJson = new JSONArray();	        
+			for (int i = 0; i < getGroupPois().size(); i++) {
+	        	GroupPoi groupPoi = getGroupPois().get(i);
+	        	groupPoisJson.put(groupPoi.toJSON());
 			}
-
-			if (poisJson.length() > 0) {
-				jsonObject.put("groups_pois_attributes", poisJson);
+	        	        
+	        for (int i = 0; i < getGroupPoisToDelete().size(); i++) {
+	        	groupPoisJson.put(getGroupPoisToDelete().get(i).toJSON());
 			}
-			
-			JSONArray toursJson = new JSONArray();
-			JSONObject tourJson = new JSONObject();
-			for (Poi poi : getPois()) {
-				tourJson.put("group_id", getId());
-				tourJson.put("tour_id", poi.getId());
-				toursJson.put(tourJson);
+	        if(groupPoisJson.length() > 0){
+	        	jsonObject.put("groups_pois_attributes", groupPoisJson);
+	        }
+	        
+	        
+	        JSONArray groupToursJson = new JSONArray();	        
+			for (int i = 0; i < getGroupTours().size(); i++) {
+	        	GroupTour groupTour = getGroupTours().get(i);
+	        	groupToursJson.put(groupTour.toJSON());
 			}
-
-			if (toursJson.length() > 0) {
-				jsonObject.put("groups_tours_attributes", tourJson);
+	        	        
+	        for (int i = 0; i < getGroupToursToDelete().size(); i++) {
+	        	groupToursJson.put(getGroupToursToDelete().get(i).toJSON());
 			}
-
+	        if(groupToursJson.length() > 0){
+	        	jsonObject.put("groups_tours_attributes", groupToursJson);
+	        }
+	        
+	        
 			JSONObject groupJson = new JSONObject();
 			groupJson.put("group", jsonObject);
 			return groupJson;
