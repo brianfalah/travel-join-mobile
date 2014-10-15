@@ -148,13 +148,21 @@ public class Tour implements Serializable, GeneralItem {
 	
 	@Override
 	public boolean equals(Object object) {
-		if (!(object instanceof Tour)) {
-			return false;
+		if (object instanceof Tour) {
+			Tour tour = (Tour) object;
+			return this.id.equals(tour.id);
 		}
-		Tour tour = (Tour) object;
-		return this.id.equals(tour.name);
+		else{
+			if (object instanceof GroupTour) {
+				GroupTour groupTour = (GroupTour) object;
+				return this.id.equals(groupTour.getTourId());
+			}
+			else{
+				return false;
+			}
+		}		
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return this.id.hashCode();

@@ -50,7 +50,6 @@ public class TourFormActivity extends ActionBarActivity implements
 	private SmartFragmentStatePagerAdapter adapterViewPager;
 	public ArrayList<GeneralItem> tourPois;
 	public ArrayList<TourPoi> tourPoisToDelete;
-	ArrayAdapter<TourPoi> tourPoisAdapter;
 
 	private static final int ADD_TOUR_METHOD = 1;
 	private static final int UPDATE_TOUR_METHOD = 2;

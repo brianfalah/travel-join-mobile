@@ -195,10 +195,7 @@ public class Poi implements Serializable, GeneralItem{
 	public boolean equals(Object object) {
 		if (object instanceof Poi) {
 			Poi poi = (Poi) object;
-			return this.name.equals(poi.name)
-					&& this.description.equals(poi.description)
-					&& this.latitude.equals(poi.latitude)
-					&& this.longitude.equals(poi.longitude);
+			return this.id.equals(poi.id);
 		}
 		else{
 			if (object instanceof TourPoi) {
@@ -206,14 +203,19 @@ public class Poi implements Serializable, GeneralItem{
 				return this.id.equals(tourPoi.getPoiId());
 			}
 			else{
-				return false;
-			}
+				if (object instanceof GroupPoi) {
+					GroupPoi groupPoi = (GroupPoi) object;
+					return this.id.equals(groupPoi.getPoiId());
+				}
+				else{
+					return false;
+				}
+			}			
 		}		
 	}
 
 	@Override
 	public int hashCode() {
-		return this.name.hashCode() + this.description.hashCode()
-				+ this.latitude.hashCode() + this.longitude.hashCode();
+		return this.id.hashCode();
 	}
 }

@@ -24,24 +24,36 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/cancelButton"
+                android:id="@+id/GroupCancelButton"
                 style="?android:buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_action_cancel"
-                android:onClick="onCancelButtonClicked"
+                android:onClick="cancel"
                 android:text="@string/cancel" />
 
             <Button
-                android:id="@+id/acceptButton"
+                android:id="@+id/GroupCreateButton"
                 style="?android:buttonBarButtonStyle"
+                android:drawableLeft="@drawable/ic_action_accept"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="createGroup"
+	            android:text="@string/create"
+	            android:visibility="gone"/>
+            
+       		<Button
+                android:id="@+id/GroupUpdateButton"
+                style="?android:buttonBarButtonStyle"
                 android:drawableLeft="@drawable/ic_action_accept"
-                android:onClick="onAcceptButtonClicked"
-                android:text="@string/create" />
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="updateGroup"
+	            android:text="@string/update"
+	            android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
     <!-- End - Bottom button section -->

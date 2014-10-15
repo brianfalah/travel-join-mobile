@@ -1,11 +1,6 @@
 package com.example.traveljoin.activities;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,7 +8,6 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,21 +22,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
-import com.example.traveljoin.models.ApiInterface;
-import com.example.traveljoin.models.ApiResult;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Poi;
 
-public class PoisSelectorActivity extends Activity implements
+public class InterestsSelectorActivity extends Activity implements
 		OnQueryTextListener {
 
 	private ProgressDialog progress;
 	private ActionBar actionBar;
 	private ListView listView;
 	private GeneralItemCheckeableListAdapter adapter;
-	private ArrayList<GeneralItem> selectedPois;
+	private ArrayList<GeneralItem> selectedInterests;
 
-	OnItemClickListener poiItemClickListener = new OnItemClickListener() {
+	OnItemClickListener interestItemClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -60,16 +52,16 @@ public class PoisSelectorActivity extends Activity implements
 		setContentView(R.layout.activity_general_item_selector);
 
 		actionBar = getActionBar();
-		actionBar.setSubtitle(R.string.pois_selector);
+		actionBar.setSubtitle(R.string.interests_selector);
 
-		selectedPois = new ArrayList<GeneralItem>();
-		ArrayList<GeneralItem> alreadySelectedPois = (ArrayList<GeneralItem>) getIntent()
-				.getExtras().get("alreadySelectedPois");
+		selectedInterests = new ArrayList<GeneralItem>();
+		ArrayList<GeneralItem> alreadySelectedInterests = (ArrayList<GeneralItem>) getIntent()
+				.getExtras().get("alreadySelectedInterests");
 
 		listView = (ListView) findViewById(R.id.list);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setTextFilterEnabled(true);
-		getPoisFromServer(alreadySelectedPois);
+		getInterests(alreadySelectedInterests);		
 		registerForContextMenu(listView);
 	}
 
@@ -110,13 +102,18 @@ public class PoisSelectorActivity extends Activity implements
 		return false;
 	}
 
-	private void getPoisFromServer(ArrayList<GeneralItem> alreadySelectedPois) {
-		progress = ProgressDialog.show(this, getString(R.string.loading),
-				getString(R.string.wait), true);
-		String url = getResources().getString(R.string.api_url)
-				+ "/pois/indexAll.json";
-		GetPoisTask getPoisTask = new GetPoisTask(alreadySelectedPois);
-		getPoisTask.execute(url);
+	private void getInterests(ArrayList<GeneralItem> alreadySelectedInterests) {
+		GlobalContext globalContext = (GlobalContext) this.getApplicationContext();
+		ArrayList<GeneralItem> interests = globalContext.getInterests();
+		
+		adapter = new GeneralItemCheckeableListAdapter(
+				new GeneralItemListAdapter(
+						InterestsSelectorActivity.this, interests),
+				alreadySelectedInterests);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(interestItemClickListener);
+		adapter.notifyDataSetChanged();
+		
 	}
 
 	public void onCancelButtonClicked(View button) {
@@ -130,61 +127,10 @@ public class PoisSelectorActivity extends Activity implements
 		// se deba seleccionar uno
 
 		Intent output = new Intent();
-		output.putExtra("newSelectedPois", adapter.getSelectedItems());
+		output.putExtra("newSelectedInterests", adapter.getSelectedItems());
 
 		setResult(Activity.RESULT_OK, output);
 		finish();
-	}
-
-	private class GetPoisTask extends AsyncTask<String, Void, String> {
-		private ApiInterface apiInterface = new ApiInterface();
-		private ApiResult api_result;
-		private ArrayList<GeneralItem> alreadySelectedPois;
-
-		public GetPoisTask(ArrayList<GeneralItem> alreadySelectedPois) {
-			this.alreadySelectedPois = alreadySelectedPois;
-		}
-
-		@Override
-		protected String doInBackground(String... urls) {
-			api_result = apiInterface.GET(urls[0]);
-			return api_result.getResult();
-		}
-
-		// onPostExecute displays the results of the AsyncTask.
-		@Override
-		protected void onPostExecute(String result) {
-			if (api_result.ok()) {
-				try {
-					JSONArray poisJson = new JSONArray(result);
-					for (int i = 0; i < poisJson.length(); i++) {
-						JSONObject poiJson = poisJson.getJSONObject(i);
-						Poi poi = Poi.fromJSON(poiJson);
-						selectedPois.add(poi);
-					}
-					adapter = new GeneralItemCheckeableListAdapter(
-							new GeneralItemListAdapter(
-									PoisSelectorActivity.this, selectedPois),
-							alreadySelectedPois);
-					listView.setAdapter(adapter);
-					listView.setOnItemClickListener(poiItemClickListener);
-					adapter.notifyDataSetChanged();
-					progress.dismiss();
-
-				} catch (JSONException e) {
-					// TODO: Handlear
-					progress.dismiss();
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO: Handlear
-					e.printStackTrace();
-				}
-			} else {
-				// showConnectionError();
-				// TODO si no se pudieron obtener las categorias mostrar cartel
-				// para reintentar
-			}
-		}
 	}
 
 }

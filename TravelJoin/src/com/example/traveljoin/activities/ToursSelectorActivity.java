@@ -66,11 +66,10 @@ public class ToursSelectorActivity extends Activity implements
 		ArrayList<GeneralItem> alreadySelectedTours = (ArrayList<GeneralItem>) getIntent()
 				.getExtras().get("alreadySelectedTours");
 
-		getToursFromServer(alreadySelectedTours);
-
 		listView = (ListView) findViewById(R.id.list);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setTextFilterEnabled(true);
+		getToursFromServer(alreadySelectedTours);
 		registerForContextMenu(listView);
 	}
 
