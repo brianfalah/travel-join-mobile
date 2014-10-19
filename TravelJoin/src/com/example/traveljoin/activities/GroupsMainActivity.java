@@ -217,6 +217,32 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		user = globalContext.getUser();
 	}
 
+	/*
+	 * Cuando vuelve de un activity empezado con un startActivityForResult viene
+	 * aca
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Decide what to do based on the original request code
+		switch (requestCode) {
+		case CREATE_GROUP_REQUEST:
+			switch (resultCode) {
+			case Activity.RESULT_OK:
+				getGroupsFromServer();
+				break;
+			}
+			break;
+		case EDIT_GROUP_REQUEST:
+			switch (resultCode) {
+			case Activity.RESULT_OK:
+				getGroupsFromServer();
+				break;
+			}
+			break;
+		}
+
+	}
+
 	private void getGroupsFromServer() {
 		progress = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);

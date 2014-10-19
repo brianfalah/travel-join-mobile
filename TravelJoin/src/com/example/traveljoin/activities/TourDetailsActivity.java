@@ -218,9 +218,9 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		    		case Activity.RESULT_OK :
 		    	        Bundle b = data.getExtras(); // gets the previously created intent
 		    	        tour = (Tour) b.get("tour_created_or_updated"); 
-		    	        PoiInformationFragment infoFragment = (PoiInformationFragment) adapterViewPager.getRegisteredFragment(0);
+		    	        TourDetailInformationFragment infoFragment = (TourDetailInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		    	        infoFragment.setFields();
-		    	        PoiEventsFragment eventsFragment = (PoiEventsFragment) adapterViewPager.getRegisteredFragment(1);
+		    	        TourDetailPoisFragment eventsFragment = (TourDetailPoisFragment) adapterViewPager.getRegisteredFragment(1);
 		    	        eventsFragment.refreshList();
 		    		break;
 	    		}

@@ -1,27 +1,27 @@
 package com.example.traveljoin.fragments;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupFormActivity;
-import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.activities.ToursSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.GroupPoi;
+import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupTour;
 import com.example.traveljoin.models.Tour;
 
@@ -30,7 +30,23 @@ public class GroupFormToursFragment extends ListFragment {
 	private ArrayList<GeneralItem> fragmentGroupTours;
 	private GeneralItemListAdapter groupToursAdapter;
 	private static final int ADD_TOURS_REQUEST = 1;
+	
+	public GroupFormToursFragment(Group group){
+		fragmentGroupTours = new ArrayList<GeneralItem>();
+		if (group != null){
+			fragmentGroupTours.addAll(group.getGroupTours());
+		}	
+	}
+    
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
+		View view = inflater.inflate(R.layout.fragment_group_form_tours,
+				container, false);		
+		return view;
+	}
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,9 +57,10 @@ public class GroupFormToursFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-		fragmentGroupTours = new ArrayList<GeneralItem>();
-		fragmentGroupTours.clear();
-		fragmentGroupTours.addAll(groupFormActivity.groupTours);
+//		fragmentGroupTours = new ArrayList<GeneralItem>();
+//		if (groupFormActivity.group != null){
+//			fragmentGroupTours.addAll(groupFormActivity.group.getGroupTours());
+//		}	
 		groupToursAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupTours);
 		setListAdapter(groupToursAdapter);
 		registerForContextMenu(getListView());
@@ -78,14 +95,15 @@ public class GroupFormToursFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if( getUserVisibleHint() == false ) 
+	    {
+	        return false;
+	    }
 		GroupTour selectedGroupTour;
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
-			selectedGroupTour = getGroupTourItem(item);
-			selectedGroupTour.setDeleted(true);
-			groupFormActivity.groupToursToDelete.add(selectedGroupTour);
+			selectedGroupTour = getGroupTourItem(item);			
 			fragmentGroupTours.remove(selectedGroupTour);
-			groupFormActivity.groupTours.remove(selectedGroupTour);
 			groupToursAdapter.notifyDataSetChanged();			
 			return true;
 		default:
@@ -109,39 +127,18 @@ public class GroupFormToursFragment extends ListFragment {
 			case Activity.RESULT_OK:
 				Bundle bundle = data.getExtras();
 				ArrayList<GeneralItem> newSelectedTours = (ArrayList<GeneralItem>) bundle.get("newSelectedTours");
-				ArrayList<GroupTour> newSelectedGroupTours = new ArrayList<GroupTour>();
-				ArrayList<Integer> newSelectedTourIds = new ArrayList<Integer>();
 				
-				ArrayList<Integer> oldSelectedTourIds = new ArrayList<Integer>();
-								
-				
-				for (int j = 0; j < newSelectedTours.size(); j++) {					
+				fragmentGroupTours.clear();
+				//vemos todos los nuevos seleccionados y armamos 1 array de TourPois y otro de Ids de Pois
+				for (int j = 0; j < newSelectedTours.size(); j++) {	
+					Tour selectedTour = (Tour) newSelectedTours.get(j);
 					Integer groupId = (groupFormActivity.group != null) ? groupFormActivity.group.getId() : null;
-					GroupTour groupTourToAdd = new GroupTour(null, groupId, newSelectedTours.get(j).getId(), newSelectedTours.get(j).getName(), newSelectedTours.get(j).getDescription());
-					newSelectedGroupTours.add(groupTourToAdd);
-					newSelectedTourIds.add(newSelectedTours.get(j).getId());
-				}
-				
-				for (int i = 0; i < fragmentGroupTours.size(); i++) {
-					GroupTour groupTour = (GroupTour) fragmentGroupTours.get(i);
-					oldSelectedTourIds.add(groupTour.getTourId());
-					
-					if(!newSelectedTourIds.contains(groupTour.getTourId()))
-					{
-						groupTour.setDeleted(true);
-						fragmentGroupTours.remove(i);
-						groupFormActivity.groupToursToDelete.add(groupTour);
-					}
-				}
-				
-				for (int i = 0; i < newSelectedGroupTours.size(); i++) {
-					if ( !oldSelectedTourIds.contains(newSelectedGroupTours.get(i).getTourId() ) ){						
-						fragmentGroupTours.add(newSelectedGroupTours.get(i));
-						groupFormActivity.groupTours.add(newSelectedGroupTours.get(i));
-					}
+					GroupTour groupTourToAdd = new GroupTour(null, groupId, selectedTour.getId(), selectedTour.getName(), selectedTour.getDescription());
+					fragmentGroupTours.add(groupTourToAdd);
 				}
 
 				groupToursAdapter.notifyDataSetChanged();
+
 				break;
 			case Activity.RESULT_CANCELED:
 				break;
@@ -150,6 +147,10 @@ public class GroupFormToursFragment extends ListFragment {
 
 		}
 
+	}
+	
+	public ArrayList<GeneralItem> getGroupTours(){
+		return fragmentGroupTours;
 	}
 
 }

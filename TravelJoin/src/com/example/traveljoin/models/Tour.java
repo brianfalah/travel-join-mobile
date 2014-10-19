@@ -92,6 +92,44 @@ public class Tour implements Serializable, GeneralItem {
 	public void setTourPoisToDelete(ArrayList<TourPoi> tourPoisToDelete) {
 		this.tourPoisToDelete = tourPoisToDelete;
 	}
+	
+	public void updateTourPois(ArrayList<TourPoi> oldTourPois, ArrayList<GeneralItem> newTourPois){
+		this.tourPois.addAll(oldTourPois);
+		
+		ArrayList<TourPoi> tourPoisToAdd = new ArrayList<TourPoi>();		
+		ArrayList<Integer> newSelectedPoiIds = new ArrayList<Integer>();		
+		ArrayList<Integer> oldSelectedPoiIds = new ArrayList<Integer>();
+		
+		//agregar los que no estaban y borrar los que no estan
+		
+		//vemos todos los nuevos seleccionados y armamos 1 array de TourPois y otro de Ids de Pois
+		for (int j = 0; j < newTourPois.size(); j++) {
+			newSelectedPoiIds.add(((TourPoi) newTourPois.get(j)).getPoiId());
+		}
+		
+		 //vemos cuales vamos a borrar(los que estaban antes y no vinieron seleccionados ahora)
+		for (int i = 0; i < getTourPois().size(); i++) {
+			TourPoi tourPoi = getTourPois().get(i);
+			oldSelectedPoiIds.add(tourPoi.getPoiId());
+			
+			//si no esta entre los nuevos lo seteamos como borrado
+			if(!newSelectedPoiIds.contains(tourPoi.getPoiId()))
+			{
+				getTourPois().get(i).setDeleted(true);
+			}
+		}
+		
+		//vemos cuales vamos a crear(los que vinieron seleccionados ahora y no estaban antes)
+		for (int i = 0; i < newTourPois.size(); i++) {
+			TourPoi tourPoi = (TourPoi) newTourPois.get(i);
+			tourPoi.setTourId(this.getId());
+			if ( !oldSelectedPoiIds.contains(tourPoi.getPoiId()) ){						
+				tourPoisToAdd.add(tourPoi);
+			}
+		}
+		
+		this.tourPois.addAll(tourPoisToAdd);
+	}
 
 	public static Tour fromJSON(JSONObject tourJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> tourPoisToAdd = new ArrayList<GeneralItem>();
@@ -121,16 +159,22 @@ public class Tour implements Serializable, GeneralItem {
 	        jsonObject.put("description", getDescription());
 	        jsonObject.put("user_id", getUserId());
 	        
+	        Integer orderNumber = 1;
+	        
 	        JSONArray tourPoisJson = new JSONArray();	        
 	        for (int i = 0; i < getTourPois().size(); i++) {
 	        	TourPoi tourPoi = getTourPois().get(i);
-	        	tourPoi.setOrderNumber(i+1);
+	        	
+	        	if (!tourPoi.isDeleted()){
+	        		tourPoi.setOrderNumber(orderNumber);
+	        		orderNumber += 1;
+	        	}
 	        	tourPoisJson.put(tourPoi.toJSON());
 			}
 	        	        
-	        for (int i = 0; i < getTourPoisToDelete().size(); i++) {
-	        	tourPoisJson.put(getTourPoisToDelete().get(i).toJSON());
-			}
+//	        for (int i = 0; i < getTourPoisToDelete().size(); i++) {
+//	        	tourPoisJson.put(getTourPoisToDelete().get(i).toJSON());
+//			}
 	        if(tourPoisJson.length() > 0){
 	        	jsonObject.put("tours_pois_attributes", tourPoisJson);
 	        }
