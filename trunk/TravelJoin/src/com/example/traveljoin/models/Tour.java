@@ -16,6 +16,7 @@ public class Tour implements Serializable, GeneralItem {
 	private String name;
 	private String description;
 	private Integer userId;
+	private User user;
 	
 	private ArrayList<TourPoi> tourPois;
 	private ArrayList<TourPoi> tourPoisToDelete;
@@ -74,6 +75,14 @@ public class Tour implements Serializable, GeneralItem {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public ArrayList<TourPoi> getTourPois() {
@@ -142,7 +151,10 @@ public class Tour implements Serializable, GeneralItem {
     	}
 		
 		Tour tour = new Tour(tourJson.getInt("id"), tourJson.getString("name"),
-				tourJson.getString("description"), tourJson.getInt("user_id"), tourPoisToAdd);				
+				tourJson.getString("description"), tourJson.getInt("user_id"), tourPoisToAdd);
+		
+		User user = User.fromJSON(tourJson.getJSONObject("user"));
+		tour.setUser(user);
 		
 		return tour;
 	}

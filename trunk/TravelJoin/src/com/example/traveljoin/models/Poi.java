@@ -20,9 +20,9 @@ public class Poi implements Serializable, GeneralItem{
 	private Double longitude;
 	private String name;
 	private String description;
-	private String address;
-	
+	private String address;	
 	private Integer userId;
+	private User user;
 	private Integer categoryId;
 	private String categoryName;
 	private ArrayList<PoiEvent> poiEvents;
@@ -101,6 +101,14 @@ public class Poi implements Serializable, GeneralItem{
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Integer getCategoryId() {
 		return categoryId;
 	}
@@ -139,7 +147,10 @@ public class Poi implements Serializable, GeneralItem{
 		
 		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"), poiJson.getDouble("longitude"),
 	    		poiJson.getString("name"), poiJson.getString("description"), poiJson.getString("address"),
-	    		poiJson.getInt("user_id"), poiJson.getInt("category_id"), poiJson.getString("category_name"), poiEventsToAdd);				
+	    		poiJson.getInt("user_id"), poiJson.getInt("category_id"), poiJson.getString("category_name"), poiEventsToAdd);
+		
+		User user = User.fromJSON(poiJson.getJSONObject("user"));
+		poi.setUser(user);
 		
 		return poi;
 	}

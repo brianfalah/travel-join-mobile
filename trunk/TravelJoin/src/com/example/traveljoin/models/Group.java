@@ -11,12 +11,17 @@ import org.json.JSONObject;
 
 public class Group implements Serializable, GeneralItem {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private String description;
 	private Integer type;
 	private String password;
 	private Integer userId;
+	private User user;
 	
 	private ArrayList<GroupInterest> groupInterests;
 	private ArrayList<GroupInterest> groupInterestsToDelete;
@@ -107,6 +112,14 @@ public class Group implements Serializable, GeneralItem {
 	
 	
 	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public ArrayList<GroupPoi> getGroupPois() {
 		return groupPois;
 	}
@@ -300,7 +313,7 @@ public class Group implements Serializable, GeneralItem {
 			JSONObject groupsTourJson = groupsToursJson.getJSONObject(index);
 			GroupTour groupTour = GroupTour.fromJSON(groupsTourJson);
 			groupToursToAdd.add(groupTour);
-		}
+		}		
 
 		Group group = new Group(groupJson.getInt("id"),
 				groupJson.getString("name"),
@@ -311,6 +324,9 @@ public class Group implements Serializable, GeneralItem {
 				groupInterestsToAdd,
 				groupPoisToAdd,
 				groupToursToAdd);
+		
+		User user = User.fromJSON(groupJson.getJSONObject("user"));
+		group.setUser(user);
 
 		return group;
 	}
