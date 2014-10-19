@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,19 +14,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.InterestsSelectorActivity;
-import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
-import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupInterest;
-import com.example.traveljoin.models.GroupPoi;
 import com.example.traveljoin.models.Interest;
 
 public class GroupFormInterestsFragment extends ListFragment {
@@ -38,6 +32,23 @@ public class GroupFormInterestsFragment extends ListFragment {
 	private GeneralItemListAdapter groupInterestsAdapter;
 	private static final int ADD_INTERESTS_REQUEST = 1;
 	
+    
+    public GroupFormInterestsFragment(Group group){
+		this.fragmentGroupInterests = new ArrayList<GeneralItem>();
+		if (group != null){
+			fragmentGroupInterests.addAll(group.getGroupInterests());
+		}	
+    }
+    
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_group_form_interests,
+				container, false);		
+		return view;
+	}
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,9 +59,10 @@ public class GroupFormInterestsFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-		fragmentGroupInterests = new ArrayList<GeneralItem>();
-		fragmentGroupInterests.clear();
-		fragmentGroupInterests.addAll(groupFormActivity.groupInterests);
+//		fragmentGroupInterests = new ArrayList<GeneralItem>();
+//		if (groupFormActivity.group != null){
+//			fragmentGroupInterests.addAll(groupFormActivity.group.getGroupInterests());
+//		}		
 		groupInterestsAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupInterests);
 		setListAdapter(groupInterestsAdapter);
 		registerForContextMenu(getListView());
@@ -85,18 +97,19 @@ public class GroupFormInterestsFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if( getUserVisibleHint() == false ) 
+	    {
+	        return false;
+	    }
 		GroupInterest selectedGroupInterest;
 		switch (item.getItemId()) {
-		case R.id.context_menu_delete:
-			selectedGroupInterest = getGroupInterestItem(item);
-			selectedGroupInterest.setDeleted(true);
-			groupFormActivity.groupInterestsToDelete.add(selectedGroupInterest);
-			fragmentGroupInterests.remove(selectedGroupInterest);
-			groupFormActivity.groupInterests.remove(selectedGroupInterest);
-			groupInterestsAdapter.notifyDataSetChanged();			
-			return true;
-		default:
-			return super.onContextItemSelected(item);
+			case R.id.context_menu_delete:
+				selectedGroupInterest = getGroupInterestItem(item);
+				fragmentGroupInterests.remove(selectedGroupInterest);
+				groupInterestsAdapter.notifyDataSetChanged();			
+				return true;
+			default:
+				return super.onContextItemSelected(item);
 		}
 	}
 
@@ -116,39 +129,18 @@ public class GroupFormInterestsFragment extends ListFragment {
 			case Activity.RESULT_OK:
 				Bundle bundle = data.getExtras();
 				ArrayList<GeneralItem> newSelectedInterests = (ArrayList<GeneralItem>) bundle.get("newSelectedInterests");
-				ArrayList<GroupInterest> newSelectedGroupInterests = new ArrayList<GroupInterest>();
-				ArrayList<Integer> newSelectedInterestIds = new ArrayList<Integer>();
 				
-				ArrayList<Integer> oldSelectedInterestIds = new ArrayList<Integer>();
-								
-				
-				for (int j = 0; j < newSelectedInterests.size(); j++) {					
+				fragmentGroupInterests.clear();
+				//vemos todos los nuevos seleccionados y armamos 1 array de TourPois y otro de Ids de Pois
+				for (int j = 0; j < newSelectedInterests.size(); j++) {	
+					Interest selectedInterest = (Interest) newSelectedInterests.get(j);
 					Integer groupId = (groupFormActivity.group != null) ? groupFormActivity.group.getId() : null;
-					GroupInterest groupInterestToAdd = new GroupInterest(null, groupId, newSelectedInterests.get(j).getId(), newSelectedInterests.get(j).getName());
-					newSelectedGroupInterests.add(groupInterestToAdd);
-					newSelectedInterestIds.add(newSelectedInterests.get(j).getId());
-				}
-				
-				for (int i = 0; i < fragmentGroupInterests.size(); i++) {
-					GroupInterest groupInterest = (GroupInterest) fragmentGroupInterests.get(i);
-					oldSelectedInterestIds.add(groupInterest.getInterestId());
-					
-					if(!newSelectedInterestIds.contains(groupInterest.getInterestId()))
-					{
-						groupInterest.setDeleted(true);
-						fragmentGroupInterests.remove(i);
-						groupFormActivity.groupInterestsToDelete.add(groupInterest);
-					}
-				}
-				
-				for (int i = 0; i < newSelectedGroupInterests.size(); i++) {
-					if ( !oldSelectedInterestIds.contains(newSelectedGroupInterests.get(i).getInterestId() ) ){						
-						fragmentGroupInterests.add(newSelectedGroupInterests.get(i));
-						groupFormActivity.groupInterests.add(newSelectedGroupInterests.get(i));
-					}
+					GroupInterest groupInterestToAdd = new GroupInterest(null, groupId, selectedInterest.getId(), selectedInterest.getName());
+					fragmentGroupInterests.add(groupInterestToAdd);
 				}
 
 				groupInterestsAdapter.notifyDataSetChanged();
+				
 				break;
 			case Activity.RESULT_CANCELED:
 				break;
@@ -158,5 +150,27 @@ public class GroupFormInterestsFragment extends ListFragment {
 		}
 
 	}
+	
+	public ArrayList<GeneralItem> getGroupInterests(){
+		return fragmentGroupInterests;
+	}
+	
+	 @Override
+     public void onAttach(Activity activity)
+     {
+         super.onAttach(activity);
+     }
+
+     @Override
+     public void onStart()
+     {
+         super.onStart();
+     }
+
+     @Override
+     public void onResume()
+     {
+         super.onResume();
+     }
 
 }

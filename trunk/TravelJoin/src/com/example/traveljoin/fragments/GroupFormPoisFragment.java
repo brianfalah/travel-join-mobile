@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -21,7 +23,10 @@ import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
+import com.example.traveljoin.models.GroupInterest;
 import com.example.traveljoin.models.GroupPoi;
+import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.TourPoi;
 
@@ -31,6 +36,23 @@ public class GroupFormPoisFragment extends ListFragment {
 	private GeneralItemListAdapter groupPoisAdapter;
 	private static final int ADD_POIS_REQUEST = 1;
 
+	
+	public GroupFormPoisFragment(Group group){
+		fragmentGroupPois = new ArrayList<GeneralItem>();
+		if (group != null){
+			fragmentGroupPois.addAll(group.getGroupPois());
+		}
+	}
+    
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_group_form_pois,
+				container, false);		
+		return view;
+	}
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,9 +63,10 @@ public class GroupFormPoisFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-		fragmentGroupPois = new ArrayList<GeneralItem>();
-		fragmentGroupPois.clear();
-		fragmentGroupPois.addAll(groupFormActivity.groupPois);
+//		fragmentGroupPois = new ArrayList<GeneralItem>();
+//		if (groupFormActivity.group != null){
+//			fragmentGroupPois.addAll(groupFormActivity.group.getGroupPois());
+//		}	
 		groupPoisAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupPois);
 		setListAdapter(groupPoisAdapter);
 		registerForContextMenu(getListView());
@@ -78,14 +101,15 @@ public class GroupFormPoisFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if( getUserVisibleHint() == false ) 
+	    {
+	        return false;
+	    }
 		GroupPoi selectedGroupPoi;
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
 			selectedGroupPoi = getGroupPoiItem(item);
-			selectedGroupPoi.setDeleted(true);
-			groupFormActivity.groupPoisToDelete.add(selectedGroupPoi);
 			fragmentGroupPois.remove(selectedGroupPoi);
-			groupFormActivity.groupPois.remove(selectedGroupPoi);
 			groupPoisAdapter.notifyDataSetChanged();			
 			return true;
 		default:
@@ -106,42 +130,21 @@ public class GroupFormPoisFragment extends ListFragment {
 		switch (requestCode) {
 		case ADD_POIS_REQUEST:
 			switch (resultCode) {
-			case Activity.RESULT_OK:
+			case Activity.RESULT_OK:				
 				Bundle bundle = data.getExtras();
 				ArrayList<GeneralItem> newSelectedPois = (ArrayList<GeneralItem>) bundle.get("newSelectedPois");
-				ArrayList<GroupPoi> newSelectedGroupPois = new ArrayList<GroupPoi>();
-				ArrayList<Integer> newSelectedPoiIds = new ArrayList<Integer>();
 				
-				ArrayList<Integer> oldSelectedPoiIds = new ArrayList<Integer>();
-								
-				
-				for (int j = 0; j < newSelectedPois.size(); j++) {					
+				fragmentGroupPois.clear();
+				//vemos todos los nuevos seleccionados y armamos 1 array de TourPois y otro de Ids de Pois
+				for (int j = 0; j < newSelectedPois.size(); j++) {	
+					Poi selectedPoi = (Poi) newSelectedPois.get(j);
 					Integer groupId = (groupFormActivity.group != null) ? groupFormActivity.group.getId() : null;
-					GroupPoi groupPoiToAdd = new GroupPoi(null, groupId, newSelectedPois.get(j).getId(), newSelectedPois.get(j).getName(), newSelectedPois.get(j).getDescription());
-					newSelectedGroupPois.add(groupPoiToAdd);
-					newSelectedPoiIds.add(newSelectedPois.get(j).getId());
-				}
-				
-				for (int i = 0; i < fragmentGroupPois.size(); i++) {
-					GroupPoi groupPoi = (GroupPoi) fragmentGroupPois.get(i);
-					oldSelectedPoiIds.add(groupPoi.getPoiId());
-					
-					if(!newSelectedPoiIds.contains(groupPoi.getPoiId()))
-					{
-						groupPoi.setDeleted(true);
-						fragmentGroupPois.remove(i);
-						groupFormActivity.groupPoisToDelete.add(groupPoi);
-					}
-				}
-				
-				for (int i = 0; i < newSelectedGroupPois.size(); i++) {
-					if ( !oldSelectedPoiIds.contains(newSelectedGroupPois.get(i).getPoiId() ) ){						
-						fragmentGroupPois.add(newSelectedGroupPois.get(i));
-						groupFormActivity.groupPois.add(newSelectedGroupPois.get(i));
-					}
+					GroupPoi groupPoiToAdd = new GroupPoi(null, groupId, selectedPoi.getId(), selectedPoi.getName(), selectedPoi.getDescription());
+					fragmentGroupPois.add(groupPoiToAdd);
 				}
 
 				groupPoisAdapter.notifyDataSetChanged();
+				
 				break;
 			case Activity.RESULT_CANCELED:
 				break;
@@ -151,5 +154,27 @@ public class GroupFormPoisFragment extends ListFragment {
 		}
 
 	}
+	
+	public ArrayList<GeneralItem> getGroupPois(){
+		return fragmentGroupPois;
+	}
+	
+	 @Override
+     public void onAttach(Activity activity)
+     {
+         super.onAttach(activity);
+     }
+
+     @Override
+     public void onStart()
+     {
+         super.onStart();
+     }
+
+     @Override
+     public void onResume()
+     {
+         super.onResume();
+     }
 
 }

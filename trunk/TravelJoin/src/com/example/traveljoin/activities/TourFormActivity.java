@@ -47,9 +47,7 @@ public class TourFormActivity extends ActionBarActivity implements
 	Button updateButton;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
-	private SmartFragmentStatePagerAdapter adapterViewPager;
-	public ArrayList<GeneralItem> tourPois;
-	public ArrayList<TourPoi> tourPoisToDelete;
+	private SmartFragmentStatePagerAdapter adapterViewPager;	
 
 	private static final int ADD_TOUR_METHOD = 1;
 	private static final int UPDATE_TOUR_METHOD = 2;
@@ -83,14 +81,11 @@ public class TourFormActivity extends ActionBarActivity implements
 				.setText(getString(R.string.tour_pois_tab))
 				.setTabListener(this));
 
-		tourPois = new ArrayList<GeneralItem>();
-		tourPoisToDelete = new ArrayList<TourPoi>();
 
 		if (getIntent().getExtras() != null) {
 			actionBar.setSubtitle(R.string.tours_edition);
 			tour = (Tour) getIntent().getExtras().get("tour");
 			updateButton.setVisibility(View.VISIBLE);
-			tourPois.addAll(tour.getTourPois());
 		} else {
 			actionBar.setSubtitle(R.string.tours_creation);
 			tour = null;
@@ -165,14 +160,17 @@ public class TourFormActivity extends ActionBarActivity implements
 	public void createTour(View button) {
 		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager
 				.getRegisteredFragment(0);
+		TourFormPoisFragment pois_fragment = (TourFormPoisFragment) adapterViewPager.getRegisteredFragment(1);
+		
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
-
+			ArrayList<GeneralItem> newSelectedTourPois = pois_fragment.getTourPois();			
+			
 			Tour tour_to_create = new Tour(null, info_fragment.nameField
 					.getText().toString(), info_fragment.descField.getText()
-					.toString(), user.getId(), tourPois);
+					.toString(), user.getId(), newSelectedTourPois);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/tours/create";
@@ -188,19 +186,24 @@ public class TourFormActivity extends ActionBarActivity implements
 	public void updateTour(View button) {
 		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager
 				.getRegisteredFragment(0);
+		TourFormPoisFragment pois_fragment = (TourFormPoisFragment) adapterViewPager.getRegisteredFragment(1);
+		
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
-			tour = new Tour(tour.getId(), info_fragment.nameField.getText()
+			ArrayList<GeneralItem> newSelectedTourPois = pois_fragment.getTourPois();				
+						
+			Tour tourToUpdate = new Tour(tour.getId(), info_fragment.nameField.getText()
 					.toString(), info_fragment.descField.getText().toString(),
-					user.getId(), tourPois);
-			tour.setTourPoisToDelete(tourPoisToDelete);
+					user.getId(), new ArrayList<GeneralItem>());
+			
+			tourToUpdate.updateTourPois(tour.getTourPois(), newSelectedTourPois);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/tours/update";
 			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(UPDATE_TOUR_METHOD,
-					tour);
+					tourToUpdate);
 			httpAsyncTask.execute(url);
 			// sigue en HttpAsyncTask en doInBackground en UPDATE_TOUR_METHOD
 		}
@@ -301,7 +304,6 @@ public class TourFormActivity extends ActionBarActivity implements
 
 	public void closeActivity(Tour tour_created_or_updated) {
 		Intent output = new Intent();
-		tour_created_or_updated.setTourPois(tourPois);
 		output.putExtra("tour_created_or_updated", tour_created_or_updated);
 		setResult(Activity.RESULT_OK, output);
 		finish();

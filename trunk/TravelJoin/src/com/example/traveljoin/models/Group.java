@@ -161,6 +161,120 @@ public class Group implements Serializable, GeneralItem {
 		this.groupToursToDelete = groupToursToDelete;
 	}
 
+	public void updateGroupInterests(ArrayList<GroupInterest> oldGroupInterests, ArrayList<GeneralItem> newGroupInterests){
+		this.groupInterests.addAll(oldGroupInterests);
+		
+		ArrayList<GroupInterest> groupInterestsToAdd = new ArrayList<GroupInterest>();		
+		ArrayList<Integer> newSelectedInterestIds = new ArrayList<Integer>();		
+		ArrayList<Integer> oldSelectedInterestIds = new ArrayList<Integer>();
+		
+		//agregar los que no estaban y borrar los que no estan
+		
+		//vemos todos los nuevos seleccionados y armamos 1 array de Ids de Interests
+		for (int j = 0; j < newGroupInterests.size(); j++) {
+			newSelectedInterestIds.add(((GroupInterest) newGroupInterests.get(j)).getInterestId());
+		}
+		
+		 //vemos cuales vamos a borrar(los que estaban antes y no vinieron seleccionados ahora)
+		for (int i = 0; i < getGroupInterests().size(); i++) {
+			GroupInterest groupInterest = getGroupInterests().get(i);
+			oldSelectedInterestIds.add(groupInterest.getInterestId());
+			
+			//si no esta entre los nuevos lo seteamos como borrado
+			if(!newSelectedInterestIds.contains(groupInterest.getInterestId()))
+			{
+				getGroupInterests().get(i).setDeleted(true);
+			}
+		}
+		
+		//vemos cuales vamos a crear(los que vinieron seleccionados ahora y no estaban antes)
+		for (int i = 0; i < newGroupInterests.size(); i++) {
+			GroupInterest groupInterest = (GroupInterest) newGroupInterests.get(i);
+			groupInterest.setGroupId(this.getId());
+			if ( !oldSelectedInterestIds.contains(groupInterest.getInterestId()) ){						
+				groupInterestsToAdd.add(groupInterest);
+			}
+		}
+		
+		this.groupInterests.addAll(groupInterestsToAdd);
+	}
+	
+	public void updateGroupPois(ArrayList<GroupPoi> oldGroupPois, ArrayList<GeneralItem> newGroupPois){
+		this.groupPois.addAll(oldGroupPois);
+		
+		ArrayList<GroupPoi> groupPoisToAdd = new ArrayList<GroupPoi>();		
+		ArrayList<Integer> newSelectedPoiIds = new ArrayList<Integer>();		
+		ArrayList<Integer> oldSelectedPoiIds = new ArrayList<Integer>();
+		
+		//agregar los que no estaban y borrar los que no estan
+		
+		//vemos todos los nuevos seleccionados y armamos 1 array de GroupPois y otro de Ids de Pois
+		for (int j = 0; j < newGroupPois.size(); j++) {
+			newSelectedPoiIds.add(((GroupPoi) newGroupPois.get(j)).getPoiId());
+		}
+		
+		 //vemos cuales vamos a borrar(los que estaban antes y no vinieron seleccionados ahora)
+		for (int i = 0; i < getGroupPois().size(); i++) {
+			GroupPoi groupPoi = getGroupPois().get(i);
+			oldSelectedPoiIds.add(groupPoi.getPoiId());
+			
+			//si no esta entre los nuevos lo seteamos como borrado
+			if(!newSelectedPoiIds.contains(groupPoi.getPoiId()))
+			{
+				getGroupPois().get(i).setDeleted(true);
+			}
+		}
+		
+		//vemos cuales vamos a crear(los que vinieron seleccionados ahora y no estaban antes)
+		for (int i = 0; i < newGroupPois.size(); i++) {
+			GroupPoi groupPoi = (GroupPoi) newGroupPois.get(i);
+			groupPoi.setGroupId(this.getId());
+			if ( !oldSelectedPoiIds.contains(groupPoi.getPoiId()) ){						
+				groupPoisToAdd.add(groupPoi);
+			}
+		}
+		
+		this.groupPois.addAll(groupPoisToAdd);
+	}
+	
+	public void updateGroupTours(ArrayList<GroupTour> oldGroupTours, ArrayList<GeneralItem> newGroupTours){
+		this.groupTours.addAll(oldGroupTours);
+		
+		ArrayList<GroupTour> groupToursToAdd = new ArrayList<GroupTour>();		
+		ArrayList<Integer> newSelectedTourIds = new ArrayList<Integer>();		
+		ArrayList<Integer> oldSelectedTourIds = new ArrayList<Integer>();
+		
+		//agregar los que no estaban y borrar los que no estan
+		
+		//vemos todos los nuevos seleccionados y armamos 1 array de GroupTours y otro de Ids de Tours
+		for (int j = 0; j < newGroupTours.size(); j++) {
+			newSelectedTourIds.add(((GroupTour) newGroupTours.get(j)).getTourId());
+		}
+		
+		 //vemos cuales vamos a borrar(los que estaban antes y no vinieron seleccionados ahora)
+		for (int i = 0; i < getGroupTours().size(); i++) {
+			GroupTour groupTour = getGroupTours().get(i);
+			oldSelectedTourIds.add(groupTour.getTourId());
+			
+			//si no esta entre los nuevos lo seteamos como borrado
+			if(!newSelectedTourIds.contains(groupTour.getTourId()))
+			{
+				getGroupTours().get(i).setDeleted(true);
+			}
+		}
+		
+		//vemos cuales vamos a crear(los que vinieron seleccionados ahora y no estaban antes)
+		for (int i = 0; i < newGroupTours.size(); i++) {
+			GroupTour groupTour = (GroupTour) newGroupTours.get(i);
+			groupTour.setGroupId(this.getId());
+			if ( !oldSelectedTourIds.contains(groupTour.getTourId()) ){						
+				groupToursToAdd.add(groupTour);
+			}
+		}
+		
+		this.groupTours.addAll(groupToursToAdd);
+	}
+	
 	public static Group fromJSON(JSONObject groupJson) throws JSONException, ParseException {
 		JSONArray groupsInterestsJson = groupJson.getJSONArray("groups_interests");
 		JSONArray groupsPoisJson = groupJson.getJSONArray("groups_pois");
@@ -220,10 +334,7 @@ public class Group implements Serializable, GeneralItem {
 	        	GroupInterest groupInterest = getGroupInterests().get(i);
 	        	groupInterestsJson.put(groupInterest.toJSON());
 			}
-	        	        
-	        for (int i = 0; i < getGroupInterestsToDelete().size(); i++) {
-	        	groupInterestsJson.put(getGroupInterestsToDelete().get(i).toJSON());
-			}
+
 	        if(groupInterestsJson.length() > 0){
 	        	jsonObject.put("groups_interests_attributes", groupInterestsJson);
 	        }
@@ -234,10 +345,7 @@ public class Group implements Serializable, GeneralItem {
 	        	GroupPoi groupPoi = getGroupPois().get(i);
 	        	groupPoisJson.put(groupPoi.toJSON());
 			}
-	        	        
-	        for (int i = 0; i < getGroupPoisToDelete().size(); i++) {
-	        	groupPoisJson.put(getGroupPoisToDelete().get(i).toJSON());
-			}
+
 	        if(groupPoisJson.length() > 0){
 	        	jsonObject.put("groups_pois_attributes", groupPoisJson);
 	        }
@@ -249,9 +357,6 @@ public class Group implements Serializable, GeneralItem {
 	        	groupToursJson.put(groupTour.toJSON());
 			}
 	        	        
-	        for (int i = 0; i < getGroupToursToDelete().size(); i++) {
-	        	groupToursJson.put(getGroupToursToDelete().get(i).toJSON());
-			}
 	        if(groupToursJson.length() > 0){
 	        	jsonObject.put("groups_tours_attributes", groupToursJson);
 	        }

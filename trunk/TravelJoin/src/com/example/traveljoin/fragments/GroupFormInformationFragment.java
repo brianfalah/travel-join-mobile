@@ -21,9 +21,19 @@ public class GroupFormInformationFragment extends Fragment {
 	public EditText groupNameField;
 	public EditText groupDescriptionField;
 	public RadioGroup radioGroup;
-	public EditText passwordField;
+	public EditText groupPasswordField;
 	GroupFormActivity groupFormActivity;
 	
+	 // newInstance constructor for creating fragment with arguments
+    public static GroupFormInformationFragment newInstance() {
+    	GroupFormInformationFragment fragment= new GroupFormInformationFragment();
+//        Bundle args = new Bundle();
+//        args.putInt("someInt", page);
+//        args.putString("someTitle", title);
+//        fragmentFirst.setArguments(args);
+        return fragment;
+    }
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -39,10 +49,9 @@ public class GroupFormInformationFragment extends Fragment {
 				.findViewById(R.id.groupDescription);
 		radioGroup = (RadioGroup) view
 				.findViewById(R.id.radio_group_type);
-		passwordField = (EditText) view
+		groupPasswordField = (EditText) view
 				.findViewById(R.id.private_group_password);
-		passwordField.setEnabled(false);
-		passwordField.setVisibility(View.GONE);
+		
 		
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -51,12 +60,12 @@ public class GroupFormInformationFragment extends Fragment {
 				switch (checkedId) {
 				case R.id.radio_public_group:
 					// TODO
-					passwordField.setEnabled(false);
-					passwordField.setVisibility(View.GONE);
+					groupPasswordField.setEnabled(false);
+					groupPasswordField.setVisibility(View.GONE);
 				case R.id.radio_private_group:
 					// TODO
-					passwordField.setEnabled(true);
-					passwordField.setVisibility(View.VISIBLE);
+					groupPasswordField.setEnabled(true);
+					groupPasswordField.setVisibility(View.VISIBLE);
 					break;
 				}
 
@@ -72,12 +81,25 @@ public class GroupFormInformationFragment extends Fragment {
 	
 	public void setFields(){
 		groupNameField.setText(groupFormActivity.group.getName());
-		groupDescriptionField.setText(groupFormActivity.group.getDescription());
-		passwordField.setText(groupFormActivity.group.getPassword());
+		groupDescriptionField.setText(groupFormActivity.group.getDescription());		
+		if (groupFormActivity.group.getType().equals(PUBLIC)){
+			radioGroup.check(R.id.radio_public_group);
+		}
+		else{
+			radioGroup.check(R.id.radio_private_group);
+			groupPasswordField.setText(groupFormActivity.group.getPassword());
+		}
+		
 	}
 	
 	public Boolean validateFields() {
-		return validateField(groupNameField) && validateField(groupDescriptionField);
+		if (getGroupType().equals(PUBLIC)){
+			return validateField(groupNameField) && validateField(groupDescriptionField);
+		}
+		else{
+			return validateField(groupNameField) && validateField(groupDescriptionField) && validateField(groupPasswordField);
+		}
+		
 	}
 
 	public Boolean validateField(View field) {
@@ -119,7 +141,7 @@ public class GroupFormInformationFragment extends Fragment {
 	}
 	
 	public String getPassword() {
-		return passwordField.getText().toString();
+		return groupPasswordField.getText().toString();
 	}
 
 }
