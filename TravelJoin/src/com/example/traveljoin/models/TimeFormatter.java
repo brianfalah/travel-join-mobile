@@ -13,7 +13,7 @@ public class TimeFormatter {
 	 */
 	
     /** Transform Calendar to ISO 8601 string. */
-    public static String fromCalendar(final Calendar calendar) {
+    public static String fromCalendar(final Calendar calendar) {    	
         Date date = calendar.getTime();
         String formatted = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             .format(date);
@@ -37,6 +37,7 @@ public class TimeFormatter {
         }
         Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(s);
         calendar.setTime(date);
+//        calendar.add(Calendar.MONTH, -1);
         return calendar;
     }
 	

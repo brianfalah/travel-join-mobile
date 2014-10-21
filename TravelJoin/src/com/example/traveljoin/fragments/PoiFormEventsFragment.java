@@ -3,7 +3,7 @@ package com.example.traveljoin.fragments;
 import java.util.ArrayList;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.activities.EventFormActivity;
+import com.example.traveljoin.activities.PoiEventFormActivity;
 import com.example.traveljoin.activities.PoiFormActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
@@ -26,6 +26,8 @@ public class PoiFormEventsFragment extends ListFragment {
 	private GeneralItemListAdapter poiEventsAdapter;
 	public ArrayList<GeneralItem> fragmentPoiEvents;
 	private static final int ADD_EVENT_REQUEST = 1;
+	//desde aca solo se edita en memoria, y se perssite cuando se toca el boton actualizar o crear
+	private static final int EDIT_IN_MEMORY_EVENT_REQUEST = 2;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,13 +69,17 @@ public class PoiFormEventsFragment extends ListFragment {
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.only_delete_item_context_menu, menu);
+		inflater.inflate(R.menu.only_edit_and_delete_item_context_menu, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		PoiEvent selectedPoiEvent;
 		switch (item.getItemId()) {
+		case R.id.context_menu_edit:
+			selectedPoiEvent = getPoiEventItem(item);			
+			editInMemoryEvent(selectedPoiEvent);
+			return true;
 		case R.id.context_menu_delete:
 			selectedPoiEvent = getPoiEventItem(item);
 			selectedPoiEvent.setDeleted(true);
@@ -96,7 +102,7 @@ public class PoiFormEventsFragment extends ListFragment {
 	
 	// EVENTOS!!!
 	public void addEvent() {
-		Intent intent = new Intent(activity, EventFormActivity.class);
+		Intent intent = new Intent(activity, PoiEventFormActivity.class);
 		if (activity.poi != null) {
 			intent.putExtra("poi_id", activity.poi.getId());
 		}
@@ -104,6 +110,17 @@ public class PoiFormEventsFragment extends ListFragment {
 		// se creo o no)
 		// y el evento creado
 		startActivityForResult(intent, ADD_EVENT_REQUEST);
+	}
+	
+	public void editInMemoryEvent(PoiEvent selectedPoiEvent){
+		Integer position = fragmentPoiEvents.indexOf(selectedPoiEvent);
+		Intent intent = new Intent(activity, PoiEventFormActivity.class);
+		if (activity.poi != null) {
+			intent.putExtra("poi_id", activity.poi.getId());
+			intent.putExtra("poi_event", selectedPoiEvent);
+			intent.putExtra("position", position);
+		}
+		startActivityForResult(intent, EDIT_IN_MEMORY_EVENT_REQUEST);
 	}
 
 	/*
@@ -114,23 +131,42 @@ public class PoiFormEventsFragment extends ListFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Decide what to do based on the original request code
 		switch (requestCode) {
-		// PARA CUANDO SE VUELVE DE CREAR UN EVENTO
-		case ADD_EVENT_REQUEST:
-			/*
-			 * If the result code is Activity.RESULT_OK, agregar punto al mapa
-			 */
-			switch (resultCode) {
-			case Activity.RESULT_OK:
-				Bundle b = data.getExtras();
-				PoiEvent poiEvent = (PoiEvent) b.get("poiEvent");
-				activity.poiEvents.add(poiEvent);
-				fragmentPoiEvents.add(poiEvent);
-				poiEventsAdapter.notifyDataSetChanged();
-				break;
-			case Activity.RESULT_CANCELED:
-
-				break;
-			}
+			// PARA CUANDO SE VUELVE DE CREAR UN EVENTO
+			case ADD_EVENT_REQUEST:
+				/*
+				 * If the result code is Activity.RESULT_OK, agregar punto al mapa
+				 */
+				switch (resultCode) {
+				case Activity.RESULT_OK:
+					Bundle b = data.getExtras();
+					PoiEvent poiEvent = (PoiEvent) b.get("poiEvent");
+					activity.poiEvents.add(poiEvent);
+					fragmentPoiEvents.add(poiEvent);
+					poiEventsAdapter.notifyDataSetChanged();
+					break;
+				case Activity.RESULT_CANCELED:
+	
+					break;
+				}
+			break;
+			// PARA CUANDO SE VUELVE DE CREAR UN EVENTO
+			case EDIT_IN_MEMORY_EVENT_REQUEST:
+				/*
+				 * If the result code is Activity.RESULT_OK, agregar punto al mapa
+				 */
+				switch (resultCode) {
+				case Activity.RESULT_OK:
+					Bundle b = data.getExtras();
+					PoiEvent poiEvent = (PoiEvent) b.get("poiEvent");
+					Integer position = (Integer) b.get("position");
+					activity.poiEvents.set(position, poiEvent);
+					fragmentPoiEvents.set(position, poiEvent);
+					poiEventsAdapter.notifyDataSetChanged();
+					break;
+				case Activity.RESULT_CANCELED:
+	
+					break;
+				}
 			break;
 
 		}
