@@ -58,6 +58,7 @@ public class MapFilterActivity extends ActionBarActivity {
 											// intent
 		mapFilter = (MapFilter) b.get("mapFilters");
 
+		//Distancias
 		spnDistances = (Spinner) findViewById(R.id.spinnerDistances);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this, R.array.distances_for_filters,

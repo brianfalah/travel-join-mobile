@@ -127,9 +127,21 @@
                 android:value="com.example.traveljoin.MapActivity" />
         </activity>
         
+        <!-- actividad para detalle de eventos -->
+        <activity
+            android:name="com.example.traveljoin.activities.PoiEventDetailsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.example.traveljoin.activities.PoiDetailsActivity" >
+			<!-- con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.traveljoin.PoiDetailsActivity" />
+        </activity>
+        
 		<!-- actividad para Alta y modificacion de eventos -->
         <activity
-            android:name="com.example.traveljoin.activities.EventFormActivity"
+            android:name="com.example.traveljoin.activities.PoiEventFormActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.example.traveljoin.activities.PoiFormActivity" >
 			<!-- con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras -->

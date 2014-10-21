@@ -84,6 +84,7 @@
 
     <!-- events -->
     <string name="events">Eventos</string>
+    <string name="delete_poi_event_error_message">No se ha podido borrar el evento correctamente.</string>
     <string name="event_form_description">Ingrese los datos del evento:</string>
     <string name="select_date_time_start">Fecha y hora de inicio</string>
     <string name="select_date_time_end">Fecha y hora de fin</string>

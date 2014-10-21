@@ -127,6 +127,10 @@ public class ApiInterface {
             	}            	
             }
             
+            if (object instanceof PoiEvent){            
+            	jsonObject = ((PoiEvent) object).toJSON();	            	            	
+            }
+            
             if (object instanceof Group){
             	if (method == "delete"){
             		jsonObject = new JSONObject();

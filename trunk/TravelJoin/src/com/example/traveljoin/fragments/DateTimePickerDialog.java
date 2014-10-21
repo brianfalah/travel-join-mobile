@@ -3,7 +3,7 @@ package com.example.traveljoin.fragments;
 import java.util.Calendar;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.activities.EventFormActivity;
+import com.example.traveljoin.activities.PoiEventFormActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -43,7 +43,7 @@ public class DateTimePickerDialog  extends DialogFragment{
         btnOK.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    	EventFormActivity activity = (EventFormActivity) getActivity();
+                    	PoiEventFormActivity activity = (PoiEventFormActivity) getActivity();
                     	int day = dp.getDayOfMonth();
                 		int month = dp.getMonth() + 1;
                 		int year = dp.getYear();
