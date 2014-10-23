@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.traveljoin.R;
 
@@ -23,13 +24,12 @@ import android.content.DialogInterface;
 
 import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
-import com.example.traveljoin.fragments.PoiEventsFragment;
-import com.example.traveljoin.fragments.PoiInformationFragment;
 import com.example.traveljoin.fragments.TourDetailInformationFragment;
 import com.example.traveljoin.fragments.TourDetailPoisFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
+import com.example.traveljoin.models.Favorite;
 import com.example.traveljoin.models.Tour;
 import com.example.traveljoin.models.User;
 
@@ -41,6 +41,8 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	private ActionBar actionBar;
 	private static final int EDIT_TOUR_REQUEST = 1;
 	protected static final int DELETE_TOUR_METHOD = 2;
+	protected static final int ADD_TO_FAVORITES_METHOD = 3;
+	protected static final int REMOVE_FROM_FAVORITES_METHOD = 4;
 	
 	ProgressDialog progress;
 	public Tour tour;
@@ -81,11 +83,26 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.tour_view_actions, menu);
-		if ( !user.getId().equals(tour.getUserId()) ){
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (!user.getId().equals(tour.getUserId())) {
 			menu.removeItem(R.id.action_edit);
 			menu.removeItem(R.id.action_delete);
+			menu.removeItem(R.id.action_calificate);
+			menu.removeItem(R.id.action_denounce);
 		}
-		return super.onCreateOptionsMenu(menu);
+		//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
+		if (tour.getIsFavorite()){
+			menu.removeItem(R.id.action_add_to_favorites);
+		}
+		else{
+			menu.removeItem(R.id.action_delete_from_favorites);
+		}
+		
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -103,8 +120,12 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		case R.id.action_calificate:
 			calificateTour();
 			return true;
-		case R.id.action_add_to_favourites:
+		case R.id.action_add_to_favorites:
+			addToFavourites();
 			return true;
+		case R.id.action_delete_from_favorites:
+			removeFromFavourites();
+			return true;	
 		case R.id.action_suggest:
 			return true;
 		case R.id.action_denounce:
@@ -207,6 +228,30 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		dialog.show();
     }	
     
+	public void addToFavourites() {
+		progress = ProgressDialog.show(TourDetailsActivity.this,
+				getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/favorites/add";
+		Favorite favorite = new Favorite(user.getId(), tour.getId(), "Tour");
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+				ADD_TO_FAVORITES_METHOD, favorite);
+		httpAsyncTask.execute(url);
+	}
+	
+	public void removeFromFavourites() {
+		progress = ProgressDialog.show(TourDetailsActivity.this,
+				getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/favorites/remove";
+		Favorite favorite = new Favorite(user.getId(), tour.getId(), "Tour");
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+				REMOVE_FROM_FAVORITES_METHOD, favorite);
+		httpAsyncTask.execute(url);
+	}
+    
     /*Cuando vuelve de un activity empezado con un startActivityForResult viene aca*/
     @Override
     protected void onActivityResult(
@@ -217,7 +262,10 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	    		switch (resultCode) {
 		    		case Activity.RESULT_OK :
 		    	        Bundle b = data.getExtras(); // gets the previously created intent
-		    	        tour = (Tour) b.get("tour_created_or_updated"); 
+		    	        Boolean isFavorite = tour.getIsFavorite();
+		    	        tour = (Tour) b.get("tour_created_or_updated");
+		    	        tour.setIsFavorite(isFavorite);
+		    	        invalidateOptionsMenu();
 		    	        TourDetailInformationFragment infoFragment = (TourDetailInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		    	        infoFragment.setFields();
 		    	        TourDetailPoisFragment eventsFragment = (TourDetailPoisFragment) adapterViewPager.getRegisteredFragment(1);
@@ -248,6 +296,12 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	        	case DELETE_TOUR_METHOD :
 	        		api_result = apiInterface.POST(urls[0], object_to_send, "delete");
 	        	break;
+				case ADD_TO_FAVORITES_METHOD:
+					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;	
+				case REMOVE_FROM_FAVORITES_METHOD:
+					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;	
         	}
         	
         	return api_result.getResult();             
@@ -268,6 +322,32 @@ public class TourDetailsActivity extends ActionBarActivity implements
 						}
 							
 		        break;	
+				case ADD_TO_FAVORITES_METHOD:
+					progress.dismiss();
+					if (api_result.ok()){						
+						tour.setIsFavorite(true);
+						invalidateOptionsMenu();
+						Toast.makeText(TourDetailsActivity.this, R.string.tour_added_to_favorites_message, Toast.LENGTH_SHORT).show();
+					}					
+					else {
+						CustomTravelJoinException exception = new CustomTravelJoinException(
+								getString(R.string.tour_already_in_favorites_message));
+						exception.alertExceptionMessage(TourDetailsActivity.this);
+					}			
+				break;
+				case REMOVE_FROM_FAVORITES_METHOD:
+					progress.dismiss();
+					if (api_result.ok()){						
+						tour.setIsFavorite(false);
+						invalidateOptionsMenu();
+						Toast.makeText(TourDetailsActivity.this, R.string.tour_removed_from_favorites_message, Toast.LENGTH_SHORT).show();
+					}					
+					else {
+						CustomTravelJoinException exception = new CustomTravelJoinException(
+								getString(R.string.tour_already_removed_from_favorites_message));
+						exception.alertExceptionMessage(TourDetailsActivity.this);
+					}			
+				break;
         	}
        }        
     }

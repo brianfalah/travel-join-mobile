@@ -154,6 +154,10 @@ public class ApiInterface {
             		jsonObject = ((Tour) object).toJSON();	
             	}            	
             }
+            
+            if (object instanceof Favorite){            
+            	jsonObject = ((Favorite) object).toJSON();	            	            	
+            }
             	
 
             // 4. convert JSONObject to JSON to String
