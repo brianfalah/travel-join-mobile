@@ -25,6 +25,8 @@ public class Poi implements Serializable, GeneralItem{
 	private User user;
 	private Integer categoryId;
 	private String categoryName;
+	private Boolean isFavorite;
+	
 	private ArrayList<PoiEvent> poiEvents;
 	private ArrayList<PoiEvent> poiEventsToDelete;
 	
@@ -135,6 +137,14 @@ public class Poi implements Serializable, GeneralItem{
 		this.poiEvents.addAll((Collection<? extends PoiEvent>) poiEvents);
 	}
 
+	public Boolean getIsFavorite() {
+		return isFavorite;
+	}
+
+	public void setIsFavorite(Boolean isFavorite) {
+		this.isFavorite = isFavorite;
+	}
+
 	public static Poi fromJSON(JSONObject poiJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> poiEventsToAdd = new ArrayList<GeneralItem>();
 		JSONArray poiEventsJson = poiJson.getJSONArray("events");
@@ -151,6 +161,8 @@ public class Poi implements Serializable, GeneralItem{
 		
 		User user = User.fromJSON(poiJson.getJSONObject("user"));
 		poi.setUser(user);
+		
+		poi.setIsFavorite(poiJson.getBoolean("is_favorite"));
 		
 		return poi;
 	}

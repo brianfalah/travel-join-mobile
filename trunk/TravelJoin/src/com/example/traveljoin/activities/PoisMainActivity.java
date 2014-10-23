@@ -70,8 +70,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.pois);
 
-		pois = new ArrayList<GeneralItem>();
-		getPoisFromServer();
+		pois = new ArrayList<GeneralItem>();		
 		adapter = new GeneralItemListAdapter(this, pois);
 
 		listView = (ListView) findViewById(R.id.list);
@@ -79,6 +78,12 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		listView.setTextFilterEnabled(true);
 		registerForContextMenu(listView);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getPoisFromServer();
+	}	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -221,7 +226,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		progress = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/pois/indexAll.json";
+				+ "/pois/indexAll.json?user_id=" + user.getId();
 		HttpAsyncTask task = new HttpAsyncTask(GET_POIS_METHOD, null);
 		task.execute(url);
 	}

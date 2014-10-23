@@ -64,8 +64,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.tours);
 
-		tours = new ArrayList<GeneralItem>();
-		getToursFromServer();
+		tours = new ArrayList<GeneralItem>();		
 		adapter = new GeneralItemListAdapter(this, tours);
 
 		listView = (ListView) findViewById(R.id.list);
@@ -73,6 +72,12 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		listView.setTextFilterEnabled(true);
 		registerForContextMenu(listView);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getToursFromServer();
+	}	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -230,7 +235,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		progress = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/tours/indexAll.json";
+				+ "/tours/indexAll.json?user_id=" + user.getId();
 		HttpAsyncTask task = new HttpAsyncTask(GET_TOURS_METHOD, null);
 		task.execute(url);
 	}
