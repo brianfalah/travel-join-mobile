@@ -23,7 +23,6 @@ public class GroupFormInformationFragment extends Fragment {
 	public EditText groupPasswordField;
 	GroupFormActivity groupFormActivity;
 	
-	 // newInstance constructor for creating fragment with arguments
     public static GroupFormInformationFragment newInstance() {
     	GroupFormInformationFragment fragment= new GroupFormInformationFragment();
         return fragment;
@@ -46,6 +45,8 @@ public class GroupFormInformationFragment extends Fragment {
 				.findViewById(R.id.radio_group_type);
 		groupPasswordField = (EditText) view
 				.findViewById(R.id.private_group_password);
+		groupPasswordField.setEnabled(false);
+		groupPasswordField.setVisibility(View.GONE);
 		
 		
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
