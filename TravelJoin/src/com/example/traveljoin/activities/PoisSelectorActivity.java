@@ -28,10 +28,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.User;
 
 public class PoisSelectorActivity extends Activity implements
 		OnQueryTextListener {
@@ -113,8 +115,10 @@ public class PoisSelectorActivity extends Activity implements
 	private void getPoisFromServer(ArrayList<GeneralItem> alreadySelectedPois) {
 		progress = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		User user = globalContext.getUser();
 		String url = getResources().getString(R.string.api_url)
-				+ "/pois/indexAll.json";
+				+ "/pois/indexAll.json?user_id=" + user.getId();
 		GetPoisTask getPoisTask = new GetPoisTask(alreadySelectedPois);
 		getPoisTask.execute(url);
 	}
@@ -151,7 +155,6 @@ public class PoisSelectorActivity extends Activity implements
 			return api_result.getResult();
 		}
 
-		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
 			if (api_result.ok()) {

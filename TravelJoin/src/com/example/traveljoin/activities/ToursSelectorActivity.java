@@ -10,10 +10,12 @@ import org.json.JSONObject;
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Tour;
+import com.example.traveljoin.models.User;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -113,8 +115,10 @@ public class ToursSelectorActivity extends Activity implements
 	private void getToursFromServer(ArrayList<GeneralItem> alreadySelectedTours) {
 		progressDialog = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		User user = globalContext.getUser();
 		String url = getResources().getString(R.string.api_url)
-				+ "/tours/indexAll.json";
+				+ "/tours/indexAll.json?user_id=" + user.getId();
 		GetToursTask getToursTask = new GetToursTask(alreadySelectedTours);
 		getToursTask.execute(url);
 	}

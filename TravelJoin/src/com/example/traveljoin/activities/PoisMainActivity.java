@@ -43,7 +43,7 @@ import com.example.traveljoin.models.User;
 public class PoisMainActivity extends Activity implements OnQueryTextListener {
 
 	private ProgressDialog progress;
-	User user;
+	private User user;
 	private ActionBar actionBar;
 	private ListView listView;
 	private GeneralItemListAdapter adapter;

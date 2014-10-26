@@ -39,16 +39,16 @@
     
     <!-- Subtitulos  -->
     <string name="map_filter">Filtros del mapa</string>
-    <string name="group_view">Detalle del grupo</string>
+    <string name="group_view">Detalle de grupo</string>
     <string name="groups_creation">Nuevo grupo</string>
     <string name="groups_edition">Editar grupo</string>
     <string name="pois_selector">Selección de puntos de interés</string>
     <string name="tours_selector">Selección de circuitos</string>
     <string name="interests_selector">Selección de intereses</string>
-    <string name="pois_view">Detalle del punto</string>
+    <string name="pois_view">Detalle de punto de interés</string>
     <string name="pois_creation">Nuevo punto de interés</string>
     <string name="pois_edition">Editar punto de interés</string>
-    <string name="tours_view">Detalle del circuito</string>
+    <string name="tours_view">Detalle de circuito</string>
     <string name="tours_creation">Nuevo circuito</string>
     <string name="tours_edition">Editar circuito</string>
 	<!-- FIN Sutitulos  -->
