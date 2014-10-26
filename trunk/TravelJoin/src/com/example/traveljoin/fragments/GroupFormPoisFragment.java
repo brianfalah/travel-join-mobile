@@ -21,7 +21,6 @@ import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupPoi;
 import com.example.traveljoin.models.Poi;
 
@@ -31,13 +30,6 @@ public class GroupFormPoisFragment extends ListFragment {
 	private GeneralItemListAdapter groupPoisAdapter;
 	private static final int ADD_POIS_REQUEST = 1;
 
-	
-	public GroupFormPoisFragment(Group group){
-		fragmentGroupPois = new ArrayList<GeneralItem>();
-		if (group != null){
-			fragmentGroupPois.addAll(group.getGroupPois());
-		}
-	}
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +50,10 @@ public class GroupFormPoisFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-//		fragmentGroupPois = new ArrayList<GeneralItem>();
-//		if (groupFormActivity.group != null){
-//			fragmentGroupPois.addAll(groupFormActivity.group.getGroupPois());
-//		}	
+		fragmentGroupPois = new ArrayList<GeneralItem>();
+		if (groupFormActivity.group != null){
+			fragmentGroupPois.addAll(groupFormActivity.group.getGroupPois());
+		}	
 		groupPoisAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupPois);
 		setListAdapter(groupPoisAdapter);
 		registerForContextMenu(getListView());

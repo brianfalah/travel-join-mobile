@@ -33,7 +33,6 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView.OnQueryTextListener;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,7 +65,6 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 
 		initializeUser();
 		groups = new ArrayList<GeneralItem>();
-		getGroupsFromServer();
 		adapter = new GeneralItemListAdapter(this, groups);
 
 		listView = (ListView) findViewById(R.id.list);
@@ -75,6 +73,12 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		registerForContextMenu(listView);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getGroupsFromServer();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.groups_activity_actions, menu);
@@ -223,24 +227,22 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Decide what to do based on the original request code
 		switch (requestCode) {
 		case CREATE_GROUP_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				getGroupsFromServer();
+				//Se actualiza la lista de grupos en el onResume
 				break;
 			}
 			break;
 		case EDIT_GROUP_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				getGroupsFromServer();
+				//Se actualiza la lista de grupos en el onResume
 				break;
 			}
 			break;
 		}
-
 	}
 
 	private void getGroupsFromServer() {
@@ -284,7 +286,6 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
-			Log.d("InputStream", result);
 			switch (this.from_method) {
 			case GET_GROUPS_METHOD:
 				if (api_result.ok()) {

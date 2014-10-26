@@ -2,12 +2,12 @@ package com.example.traveljoin.activities;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.GroupFormInformationFragment;
 import com.example.traveljoin.fragments.GroupFormInterestsFragment;
@@ -30,58 +30,51 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 public class GroupFormActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
-	
-	User user;
-	ProgressDialog progress;
+
+	public User user;
+	public ProgressDialog progress;
 	public Group group;
-	Button createButton;
-	Button updateButton;
+	public Button createButton;
+	public Button updateButton;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
-	private MyPagerAdapter adapterViewPager;	
-	private List<Fragment> listFragments;
-	
+	private MyPagerAdapter adapterViewPager;
+
+	private static int NUM_ITEMS = 4;
+	private static final int GROUP_INFORMATION_TAB = 0;
+	private static final int GROUP_INTERESTS_TAB = 1;
+	private static final int GROUP_POIS_TAB = 2;
+	private static final int GROUP_TOURS_TAB = 3;
+
 	private static final int ADD_GROUP_METHOD = 1;
 	private static final int UPDATE_GROUP_METHOD = 2;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_form);
 		initializeUser();
 		initializeViewReferences();
-		
+
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
+
 		if (getIntent().getExtras() != null) {
-			actionBar.setSubtitle(R.string.groups_edition);
-			group = (Group) getIntent().getExtras().get("group");
-			updateButton.setVisibility(View.VISIBLE);
+			initializeViewForEditingMode();
 		} else {
-			actionBar.setSubtitle(R.string.groups_creation);
-			group = null;
-			createButton.setVisibility(View.VISIBLE);
+			initializeViewForCreatingMode();
 		}
 
-		listFragments = new ArrayList<Fragment>();
-		listFragments.add(new GroupFormInformationFragment());
-		listFragments.add(new GroupFormInterestsFragment(group));
-		listFragments.add(new GroupFormPoisFragment(group));
-		listFragments.add(new GroupFormToursFragment(group));
-
-		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), listFragments);
+		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(adapterViewPager);
@@ -105,9 +98,21 @@ public class GroupFormActivity extends ActionBarActivity implements
 		actionBar.addTab(actionBar.newTab()
 				.setText(getString(R.string.group_tours_tab))
 				.setTabListener(this));
-		
+
 	}
-	
+
+	private void initializeViewForCreatingMode() {
+		actionBar.setSubtitle(R.string.groups_creation);
+		group = null;
+		createButton.setVisibility(View.VISIBLE);
+	}
+
+	private void initializeViewForEditingMode() {
+		actionBar.setSubtitle(R.string.groups_edition);
+		group = (Group) getIntent().getExtras().get("group");
+		updateButton.setVisibility(View.VISIBLE);
+	}
+
 	private void initializeViewReferences() {
 		createButton = (Button) findViewById(R.id.GroupCreateButton);
 		updateButton = (Button) findViewById(R.id.GroupUpdateButton);
@@ -116,7 +121,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 	private void initializeUser() {
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
-	}		
+	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction fragmentTransaction) {
@@ -130,114 +135,76 @@ public class GroupFormActivity extends ActionBarActivity implements
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
 	}
-	
+
 	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic
 	// ViewPager items
-	public static class MyPagerAdapter extends FragmentPagerAdapter {
-		private List<Fragment> fragments;
-		private static int NUM_ITEMS = 4;		
-		private static final int GROUP_INFORMATION_TAB = 0;
-		private static final int GROUP_INTERESTS_TAB = 1;
-		private static final int GROUP_POIS_TAB = 2;
-		private static final int GROUP_TOURS_TAB = 3;
-		
+	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
 
-		public MyPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
-			super(fm);
-	        this.fragments = fragments;
+		public MyPagerAdapter(FragmentManager fragmentManager) {
+			super(fragmentManager);
 		}
 
-		// Returns total number of pages
 		@Override
 		public int getCount() {
 			return NUM_ITEMS;
 		}
 
-		// Returns the fragment to display for that page
 		@Override
 		public Fragment getItem(int position) {
-			return fragments.get(position);
-//			switch (position) {
-//			case GROUP_INFORMATION_TAB:
-//				if (infoFragment == null){
-//					infoFragment = GroupFormInformationFragment.newInstance();
-//				}				
-//				return infoFragment;
-//			case GROUP_INTERESTS_TAB:
-//				if (interestsFragment == null){
-//					interestsFragment = GroupFormInterestsFragment.newInstance();	
-//				}				
-//				return interestsFragment;
-//			case GROUP_POIS_TAB:
-//				if (poisFragment == null){
-//					poisFragment = GroupFormPoisFragment.newInstance();	
-//				}								
-//				return poisFragment;
-//			case GROUP_TOURS_TAB:
-//				if (toursFragment == null){
-//					toursFragment = GroupFormToursFragment.newInstance();
-//				}
-//				return toursFragment;
-//			default:
-//				return null;
-//			}
+			switch (position) {
+			case GROUP_INFORMATION_TAB:
+				return new GroupFormInformationFragment();
+			case GROUP_INTERESTS_TAB:
+				return new GroupFormInterestsFragment();
+			case GROUP_POIS_TAB:
+				return new GroupFormPoisFragment();
+			case GROUP_TOURS_TAB:
+				return new GroupFormToursFragment();
+			default:
+				return null;
+			}
 		}
-		
+
 		@Override
-	    public void destroyItem(ViewGroup container, int position, Object object) {
-	        // TODO Auto-generated method stub
-	        //super.destroyItem(container, position, object);
-	    }
-		
-		public GroupFormInformationFragment getInfoFragment(){
-			return (GroupFormInformationFragment) fragments.get(GROUP_INFORMATION_TAB);
-//			return infoFragment;
-		}
-		
-		public GroupFormInterestsFragment getInterestsFragment(){
-			return (GroupFormInterestsFragment) fragments.get(GROUP_INTERESTS_TAB);
-//			return interestsFragment;
-		}
-		
-		public GroupFormPoisFragment getPoisFragment(){
-			return (GroupFormPoisFragment) fragments.get(GROUP_POIS_TAB);
-//			return poisFragment;
-		}
-		
-		public GroupFormToursFragment getToursFragment(){
-			return (GroupFormToursFragment) fragments.get(GROUP_TOURS_TAB);
-//			return toursFragment;
+		public CharSequence getPageTitle(int position) {
+			return "Page " + position;
 		}
 
 	}
-		
-	// cuando se clickea el boton crear viene aca!
+
 	public void createGroup(View button) {
-//		GroupFormInformationFragment infoFragment = (GroupFormInformationFragment) adapterViewPager
-//				.getRegisteredFragment(0);
-//		GroupFormInterestsFragment interestsFragment = (GroupFormInterestsFragment) adapterViewPager.getRegisteredFragment(1);
-//		GroupFormPoisFragment poisFragment = (GroupFormPoisFragment) adapterViewPager.getRegisteredFragment(2);
-//		GroupFormToursFragment toursFragment = (GroupFormToursFragment) adapterViewPager.getRegisteredFragment(3);
-		
-		Boolean valid = adapterViewPager.getInfoFragment().validateFields();
+		GroupFormInformationFragment infoFragment = (GroupFormInformationFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_INFORMATION_TAB);
+		GroupFormInterestsFragment interestsFragment = (GroupFormInterestsFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_INTERESTS_TAB);
+		GroupFormPoisFragment poisFragment = (GroupFormPoisFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_POIS_TAB);
+		GroupFormToursFragment toursFragment = (GroupFormToursFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_TOURS_TAB);
+
+		Boolean valid = infoFragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
-			
-			ArrayList<GeneralItem> newSelectedGroupInterests = adapterViewPager.getInterestsFragment().getGroupInterests();
-			ArrayList<GeneralItem> newSelectedGroupPois = adapterViewPager.getPoisFragment().getGroupPois();
-			ArrayList<GeneralItem> newSelectedGroupTours = adapterViewPager.getToursFragment().getGroupTours();
-			
-			Group group_to_create = new Group(null, adapterViewPager.getInfoFragment().getGroupName(),
-					adapterViewPager.getInfoFragment().getGroupDescription(),
-					adapterViewPager.getInfoFragment().getGroupType(),
-					adapterViewPager.getInfoFragment().getPassword() ,user.getId(),
-					newSelectedGroupInterests, newSelectedGroupPois, newSelectedGroupTours);
+
+			ArrayList<GeneralItem> newSelectedGroupInterests = interestsFragment
+					.getGroupInterests();
+			ArrayList<GeneralItem> newSelectedGroupPois = poisFragment
+					.getGroupPois();
+			ArrayList<GeneralItem> newSelectedGroupTours = toursFragment
+					.getGroupTours();
+
+			Group groupToCreate = new Group(null,
+					infoFragment.getGroupName(),
+					infoFragment.getGroupDescription(),
+					infoFragment.getGroupType(), infoFragment.getPassword(),
+					user.getId(), newSelectedGroupInterests,
+					newSelectedGroupPois, newSelectedGroupTours);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/groups/create";
 			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(ADD_GROUP_METHOD,
-					group_to_create);
+					groupToCreate);
 			httpAsyncTask.execute(url);
 			// sigue en onPostExecute, en la parte de ADD_TOUR_METHOD
 		}
@@ -246,34 +213,45 @@ public class GroupFormActivity extends ActionBarActivity implements
 
 	// cuando se clickea el boton actualizar viene aca!
 	public void updateGroup(View button) {
-//		GroupFormInformationFragment infoFragment = (GroupFormInformationFragment) adapterViewPager
-//				.getRegisteredFragment(0);
-//		GroupFormInterestsFragment interestsFragment = (GroupFormInterestsFragment) adapterViewPager.getRegisteredFragment(1);
-//		GroupFormPoisFragment poisFragment = (GroupFormPoisFragment) adapterViewPager.getRegisteredFragment(2);
-//		GroupFormToursFragment toursFragment = (GroupFormToursFragment) adapterViewPager.getRegisteredFragment(3);
-		
-		Boolean valid = adapterViewPager.getInfoFragment().validateFields();
+		GroupFormInformationFragment infoFragment = (GroupFormInformationFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_INFORMATION_TAB);
+		GroupFormInterestsFragment interestsFragment = (GroupFormInterestsFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_INTERESTS_TAB);
+		GroupFormPoisFragment poisFragment = (GroupFormPoisFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_POIS_TAB);
+		GroupFormToursFragment toursFragment = (GroupFormToursFragment) adapterViewPager
+				.getRegisteredFragment(GROUP_TOURS_TAB);
+
+		Boolean valid = infoFragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
-			
-			ArrayList<GeneralItem> newSelectedGroupInterests = adapterViewPager.getInterestsFragment().getGroupInterests();
-			ArrayList<GeneralItem> newSelectedGroupPois = adapterViewPager.getPoisFragment().getGroupPois();
-			ArrayList<GeneralItem> newSelectedGroupTours = adapterViewPager.getToursFragment().getGroupTours();
-			
-			Group groupToUpdate = new Group(group.getId(), adapterViewPager.getInfoFragment().getGroupName(),
-					adapterViewPager.getInfoFragment().getGroupDescription(), adapterViewPager.getInfoFragment().getGroupType(),
-					adapterViewPager.getInfoFragment().getPassword() ,user.getId(),
-					new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>());
-			
-			groupToUpdate.updateGroupInterests(group.getGroupInterests(), newSelectedGroupInterests);
-			groupToUpdate.updateGroupPois(group.getGroupPois(), newSelectedGroupPois);
-			groupToUpdate.updateGroupTours(group.getGroupTours(), newSelectedGroupTours);
+
+			ArrayList<GeneralItem> newSelectedGroupInterests = interestsFragment
+					.getGroupInterests();
+			ArrayList<GeneralItem> newSelectedGroupPois = poisFragment
+					.getGroupPois();
+			ArrayList<GeneralItem> newSelectedGroupTours = toursFragment
+					.getGroupTours();
+
+			Group groupToUpdate = new Group(group.getId(),
+					infoFragment.getGroupName(),
+					infoFragment.getGroupDescription(),
+					infoFragment.getGroupType(), infoFragment.getPassword(),
+					user.getId(), new ArrayList<GeneralItem>(),
+					new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>());
+
+			groupToUpdate.updateGroupInterests(group.getGroupInterests(),
+					newSelectedGroupInterests);
+			groupToUpdate.updateGroupPois(group.getGroupPois(),
+					newSelectedGroupPois);
+			groupToUpdate.updateGroupTours(group.getGroupTours(),
+					newSelectedGroupTours);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/groups/update";
-			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(UPDATE_GROUP_METHOD,
-					groupToUpdate);
+			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+					UPDATE_GROUP_METHOD, groupToUpdate);
 			httpAsyncTask.execute(url);
 			// sigue en HttpAsyncTask en doInBackground en UPDATE_TOUR_METHOD
 		}
@@ -286,7 +264,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 		setResult(Activity.RESULT_CANCELED, output);
 		finish();
 	}
-	
+
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
 		private Integer from_method;

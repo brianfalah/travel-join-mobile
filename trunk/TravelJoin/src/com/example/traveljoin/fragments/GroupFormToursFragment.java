@@ -21,7 +21,6 @@ import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.ToursSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupTour;
 import com.example.traveljoin.models.Tour;
 
@@ -31,12 +30,6 @@ public class GroupFormToursFragment extends ListFragment {
 	private GeneralItemListAdapter groupToursAdapter;
 	private static final int ADD_TOURS_REQUEST = 1;
 	
-	public GroupFormToursFragment(Group group){
-		fragmentGroupTours = new ArrayList<GeneralItem>();
-		if (group != null){
-			fragmentGroupTours.addAll(group.getGroupTours());
-		}	
-	}
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,10 +50,10 @@ public class GroupFormToursFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-//		fragmentGroupTours = new ArrayList<GeneralItem>();
-//		if (groupFormActivity.group != null){
-//			fragmentGroupTours.addAll(groupFormActivity.group.getGroupTours());
-//		}	
+		fragmentGroupTours = new ArrayList<GeneralItem>();
+		if (groupFormActivity.group != null){
+			fragmentGroupTours.addAll(groupFormActivity.group.getGroupTours());
+		}	
 		groupToursAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupTours);
 		setListAdapter(groupToursAdapter);
 		registerForContextMenu(getListView());

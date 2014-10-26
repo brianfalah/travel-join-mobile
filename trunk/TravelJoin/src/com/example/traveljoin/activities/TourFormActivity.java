@@ -38,14 +38,18 @@ import android.widget.Button;
 public class TourFormActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
-	User user;
-	ProgressDialog progress;
+	public User user;
+	public ProgressDialog progress;
 	public Tour tour;
-	Button createButton;
-	Button updateButton;
+	public Button createButton;
+	public Button updateButton;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
-	private SmartFragmentStatePagerAdapter adapterViewPager;	
+	private SmartFragmentStatePagerAdapter adapterViewPager;
+	
+	private static int NUM_ITEMS = 2;
+	private static final int TOUR_INFORMATION_TAB = 0;
+	private static final int TOUR_POIS_TAB = 1;
 
 	private static final int ADD_TOUR_METHOD = 1;
 	private static final int UPDATE_TOUR_METHOD = 2;
@@ -79,16 +83,23 @@ public class TourFormActivity extends ActionBarActivity implements
 				.setText(getString(R.string.tour_pois_tab))
 				.setTabListener(this));
 
-
 		if (getIntent().getExtras() != null) {
-			actionBar.setSubtitle(R.string.tours_edition);
-			tour = (Tour) getIntent().getExtras().get("tour");
-			updateButton.setVisibility(View.VISIBLE);
+			initializeViewForEditingMode();
 		} else {
-			actionBar.setSubtitle(R.string.tours_creation);
-			tour = null;
-			createButton.setVisibility(View.VISIBLE);
+			initializeViewForCreatingMode();
 		}
+	}
+
+	private void initializeViewForCreatingMode() {
+		actionBar.setSubtitle(R.string.tours_creation);
+		tour = null;
+		createButton.setVisibility(View.VISIBLE);
+	}
+
+	private void initializeViewForEditingMode() {
+		actionBar.setSubtitle(R.string.tours_edition);
+		tour = (Tour) getIntent().getExtras().get("tour");
+		updateButton.setVisibility(View.VISIBLE);
 	}
 
 	private void initializeViewReferences() {
@@ -114,39 +125,29 @@ public class TourFormActivity extends ActionBarActivity implements
 	public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
 	}
 
-	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic
-	// ViewPager items
 	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
-		private static int NUM_ITEMS = 2;
-		public static final int TOUR_INFORMATION_TAB = 0;
-		public static final int TOUR_POIS_TAB = 1;
-
+		
 		public MyPagerAdapter(FragmentManager fragmentManager) {
 			super(fragmentManager);
 		}
 
-		// Returns total number of pages
 		@Override
 		public int getCount() {
 			return NUM_ITEMS;
 		}
 
-		// Returns the fragment to display for that page
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
-			case TOUR_INFORMATION_TAB: // Fragment # 0 - This will show
-										// FirstFragment
+			case TOUR_INFORMATION_TAB:
 				return new TourFormInformationFragment();
-			case TOUR_POIS_TAB: // Fragment # 0 - This will show FirstFragment
-								// different title
+			case TOUR_POIS_TAB:
 				return new TourFormPoisFragment();
 			default:
 				return null;
 			}
 		}
 
-		// Returns the page title for the top indicator
 		@Override
 		public CharSequence getPageTitle(int position) {
 			return "Page " + position;
@@ -157,15 +158,17 @@ public class TourFormActivity extends ActionBarActivity implements
 	// cuando se clickea el boton crear viene aca!
 	public void createTour(View button) {
 		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager
-				.getRegisteredFragment(0);
-		TourFormPoisFragment pois_fragment = (TourFormPoisFragment) adapterViewPager.getRegisteredFragment(1);
-		
+				.getRegisteredFragment(TOUR_INFORMATION_TAB);
+		TourFormPoisFragment pois_fragment = (TourFormPoisFragment) adapterViewPager
+				.getRegisteredFragment(TOUR_POIS_TAB);
+
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
-			ArrayList<GeneralItem> newSelectedTourPois = pois_fragment.getTourPois();			
-			
+			ArrayList<GeneralItem> newSelectedTourPois = pois_fragment
+					.getTourPois();
+
 			Tour tour_to_create = new Tour(null, info_fragment.nameField
 					.getText().toString(), info_fragment.descField.getText()
 					.toString(), user.getId(), newSelectedTourPois);
@@ -183,20 +186,23 @@ public class TourFormActivity extends ActionBarActivity implements
 	// cuando se clickea el boton actualizar viene aca!
 	public void updateTour(View button) {
 		TourFormInformationFragment info_fragment = (TourFormInformationFragment) adapterViewPager
-				.getRegisteredFragment(0);
-		TourFormPoisFragment pois_fragment = (TourFormPoisFragment) adapterViewPager.getRegisteredFragment(1);
-		
+				.getRegisteredFragment(TOUR_INFORMATION_TAB);
+		TourFormPoisFragment pois_fragment = (TourFormPoisFragment) adapterViewPager
+				.getRegisteredFragment(TOUR_POIS_TAB);
+
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
-			ArrayList<GeneralItem> newSelectedTourPois = pois_fragment.getTourPois();				
-						
-			Tour tourToUpdate = new Tour(tour.getId(), info_fragment.nameField.getText()
-					.toString(), info_fragment.descField.getText().toString(),
-					user.getId(), new ArrayList<GeneralItem>());
-			
-			tourToUpdate.updateTourPois(tour.getTourPois(), newSelectedTourPois);
+			ArrayList<GeneralItem> newSelectedTourPois = pois_fragment
+					.getTourPois();
+
+			Tour tourToUpdate = new Tour(tour.getId(), info_fragment.nameField
+					.getText().toString(), info_fragment.descField.getText()
+					.toString(), user.getId(), new ArrayList<GeneralItem>());
+
+			tourToUpdate
+					.updateTourPois(tour.getTourPois(), newSelectedTourPois);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/tours/update";
