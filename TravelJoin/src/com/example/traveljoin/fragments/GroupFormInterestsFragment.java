@@ -21,7 +21,6 @@ import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.InterestsSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupInterest;
 import com.example.traveljoin.models.Interest;
 
@@ -32,13 +31,6 @@ public class GroupFormInterestsFragment extends ListFragment {
 	private GeneralItemListAdapter groupInterestsAdapter;
 	private static final int ADD_INTERESTS_REQUEST = 1;
 	
-    
-    public GroupFormInterestsFragment(Group group){
-		this.fragmentGroupInterests = new ArrayList<GeneralItem>();
-		if (group != null){
-			fragmentGroupInterests.addAll(group.getGroupInterests());
-		}	
-    }
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,10 +51,10 @@ public class GroupFormInterestsFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-//		fragmentGroupInterests = new ArrayList<GeneralItem>();
-//		if (groupFormActivity.group != null){
-//			fragmentGroupInterests.addAll(groupFormActivity.group.getGroupInterests());
-//		}		
+		fragmentGroupInterests = new ArrayList<GeneralItem>();
+		if (groupFormActivity.group != null){
+			fragmentGroupInterests.addAll(groupFormActivity.group.getGroupInterests());
+		}		
 		groupInterestsAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupInterests);
 		setListAdapter(groupInterestsAdapter);
 		registerForContextMenu(getListView());

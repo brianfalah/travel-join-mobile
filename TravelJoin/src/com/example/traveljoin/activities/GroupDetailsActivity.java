@@ -189,6 +189,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 	public void editGroup() {
 		Intent intent = new Intent(this, GroupFormActivity.class);
+		intent.putExtra("group", group);
 		startActivityForResult(intent, EDIT_GROUP_REQUEST);
 	}
 
@@ -207,7 +208,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 										getString(R.string.wait), true);
 								String url = getResources().getString(
 										R.string.api_url)
-										+ "/pois/destroy";
+										+ "/groups/destroy";
 								HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
 										DELETE_GROUP_METHOD, group);
 								httpAsyncTask.execute(url);

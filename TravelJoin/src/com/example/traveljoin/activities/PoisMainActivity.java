@@ -214,7 +214,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		case EDIT_POI_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				getPoisFromServer();
+				//Se actualiza la lista de pois en el onResume
 				break;
 			}
 			break;

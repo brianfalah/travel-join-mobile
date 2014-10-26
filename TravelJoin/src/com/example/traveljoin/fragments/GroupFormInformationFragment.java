@@ -23,10 +23,6 @@ public class GroupFormInformationFragment extends Fragment {
 	public EditText groupPasswordField;
 	GroupFormActivity groupFormActivity;
 	
-    public static GroupFormInformationFragment newInstance() {
-    	GroupFormInformationFragment fragment= new GroupFormInformationFragment();
-        return fragment;
-    }
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

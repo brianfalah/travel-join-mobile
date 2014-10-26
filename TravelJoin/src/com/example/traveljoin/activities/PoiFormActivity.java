@@ -44,20 +44,23 @@ public class PoiFormActivity extends ActionBarActivity implements
 	private SmartFragmentStatePagerAdapter adapterViewPager;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
-	PoiFormInformationFragment info_fragment;
+	public PoiFormInformationFragment info_fragment;
 
-	User user;
-	ProgressDialog progress;
+	public User user;
+	public ProgressDialog progress;
 
-	Button createButton;
-	Button updateButton;
+	public Button createButton;
+	public Button updateButton;
 	public LatLng point;
 	public Poi poi;
 	public ArrayList<GeneralItem> poiEvents;
 	public ArrayList<PoiEvent> poiEventsToDelete;
-	ArrayAdapter<PoiEvent> poiEventsAdapter;
-	// ListView lvEvents;
+	public ArrayAdapter<PoiEvent> poiEventsAdapter;
 
+	private static int NUM_ITEMS = 2;
+	private static final int POI_INFORMATION_TAB = 0;
+	private static final int POI_EVENTS_TAB = 1;
+	
 	private static final int ADD_POI_METHOD = 1;
 	private static final int UPDATE_POI_METHOD = 2;
 
@@ -105,39 +108,29 @@ public class PoiFormActivity extends ActionBarActivity implements
 		user = globalContext.getUser();
 	}
 
-	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic
-	// ViewPager items
 	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
-		private static int NUM_ITEMS = 2;
-		public static final int POI_INFORMATION_TAB = 0;
-		public static final int POI_EVENTS_TAB = 1;
 
 		public MyPagerAdapter(FragmentManager fragmentManager) {
 			super(fragmentManager);
 		}
 
-		// Returns total number of pages
 		@Override
 		public int getCount() {
 			return NUM_ITEMS;
 		}
 
-		// Returns the fragment to display for that page
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
-			case POI_INFORMATION_TAB: // Fragment # 0 - This will show
-										// FirstFragment
+			case POI_INFORMATION_TAB:
 				return new PoiFormInformationFragment();
-			case POI_EVENTS_TAB: // Fragment # 0 - This will show FirstFragment
-									// different title
+			case POI_EVENTS_TAB:
 				return new PoiFormEventsFragment();
 			default:
 				return null;
 			}
 		}
 
-		// Returns the page title for the top indicator
 		@Override
 		public CharSequence getPageTitle(int position) {
 			return "Page " + position;
@@ -169,7 +162,7 @@ public class PoiFormActivity extends ActionBarActivity implements
 	// cuando se clickea el boton crear viene aca!
 	public void createPoi(View button) {
 		PoiFormInformationFragment info_fragment = (PoiFormInformationFragment) adapterViewPager
-				.getRegisteredFragment(0);
+				.getRegisteredFragment(POI_INFORMATION_TAB);
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
@@ -198,7 +191,7 @@ public class PoiFormActivity extends ActionBarActivity implements
 	// cuando se clickea el boton actualizar viene aca!
 	public void updatePoi(View button) {
 		PoiFormInformationFragment info_fragment = (PoiFormInformationFragment) adapterViewPager
-				.getRegisteredFragment(0);
+				.getRegisteredFragment(POI_INFORMATION_TAB);
 		Boolean valid = info_fragment.validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
