@@ -2,7 +2,6 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupDetailsActivity;
-import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.User;
 import com.facebook.widget.ProfilePictureView;
@@ -18,7 +17,6 @@ public class GroupDetailsInformationFragment extends Fragment {
 	private TextView nameField;
 	private TextView descriptionField;
 	private TextView groupTypeField;
-	private GroupDetailsActivity activity;
 	private Group group;
 
 	private static Integer PUBLIC_GROUP = 0;
@@ -31,7 +29,7 @@ public class GroupDetailsInformationFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_group_information,
 				container, false);
 
-		activity = (GroupDetailsActivity) getActivity();
+		GroupDetailsActivity activity = (GroupDetailsActivity) getActivity();
 		group = activity.group;
 		initializeViewReferences(view);
 		initializeOwnerInformation(view);
@@ -55,9 +53,7 @@ public class GroupDetailsInformationFragment extends Fragment {
 		TextView userOwnerNameView = (TextView) view
 				.findViewById(R.id.selection_owner_name);
 
-		GlobalContext globalContext = (GlobalContext) getActivity()
-				.getApplicationContext();
-		User owner = globalContext.getUser();
+		User owner = group.getUser();
 		profilePictureView.setProfileId(owner.getFacebookId());
 		userOwnerNameView.setText(owner.getFullName());
 	}
