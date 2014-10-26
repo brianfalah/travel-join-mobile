@@ -55,7 +55,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		initializeUser();
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
 		actionBar = getActionBar();
-		actionBar.setSubtitle(R.string.pois_view);
+		actionBar.setSubtitle(R.string.group_view);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -89,7 +89,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.poi_view_actions, menu);
+		inflater.inflate(R.menu.group_view_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
