@@ -237,6 +237,12 @@
                 android:value="com.example.traveljoin.GroupsMainActivity" />
         </activity>
         
+        <!-- Formulario de grupo -->
+        <activity
+            android:name="com.example.traveljoin.activities.GroupDetailsActivity"
+            android:label="@string/app_name">
+        </activity>
+        
         <!-- Seleccionador de pois -->
         <activity
             android:name="com.example.traveljoin.activities.PoisSelectorActivity"

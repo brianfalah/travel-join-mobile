@@ -27,13 +27,11 @@ import android.widget.Toast;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.fragments.DateTimePickerDialog;
-import com.example.traveljoin.fragments.PoiFormInformationFragment;
 import com.example.traveljoin.fragments.DateTimePickerDialog.DateTimePickerDialogListener;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
-import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.PoiEvent;;
 
 public class PoiEventFormActivity extends ActionBarActivity implements DateTimePickerDialogListener{
@@ -273,7 +271,7 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		TextView edit_text_field = (TextView) field;
 		if (timeFrom != null && timeTo != null && timeTo.compareTo(timeFrom) <= 0){
 			edit_text_field.requestFocus();
-			edit_text_field.setError("El día y la hora de fin debe ser mayor al día y la hora de inicio");
+			edit_text_field.setError("El d��a y la hora de fin debe ser mayor al d��a y la hora de inicio");
 			valid = false;
 		}	
 		else{
@@ -289,11 +287,11 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		switch (v.getId()) {
 		    case (R.id.dateFromImg):
 		    	editNameDialog = new DateTimePickerDialog(DATE_FROM);
-	        	editNameDialog.show(fm, "Seleccione el día y la hora de inicio del evento");
+	        	editNameDialog.show(fm, "Seleccione el d��a y la hora de inicio del evento");
 		    break;
 		    case (R.id.dateToImg):
 		    	editNameDialog = new DateTimePickerDialog(DATE_TO);
-        		editNameDialog.show(fm, "Seleccione el día y la hora de fin del evento");
+        		editNameDialog.show(fm, "Seleccione el d��a y la hora de fin del evento");
 		    break;
 	    }		
 	}	       

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -28,11 +27,9 @@ import com.example.traveljoin.models.GeneralItem;
 public class InterestsSelectorActivity extends Activity implements
 		OnQueryTextListener {
 
-	private ProgressDialog progress;
 	private ActionBar actionBar;
 	private ListView listView;
 	private GeneralItemCheckeableListAdapter adapter;
-	private ArrayList<GeneralItem> selectedInterests;
 
 	OnItemClickListener interestItemClickListener = new OnItemClickListener() {
 		@Override
@@ -54,7 +51,6 @@ public class InterestsSelectorActivity extends Activity implements
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.interests_selector);
 
-		selectedInterests = new ArrayList<GeneralItem>();
 		ArrayList<GeneralItem> alreadySelectedInterests = (ArrayList<GeneralItem>) getIntent()
 				.getExtras().get("alreadySelectedInterests");
 

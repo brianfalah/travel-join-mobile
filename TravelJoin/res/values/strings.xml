@@ -61,6 +61,8 @@
 	<string name="action_add">Agregar</string>
     <string name="search_hint">Buscar en la lista</string>
     <string name="explore_button">Explorar!</string>
+    <string name="join_group">Unirse al grupo</string>
+    <string name="disjoin_group">Dejar el grupo</string>
     <!-- FIN Actions -->
     
     <!-- POIs -->    
@@ -115,6 +117,8 @@
     <string name="delete_group">Borrar grupo</string>
     <string name="delete_group_message">¿Está seguro de que desea borrar este grupo?</string>
     <string name="delete_group_error_message">No se ha podido borrar el grupo correctamente.</string>
+    <string name="group_public">Público</string>
+    <string name="group_private">Privado</string>
     <!-- FIN groups -->
     
     <!-- Login -->

@@ -2,7 +2,6 @@ package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupFormActivity;
-import com.example.traveljoin.activities.TourFormActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,10 +26,6 @@ public class GroupFormInformationFragment extends Fragment {
 	 // newInstance constructor for creating fragment with arguments
     public static GroupFormInformationFragment newInstance() {
     	GroupFormInformationFragment fragment= new GroupFormInformationFragment();
-//        Bundle args = new Bundle();
-//        args.putInt("someInt", page);
-//        args.putString("someTitle", title);
-//        fragmentFirst.setArguments(args);
         return fragment;
     }
     
@@ -62,6 +57,7 @@ public class GroupFormInformationFragment extends Fragment {
 					// TODO
 					groupPasswordField.setEnabled(false);
 					groupPasswordField.setVisibility(View.GONE);
+					break;
 				case R.id.radio_private_group:
 					// TODO
 					groupPasswordField.setEnabled(true);

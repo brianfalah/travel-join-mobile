@@ -37,7 +37,6 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.Tour;
 import com.example.traveljoin.models.User;
 

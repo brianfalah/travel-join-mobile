@@ -1,10 +1,5 @@
 package com.example.traveljoin.activities;
 
-import java.text.ParseException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;

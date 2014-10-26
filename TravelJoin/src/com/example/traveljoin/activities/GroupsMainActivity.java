@@ -200,7 +200,7 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 	}
 	
 	private void startGroupDetailActivity(final Group selectedGroup) {
-		Intent intent = new Intent(this, GroupFormActivity.class);
+		Intent intent = new Intent(this, GroupDetailsActivity.class);
 		intent.putExtra("group", selectedGroup);
 		startActivity(intent);
 	}
@@ -247,7 +247,7 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		progress = ProgressDialog.show(this, getString(R.string.loading),
 				getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/groups/index.json";
+				+ "/groups/index.json?user_id=" + user.getId();
 		HttpAsyncTask task = new HttpAsyncTask(GET_GROUPS_METHOD, null);
 		task.execute(url);
 	}
