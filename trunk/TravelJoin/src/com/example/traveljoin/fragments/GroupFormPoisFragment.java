@@ -1,7 +1,6 @@
 package com.example.traveljoin.fragments;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,15 +19,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.PoisSelectorActivity;
-import com.example.traveljoin.activities.TourFormActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Group;
-import com.example.traveljoin.models.GroupInterest;
 import com.example.traveljoin.models.GroupPoi;
-import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.Poi;
-import com.example.traveljoin.models.TourPoi;
 
 public class GroupFormPoisFragment extends ListFragment {
 	GroupFormActivity groupFormActivity;

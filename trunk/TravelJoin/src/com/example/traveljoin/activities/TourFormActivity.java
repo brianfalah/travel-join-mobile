@@ -16,7 +16,6 @@ import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Tour;
-import com.example.traveljoin.models.TourPoi;
 import com.example.traveljoin.models.User;
 
 import android.app.ActionBar;
@@ -34,7 +33,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 public class TourFormActivity extends ActionBarActivity implements

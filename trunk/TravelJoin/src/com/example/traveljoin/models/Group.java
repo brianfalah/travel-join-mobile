@@ -11,9 +11,6 @@ import org.json.JSONObject;
 
 public class Group implements Serializable, GeneralItem {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
@@ -21,6 +18,7 @@ public class Group implements Serializable, GeneralItem {
 	private Integer type;
 	private String password;
 	private Integer userId;
+	private Boolean joined;
 	private User user;
 	
 	private ArrayList<GroupInterest> groupInterests;
@@ -29,8 +27,6 @@ public class Group implements Serializable, GeneralItem {
 	private ArrayList<GroupPoi> groupPoisToDelete;	
 	private ArrayList<GroupTour> groupTours;
 	private ArrayList<GroupTour> groupToursToDelete;
-	
-
 	
 	
 	public Group(Integer id, String name, String description, Integer type, String password,
@@ -110,7 +106,15 @@ public class Group implements Serializable, GeneralItem {
 		this.userId = userId;
 	}
 	
-	
+	public Boolean getIsJoined() {
+		//TODO
+//		return joined;
+		return false;
+	}
+
+	public void setIsJoined(Boolean joined) {
+		this.joined = joined;
+	}
 	
 	public User getUser() {
 		return user;
