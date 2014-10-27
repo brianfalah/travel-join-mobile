@@ -43,7 +43,7 @@ import com.example.traveljoin.models.User;
 public class ToursMainActivity extends Activity implements OnQueryTextListener {
 
 	private ProgressDialog progress;
-	private User user;
+	User user;
 	private ActionBar actionBar;
 	private ListView listView;
 	private GeneralItemListAdapter adapter;
@@ -192,7 +192,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 
 	private void startTourDetailActivity(final Tour selectedTour) {
 		Intent intent = new Intent(this, TourDetailsActivity.class);
-		intent.putExtra("tour", selectedTour); // le pasamos el punto a la
+		intent.putExtra("tour_id", selectedTour.getId()); // le pasamos el punto a la
 												// activity
 		startActivity(intent);
 	}
@@ -215,14 +215,14 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		case CREATE_TOUR_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de circuitos en el onResume
+				getToursFromServer();
 				break;
 			}
 			break;
 		case EDIT_TOUR_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de circuitos en el onResume
+				getToursFromServer();
 				break;
 			}
 			break;

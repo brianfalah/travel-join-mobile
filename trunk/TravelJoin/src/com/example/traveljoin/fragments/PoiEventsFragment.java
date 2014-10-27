@@ -39,7 +39,7 @@ public class PoiEventsFragment extends ListFragment {
 		activity = (PoiDetailsActivity) getActivity();              
 				
 		events = new ArrayList<GeneralItem>();
-		events.addAll(activity.poi.getPoiEvents());
+		//events.addAll(activity.poi.getPoiEvents());
 
 		adapter = new GeneralItemListAdapter(
 				getActivity(), events);

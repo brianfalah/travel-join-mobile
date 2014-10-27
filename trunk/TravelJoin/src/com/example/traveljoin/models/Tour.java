@@ -18,6 +18,7 @@ public class Tour implements Serializable, GeneralItem {
 	private Integer userId;
 	private User user;
 	private Boolean isFavorite;
+	private Rating rating;
 	
 	private ArrayList<TourPoi> tourPois;
 	private ArrayList<TourPoi> tourPoisToDelete;
@@ -149,6 +150,14 @@ public class Tour implements Serializable, GeneralItem {
 		this.isFavorite = isFavorite;
 	}
 
+	public Rating getRating() {
+		return rating;
+	}
+
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
+
 	public static Tour fromJSON(JSONObject tourJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> tourPoisToAdd = new ArrayList<GeneralItem>();
 		JSONArray tourPoisJson = tourJson.getJSONArray("tours_pois");
@@ -165,6 +174,11 @@ public class Tour implements Serializable, GeneralItem {
 		User user = User.fromJSON(tourJson.getJSONObject("user"));
 		tour.setUser(user);
 		tour.setIsFavorite(tourJson.getBoolean("is_favorite"));
+		
+		if (tourJson.has("rating") && !tourJson.isNull("rating")){
+			Rating rating = Rating.fromJSON(tourJson.getJSONObject("rating"));
+			tour.setRating(rating);
+		}
 		
 		return tour;
 	}
