@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -31,15 +29,6 @@ public class GroupFormInterestsFragment extends ListFragment {
 	private GeneralItemListAdapter groupInterestsAdapter;
 	private static final int ADD_INTERESTS_REQUEST = 1;
 	
-    
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.fragment_group_form_interests,
-				container, false);		
-		return view;
-	}
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,10 +78,6 @@ public class GroupFormInterestsFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if( getUserVisibleHint() == false ) 
-	    {
-	        return false;
-	    }
 		GroupInterest selectedGroupInterest;
 		switch (item.getItemId()) {
 			case R.id.context_menu_delete:
@@ -147,22 +132,4 @@ public class GroupFormInterestsFragment extends ListFragment {
 		return fragmentGroupInterests;
 	}
 	
-	 @Override
-     public void onAttach(Activity activity)
-     {
-         super.onAttach(activity);
-     }
-
-     @Override
-     public void onStart()
-     {
-         super.onStart();
-     }
-
-     @Override
-     public void onResume()
-     {
-         super.onResume();
-     }
-
 }

@@ -32,7 +32,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -293,7 +292,6 @@ public class GroupFormActivity extends ActionBarActivity implements
 
 		@Override
 		protected void onPostExecute(String result) {
-			Log.d("InputStream", result);
 			switch (this.from_method) {
 			case ADD_GROUP_METHOD:
 				progress.dismiss();
