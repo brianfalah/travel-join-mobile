@@ -1,5 +1,10 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +21,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 
 import com.example.traveljoin.R;
 
@@ -30,6 +41,7 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Favorite;
+import com.example.traveljoin.models.Rating;
 import com.example.traveljoin.models.Tour;
 import com.example.traveljoin.models.User;
 
@@ -39,20 +51,32 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	private SmartFragmentStatePagerAdapter adapterViewPager;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
+	private RatingBar ratingBar;
+	private EditText editTextComment;	
+	private Button btnRatingOk;	
+	private Button btnRatingCancel;
+	
 	private static final int EDIT_TOUR_REQUEST = 1;
 	protected static final int DELETE_TOUR_METHOD = 2;
 	protected static final int ADD_TO_FAVORITES_METHOD = 3;
 	protected static final int REMOVE_FROM_FAVORITES_METHOD = 4;
+	protected static final int ADD_RATING_METHOD = 5;
+	protected static final int GET_TOUR_METHOD = 6;
 	
 	ProgressDialog progress;
-	public Tour tour;
+	public Tour tour = null;
 	User user;
+	private Dialog rankDialog;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_details);
         initializeUser();
+        Bundle b = getIntent().getExtras(); // gets the previously created intent
+        Integer tourId = (Integer) b.get("tour_id");
+		getTourFromServer(tourId);
+        
         adapterViewPager = new MyPagerAdapter(
 				getSupportFragmentManager());
 		actionBar = getActionBar();
@@ -72,13 +96,19 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		actionBar.addTab(actionBar.newTab().setText(getString(R.string.general_user_profile_tab))
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText(getString(R.string.pois))
-				.setTabListener(this));
-        
-                
-        Bundle b = getIntent().getExtras(); // gets the previously created intent
-        tour = (Tour) b.get("tour"); 
+				.setTabListener(this));                        
     }   
     
+	public void getTourFromServer(Integer tourId) {
+		progress = ProgressDialog.show(TourDetailsActivity.this,
+				getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/tours/show.json?tour_id=" + tourId + "&user_id=" + user.getId();
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(GET_TOUR_METHOD, null);
+		httpAsyncTask.execute(url);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -88,18 +118,24 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!user.getId().equals(tour.getUserId())) {
-			menu.removeItem(R.id.action_edit);
-			menu.removeItem(R.id.action_delete);
-			menu.removeItem(R.id.action_calificate);
-			menu.removeItem(R.id.action_denounce);
-		}
-		//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
-		if (tour.getIsFavorite()){
-			menu.removeItem(R.id.action_add_to_favorites);
-		}
-		else{
-			menu.removeItem(R.id.action_delete_from_favorites);
+		if (tour != null){				
+			if (!user.getId().equals(tour.getUserId())) {
+				//si no es el dueño
+				menu.removeItem(R.id.action_edit);
+				menu.removeItem(R.id.action_delete);
+			}
+			else{
+				//si es el dueño
+				menu.removeItem(R.id.action_calificate);
+				menu.removeItem(R.id.action_denounce);
+			}
+			//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
+			if (tour.getIsFavorite()){
+				menu.removeItem(R.id.action_add_to_favorites);
+			}
+			else{
+				menu.removeItem(R.id.action_delete_from_favorites);
+			}
 		}
 		
 		return super.onPrepareOptionsMenu(menu);
@@ -220,13 +256,70 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		.setIcon(android.R.drawable.ic_dialog_alert)
          .show();
 	}
+    
+	public void calificateTour() {
+		rankDialog = new Dialog(this);
+		rankDialog.setContentView(R.layout.calificate);
+		rankDialog.setTitle(getString(R.string.rank_tour));
+		rankDialog.setCancelable(true);
+		ratingBar = (RatingBar)rankDialog.findViewById(R.id.ratingBar);		
+		editTextComment = (EditText)rankDialog.findViewById(R.id.comment);
+		btnRatingOk = (Button)rankDialog.findViewById(R.id.btnRatingOk);
+		btnRatingCancel = (Button)rankDialog.findViewById(R.id.btnRatingCancel);
+		if (tour.getRating() != null){
+			ratingBar.setRating(tour.getRating().getValue());
+			editTextComment.setText(tour.getRating().getComment());
+			btnRatingOk.setEnabled(true);
+		}
+		
+		addListenerOnRatingBar();
+		addListenerOnButtons();
+		rankDialog.show();
+	}
 	
-    public void calificateTour(){
-    	final Dialog dialog = new Dialog(this);
-		dialog.setContentView(R.layout.calificate);		
-		dialog.setTitle(getString(R.string.rank_tour));	
-		dialog.show();
-    }	
+	public void addListenerOnRatingBar() {		  	 
+		//if rating value is changed,
+		//display the current rating value in the result (textview) automatically
+		ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+			public void onRatingChanged(RatingBar ratingBar, float rating,
+				boolean fromUser) {
+				if (rating > 0){
+					btnRatingOk.setEnabled(true);
+				}
+				else{
+					btnRatingOk.setEnabled(false);
+				}
+	 
+			}
+		});
+	  }
+	 
+	  public void addListenerOnButtons() {	 
+		  btnRatingOk.setOnClickListener(new OnClickListener() {	 
+			public void onClick(View v) {				
+				float value = ratingBar.getRating();
+				if (value > 0){
+					progress = ProgressDialog.show(TourDetailsActivity.this,
+							getString(R.string.loading),
+							getString(R.string.wait), true);
+					String url = getResources().getString(R.string.api_url)
+							+ "/ratings/add";
+					Rating rating = new Rating(user.getId(), tour.getId(), "Tour",
+							value, editTextComment.getText().toString());
+					HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+							ADD_RATING_METHOD, rating);
+					httpAsyncTask.execute(url);
+				}
+			}	 
+		  });
+		  
+		  btnRatingCancel.setOnClickListener(new OnClickListener() {	 
+			public void onClick(View v) {				
+				rankDialog.hide();
+			}	 
+		  });		  
+	 
+	  }
     
 	public void addToFavourites() {
 		progress = ProgressDialog.show(TourDetailsActivity.this,
@@ -263,8 +356,12 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		    		case Activity.RESULT_OK :
 		    	        Bundle b = data.getExtras(); // gets the previously created intent
 		    	        Boolean isFavorite = tour.getIsFavorite();
+		    	        Rating rating = tour.getRating();
+		    	        
 		    	        tour = (Tour) b.get("tour_created_or_updated");
 		    	        tour.setIsFavorite(isFavorite);
+		    	        tour.setRating(rating);
+		    	        
 		    	        invalidateOptionsMenu();
 		    	        TourDetailInformationFragment infoFragment = (TourDetailInformationFragment) adapterViewPager.getRegisteredFragment(0);
 		    	        infoFragment.setFields();
@@ -293,7 +390,10 @@ public class TourDetailsActivity extends ActionBarActivity implements
         protected String doInBackground(String... urls) {  
         	//despues de cualquiera de estos metodo vuelve al postexecute de aca
         	switch (this.from_method) {
-	        	case DELETE_TOUR_METHOD :
+	        	case GET_TOUR_METHOD:
+					api_result = apiInterface.GET(urls[0]);
+				break;
+	        	case DELETE_TOUR_METHOD:
 	        		api_result = apiInterface.POST(urls[0], object_to_send, "delete");
 	        	break;
 				case ADD_TO_FAVORITES_METHOD:
@@ -302,6 +402,9 @@ public class TourDetailsActivity extends ActionBarActivity implements
 				case REMOVE_FROM_FAVORITES_METHOD:
 					api_result = apiInterface.POST(urls[0], object_to_send, "");
 				break;	
+				case ADD_RATING_METHOD:
+					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;
         	}
         	
         	return api_result.getResult();             
@@ -311,7 +414,33 @@ public class TourDetailsActivity extends ActionBarActivity implements
         @Override
         protected void onPostExecute(String result) {        	
         	//Log.d("InputStream", result);
-        	switch (this.from_method) {        	
+        	switch (this.from_method) {   
+				case GET_TOUR_METHOD:
+					progress.dismiss();
+					
+					JSONObject tourJson;
+					if (api_result.ok()){
+						try {
+							tourJson = new JSONObject(result);
+							tour = Tour.fromJSON(tourJson);
+							TourDetailInformationFragment infoFragment = (TourDetailInformationFragment) adapterViewPager.getRegisteredFragment(0);
+			    	        infoFragment.setFields();
+			    	        infoFragment.setOwnerInformation();
+			    	        TourDetailPoisFragment eventsFragment = (TourDetailPoisFragment) adapterViewPager.getRegisteredFragment(1);
+			    	        eventsFragment.refreshList();
+						} catch (JSONException e) {
+							showExceptionError(e);
+						} catch (ParseException e) {
+							showExceptionError(e);
+						}						
+					}						
+					else {
+						CustomTravelJoinException exception = new CustomTravelJoinException(
+								getString(R.string.connection_error_message));
+						exception.alertExceptionMessage(TourDetailsActivity.this);
+					}
+	
+				break;
 	        	case DELETE_TOUR_METHOD :
 	        		progress.dismiss(); 
 						if (api_result.ok())												
@@ -348,6 +477,26 @@ public class TourDetailsActivity extends ActionBarActivity implements
 						exception.alertExceptionMessage(TourDetailsActivity.this);
 					}			
 				break;
+				case ADD_RATING_METHOD:
+					JSONObject ratingJson;
+					progress.dismiss();
+					if (api_result.ok()){	
+						try {
+							ratingJson = new JSONObject(result);
+							Rating rating = Rating.fromJSON(ratingJson);
+							tour.setRating(rating);
+							rankDialog.hide();
+							Toast.makeText(TourDetailsActivity.this, R.string.poi_ranked_ok_message, Toast.LENGTH_SHORT).show();
+						} catch (JSONException e) {
+							showExceptionError(e);
+						}								
+					}					
+					else {
+						CustomTravelJoinException exception = new CustomTravelJoinException(
+								getString(R.string.connection_error_message));
+						exception.alertExceptionMessage(TourDetailsActivity.this);
+					}			
+				break;
         	}
        }        
     }
@@ -363,5 +512,13 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	private void initializeUser() {
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
+	}
+	
+	
+	public void showExceptionError(Exception e) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				e.getMessage());
+		exception.alertExceptionMessage(this);
+		e.printStackTrace();
 	}
 }

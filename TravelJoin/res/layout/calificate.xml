@@ -1,29 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/calificate_layout"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:orientation="vertical">
-
-    <RatingBar
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <RatingBar        
         android:id="@+id/ratingBar"
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="0.5" />
     
     <EditText
-         android:id="@+id/comments"
+         android:id="@+id/comment"
+         android:layout_below="@+id/ratingBar"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:hint="Ingrese sus comentarios.."
-         android:inputType="textCapSentences|textAutoCorrect" >
+         android:inputType="textCapSentences|textAutoCorrect|textMultiLine">
      </EditText>
+     
+        <!-- Bottom button section -->
 
-    <Button
-      android:id="@+id/btnOk"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:text="@string/ok">
-    </Button>
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/comment"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
+            style="?android:buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btnRatingCancel"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_action_cancel"
+                android:onClick="cancel"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/btnRatingOk"
+                style="?android:buttonBarButtonStyle"
+                android:drawableLeft="@drawable/ic_action_accept"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+	            android:text="@string/ok"
+	            android:enabled="false"/>
+                 		
+        </LinearLayout>
+        
+    </LinearLayout>
+    <!-- End - Bottom button section -->
+
+<!--     <Button -->
+<!--       android:id="@+id/btnRatingOk" -->
+<!--       android:enabled="false" -->
+<!--       android:layout_width="wrap_content" -->
+<!--       android:layout_height="wrap_content" -->
+<!--       android:gravity="center" -->
+<!--       android:text="@string/ok"> -->
+<!--     </Button> -->
+
+</RelativeLayout>

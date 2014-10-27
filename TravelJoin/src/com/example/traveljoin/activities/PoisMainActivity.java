@@ -191,7 +191,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 
 	private void startPoiDetailActivity(final Poi selectedPoi) {
 		Intent intent = new Intent(this, PoiDetailsActivity.class);
-		intent.putExtra("poi", selectedPoi); // le pasamos el punto a la
+		intent.putExtra("poi_id", selectedPoi.getId()); // le pasamos el punto a la
 												// activity
 		startActivity(intent);
 	}
@@ -214,7 +214,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		case EDIT_POI_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de pois en el onResume
+				getPoisFromServer();
 				break;
 			}
 			break;

@@ -251,7 +251,7 @@ public class MapActivity extends SlidingFragmentActivity implements
                 		//va al detalle del punto para que decida si quiere editarlo, borrarlo, etc		
                 		Intent intent = new Intent(getActivity(), PoiDetailsActivity.class);
                 		Poi poi = markerPoiMap.get(marker);
-                		intent.putExtra("poi", poi); //le pasamos el punto a la activity
+                		intent.putExtra("poi_id", poi.getId()); //le pasamos el punto a la activity
                 		startActivity(intent);	
                     }
                 });

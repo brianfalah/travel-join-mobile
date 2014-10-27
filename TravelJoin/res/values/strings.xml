@@ -3,7 +3,7 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-<!--     <string name="api_url">http://192.168.1.133:3001</string> -->
+<!--     <string name="api_url">http://192.168.1.111:3001</string> -->
     <string name="api_url">http://travel-join-api.herokuapp.com</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
@@ -82,6 +82,12 @@
         <item>5</item>
         <item>10</item>
     </string-array>
+    
+    <string name="poi_added_to_favorites_message">El punto fue agregado a sus favoritos correctamente.</string>
+	<string name="poi_removed_from_favorites_message">El punto fue borrado de sus favoritos correctamente.</string>
+	<string name="poi_already_in_favorites_message">Usted ya ha agregado este punto a sus favoritos.</string>    
+	<string name="poi_already_removed_from_favorites_message">Usted ya ha borrado este punto de sus favoritos.</string>
+	<string name="poi_ranked_ok_message">El punto fue calificado correctamente.</string>
     <!-- FIN pois -->
 
     <!-- events -->
@@ -101,6 +107,12 @@
     <string name="rank_tour">Calificar circuito</string>
     <string name="tour_general_information_tab">General</string>
     <string name="tour_pois_tab">Puntos de interés</string>
+    
+    <string name="tour_added_to_favorites_message">El circuito fue agregado a sus favoritos correctamente.</string>
+	<string name="tour_removed_from_favorites_message">El circuito fue borrado de sus favoritos correctamente.</string>
+	<string name="tour_already_in_favorites_message">Usted ya ha agregado este circuito a sus favoritos.</string>    
+	<string name="tour_already_removed_from_favorites_message">Usted ya ha borrado este circuito de sus favoritos.</string>
+	<string name="tour_ranked_ok_message">El circuito fue calificado correctamente.</string>
     <!-- FIN tours -->
 	
 	<!-- Groups -->
@@ -165,16 +177,7 @@
     
     <!-- Exception mesaages -->
 	<string name="retry_message">"Intente de nuevo"</string>
-	<string name="connection_error_message">Ha ocurrido un problema con la conexión a los servidores. Por favor, intente de nuevo.</string>
-	<string name="poi_added_to_favorites_message">El punto fue agregado a sus favoritos correctamente.</string>
-	<string name="poi_removed_from_favorites_message">El punto fue borrado de sus favoritos correctamente.</string>
-	<string name="poi_already_in_favorites_message">Usted ya ha agregado este punto a sus favoritos.</string>    
-	<string name="poi_already_removed_from_favorites_message">Usted ya ha borrado este punto de sus favoritos.</string>
-	
-	<string name="tour_added_to_favorites_message">El circuito fue agregado a sus favoritos correctamente.</string>
-	<string name="tour_removed_from_favorites_message">El circuito fue borrado de sus favoritos correctamente.</string>
-	<string name="tour_already_in_favorites_message">Usted ya ha agregado este circuito a sus favoritos.</string>    
-	<string name="tour_already_removed_from_favorites_message">Usted ya ha borrado este circuito de sus favoritos.</string>
+	<string name="connection_error_message">Ha ocurrido un problema con la conexión a los servidores. Por favor, intente de nuevo.</string>			
     <!-- FIN Exception mesaages -->
     
 </resources>

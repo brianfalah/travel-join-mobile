@@ -1,5 +1,10 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +21,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
 import com.example.traveljoin.R;
@@ -31,6 +42,7 @@ import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Favorite;
 import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.Rating;
 import com.example.traveljoin.models.User;
 
 public class PoiDetailsActivity extends ActionBarActivity implements
@@ -39,21 +51,34 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	private SmartFragmentStatePagerAdapter adapterViewPager;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
+	private RatingBar ratingBar;
+	private EditText editTextComment;	
+	private Button btnRatingOk;	
+	private Button btnRatingCancel;
+		
 	private static final int EDIT_POI_REQUEST = 1;
 	protected static final int DELETE_POI_METHOD = 2;
-	protected static final int ADD_TO_FAVORITES_METHOD = 3;
+	protected static final int ADD_TO_FAVORITES_METHOD = 3;		
 	protected static final int REMOVE_FROM_FAVORITES_METHOD = 4;
+	protected static final int ADD_RATING_METHOD = 5;
+	protected static final int GET_POI_METHOD = 6;
 	
 
 	ProgressDialog progress;
-	public Poi poi;
+	public Poi poi = null;
 	User user;
+	private Dialog rankDialog;	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_poi_details);
+		setContentView(R.layout.activity_poi_details);		
 		initializeUser();
+		Bundle b = getIntent().getExtras(); 
+		Integer poiId = (Integer) b.get("poi_id");
+		getPoiFromServer(poiId);
+		
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.pois_view);
@@ -73,11 +98,17 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 				.setText(getString(R.string.general_user_profile_tab))
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText(getString(R.string.events))
-				.setTabListener(this));
-
-		Bundle b = getIntent().getExtras(); // gets the previously created
-											// intent
-		poi = (Poi) b.get("poi");
+				.setTabListener(this));		
+	}
+	
+	public void getPoiFromServer(Integer poiId) {
+		progress = ProgressDialog.show(PoiDetailsActivity.this,
+				getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/pois/show.json?poi_id=" + poiId + "&user_id=" + user.getId();
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(GET_POI_METHOD, null);
+		httpAsyncTask.execute(url);
 	}
 
 	@Override
@@ -89,18 +120,24 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!user.getId().equals(poi.getUserId())) {
-			menu.removeItem(R.id.action_edit);
-			menu.removeItem(R.id.action_delete);
-			menu.removeItem(R.id.action_calificate);
-			menu.removeItem(R.id.action_denounce);
-		}
-		//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
-		if (poi.getIsFavorite()){
-			menu.removeItem(R.id.action_add_to_favorites);
-		}
-		else{
-			menu.removeItem(R.id.action_delete_from_favorites);
+		if (poi != null){					
+			if (!user.getId().equals(poi.getUserId())) {
+				//si no es el dueño
+				menu.removeItem(R.id.action_edit);
+				menu.removeItem(R.id.action_delete);				
+			}
+			else{
+				//si es el dueño
+				menu.removeItem(R.id.action_calificate);
+				menu.removeItem(R.id.action_denounce);
+			}
+			//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
+			if (poi.getIsFavorite()){
+				menu.removeItem(R.id.action_add_to_favorites);
+			}
+			else{
+				menu.removeItem(R.id.action_delete_from_favorites);
+			}
 		}
 		
 		return super.onPrepareOptionsMenu(menu);
@@ -229,11 +266,68 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	}
 
 	public void calificatePoi() {
-		final Dialog dialog = new Dialog(this);
-		dialog.setContentView(R.layout.calificate);
-		dialog.setTitle(getString(R.string.rank_poi));
-		dialog.show();
+		rankDialog = new Dialog(this);
+		rankDialog.setContentView(R.layout.calificate);
+		rankDialog.setTitle(getString(R.string.rank_poi));
+		rankDialog.setCancelable(true);
+		ratingBar = (RatingBar)rankDialog.findViewById(R.id.ratingBar);		
+		editTextComment = (EditText)rankDialog.findViewById(R.id.comment);
+		btnRatingOk = (Button)rankDialog.findViewById(R.id.btnRatingOk);
+		btnRatingCancel = (Button)rankDialog.findViewById(R.id.btnRatingCancel);
+		if (poi.getRating() != null){
+			ratingBar.setRating(poi.getRating().getValue());
+			editTextComment.setText(poi.getRating().getComment());
+			btnRatingOk.setEnabled(true);
+		}
+		
+		addListenerOnRatingBar();
+		addListenerOnButtons();
+		rankDialog.show();
 	}
+	
+	  public void addListenerOnRatingBar() {		  	 
+		//if rating value is changed,
+		//display the current rating value in the result (textview) automatically
+		ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+			public void onRatingChanged(RatingBar ratingBar, float rating,
+				boolean fromUser) {
+				if (rating > 0){
+					btnRatingOk.setEnabled(true);
+				}
+				else{
+					btnRatingOk.setEnabled(false);
+				}
+	 
+			}
+		});
+	  }
+	 
+	  public void addListenerOnButtons() {	 
+		  btnRatingOk.setOnClickListener(new OnClickListener() {	 
+			public void onClick(View v) {				
+				float value = ratingBar.getRating();
+				if (value > 0){
+					progress = ProgressDialog.show(PoiDetailsActivity.this,
+							getString(R.string.loading),
+							getString(R.string.wait), true);
+					String url = getResources().getString(R.string.api_url)
+							+ "/ratings/add";
+					Rating rating = new Rating(user.getId(), poi.getId(), "Poi",
+							value, editTextComment.getText().toString());
+					HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+							ADD_RATING_METHOD, rating);
+					httpAsyncTask.execute(url);
+				}
+			}	 
+		  });
+		  
+		  btnRatingCancel.setOnClickListener(new OnClickListener() {	 
+			public void onClick(View v) {				
+				rankDialog.hide();
+			}	 
+		  });		  
+	 
+	  }
 	
 	public void addToFavourites() {
 		progress = ProgressDialog.show(PoiDetailsActivity.this,
@@ -273,8 +367,12 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 			case Activity.RESULT_OK:
 				Bundle b = data.getExtras(); 
 				Boolean isFavorite = poi.getIsFavorite();
+				Rating rating = poi.getRating();
+				
 				poi = (Poi) b.get("poi_created_or_updated");
 				poi.setIsFavorite(isFavorite);
+				poi.setRating(rating);
+				
 				invalidateOptionsMenu();
 				PoiInformationFragment infoFragment = (PoiInformationFragment) adapterViewPager
 						.getRegisteredFragment(0);
@@ -306,6 +404,9 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 			// despues de cualquiera de estos metodo vuelve al postexecute de
 			// aca
 			switch (this.from_method) {
+				case GET_POI_METHOD:
+					api_result = apiInterface.GET(urls[0]);
+				break;
 				case DELETE_POI_METHOD:
 					api_result = apiInterface.POST(urls[0], object_to_send,
 						"delete");
@@ -315,7 +416,10 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 				break;	
 				case REMOVE_FROM_FAVORITES_METHOD:
 					api_result = apiInterface.POST(urls[0], object_to_send, "");
-				break;				
+				break;	
+				case ADD_RATING_METHOD:
+					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;
 			}
 
 			return api_result.getResult();
@@ -326,6 +430,34 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		protected void onPostExecute(String result) {
 			// Log.d("InputStream", result);
 			switch (this.from_method) {
+				case GET_POI_METHOD:
+					progress.dismiss();
+					
+					JSONObject poiJson;
+					if (api_result.ok()){
+						try {
+							poiJson = new JSONObject(result);
+							poi = Poi.fromJSON(poiJson);
+							PoiInformationFragment infoFragment = (PoiInformationFragment) adapterViewPager
+									.getRegisteredFragment(0);
+							infoFragment.setFields();
+							infoFragment.setOwnerInformation();
+							PoiEventsFragment eventsFragment = (PoiEventsFragment) adapterViewPager
+									.getRegisteredFragment(1);
+							eventsFragment.refreshList();
+						} catch (JSONException e) {
+							showExceptionError(e);
+						} catch (ParseException e) {
+							showExceptionError(e);
+						}						
+					}						
+					else {
+						CustomTravelJoinException exception = new CustomTravelJoinException(
+								getString(R.string.connection_error_message));
+						exception.alertExceptionMessage(PoiDetailsActivity.this);
+					}
+	
+				break;
 				case DELETE_POI_METHOD:
 					progress.dismiss();
 					if (api_result.ok())
@@ -360,6 +492,26 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 					else {
 						CustomTravelJoinException exception = new CustomTravelJoinException(
 								getString(R.string.poi_already_removed_from_favorites_message));
+						exception.alertExceptionMessage(PoiDetailsActivity.this);
+					}			
+				break;
+				case ADD_RATING_METHOD:
+					JSONObject ratingJson;
+					progress.dismiss();
+					if (api_result.ok()){	
+						try {
+							ratingJson = new JSONObject(result);
+							Rating rating = Rating.fromJSON(ratingJson);
+							poi.setRating(rating);
+							rankDialog.hide();
+							Toast.makeText(PoiDetailsActivity.this, R.string.poi_ranked_ok_message, Toast.LENGTH_SHORT).show();
+						} catch (JSONException e) {
+							showExceptionError(e);
+						}								
+					}					
+					else {
+						CustomTravelJoinException exception = new CustomTravelJoinException(
+								getString(R.string.connection_error_message));
 						exception.alertExceptionMessage(PoiDetailsActivity.this);
 					}			
 				break;

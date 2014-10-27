@@ -158,6 +158,10 @@ public class ApiInterface {
             if (object instanceof Favorite){            
             	jsonObject = ((Favorite) object).toJSON();	            	            	
             }
+            
+            if (object instanceof Rating){            
+            	jsonObject = ((Rating) object).toJSON();
+            }
             	
 
             // 4. convert JSONObject to JSON to String
