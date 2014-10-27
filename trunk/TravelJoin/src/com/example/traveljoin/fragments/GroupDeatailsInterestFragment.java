@@ -13,15 +13,13 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 public class GroupDeatailsInterestFragment extends ListFragment {
 	
 	private Group group;
 	private ArrayList<GeneralItem> groupInterests;
-	GroupDetailsActivity activity;
-	GeneralItemListAdapter adapter;
-	ListView listView;
+	private GroupDetailsActivity activity;
+	private GeneralItemListAdapter adapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,7 +27,6 @@ public class GroupDeatailsInterestFragment extends ListFragment {
 
 		View view = inflater.inflate(R.layout.fragment_general_list,
 				container, false);
-		listView = (ListView) view.findViewById(R.id.list);
 		return view;
 	}
 	

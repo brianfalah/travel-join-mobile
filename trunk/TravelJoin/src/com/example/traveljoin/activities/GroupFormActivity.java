@@ -194,11 +194,10 @@ public class GroupFormActivity extends ActionBarActivity implements
 			ArrayList<GeneralItem> newSelectedGroupTours = toursFragment
 					.getGroupTours();
 
-			Group groupToCreate = new Group(null,
-					infoFragment.getGroupName(),
+			Group groupToCreate = new Group(null, infoFragment.getGroupName(),
 					infoFragment.getGroupDescription(),
 					infoFragment.getGroupType(), infoFragment.getPassword(),
-					user.getId(), newSelectedGroupInterests,
+					user, user.getId(), newSelectedGroupInterests,
 					newSelectedGroupPois, newSelectedGroupTours);
 
 			String url = getResources().getString(R.string.api_url)
@@ -238,7 +237,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 					infoFragment.getGroupName(),
 					infoFragment.getGroupDescription(),
 					infoFragment.getGroupType(), infoFragment.getPassword(),
-					user.getId(), new ArrayList<GeneralItem>(),
+					user, user.getId(), new ArrayList<GeneralItem>(),
 					new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>());
 
 			groupToUpdate.updateGroupInterests(group.getGroupInterests(),

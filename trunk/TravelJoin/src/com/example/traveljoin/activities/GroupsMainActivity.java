@@ -127,7 +127,7 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		Group group = (Group) listView.getItemAtPosition(info.position);
-		if (!group.getUserId().equals(user.getId())) {
+		if (!group.getOwnerId().equals(user.getId())) {
 			menu.removeItem(R.id.group_context_menu_edit);
 			menu.removeItem(R.id.group_context_menu_delete);
 		}

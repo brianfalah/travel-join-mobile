@@ -17,11 +17,11 @@ public class GroupFormInformationFragment extends Fragment {
 
 	private static Integer PUBLIC = 0;
 	private static Integer PRIVATE = 1;
-	public EditText groupNameField;
-	public EditText groupDescriptionField;
-	public RadioGroup radioGroup;
-	public EditText groupPasswordField;
-	GroupFormActivity groupFormActivity;
+	private EditText groupNameField;
+	private EditText groupDescriptionField;
+	private RadioGroup radioGroup;
+	private EditText groupPasswordField;
+	private GroupFormActivity groupFormActivity;
 	
     
 	@Override

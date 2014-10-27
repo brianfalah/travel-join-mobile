@@ -109,6 +109,7 @@
     <string name="group_pois_tab">Puntos de interés</string>
     <string name="group_tours_tab">Circuitos</string> 
     <string name="group_interests_tab">Intereses</string>
+    <string name="group_members_tab">Miembros</string>
     <string name="radio_public_group">Público</string>
     <string name="radio_private_group">Privado</string>
     <string name="group_password">Contraseña</string>

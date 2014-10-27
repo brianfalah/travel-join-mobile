@@ -53,7 +53,7 @@ public class GroupDetailsInformationFragment extends Fragment {
 		TextView userOwnerNameView = (TextView) view
 				.findViewById(R.id.selection_owner_name);
 
-		User owner = group.getUser();
+		User owner = group.getOwner();
 		profilePictureView.setProfileId(owner.getFacebookId());
 		userOwnerNameView.setText(owner.getFullName());
 	}

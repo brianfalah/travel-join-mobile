@@ -18,9 +18,9 @@ import android.widget.ListView;
 
 public class GroupDetailsPoisFragment extends ListFragment {
 
-	GroupDetailsActivity activity;
+	private GroupDetailsActivity activity;
 	private ArrayList<GeneralItem> groupPois;
-	GeneralItemListAdapter adapter;
+	private GeneralItemListAdapter adapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
