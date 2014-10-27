@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -29,16 +27,6 @@ public class GroupFormPoisFragment extends ListFragment {
 	private ArrayList<GeneralItem> fragmentGroupPois;
 	private GeneralItemListAdapter groupPoisAdapter;
 	private static final int ADD_POIS_REQUEST = 1;
-
-    
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.fragment_group_form_pois,
-				container, false);		
-		return view;
-	}
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,10 +76,6 @@ public class GroupFormPoisFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if( getUserVisibleHint() == false ) 
-	    {
-	        return false;
-	    }
 		GroupPoi selectedGroupPoi;
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
@@ -110,7 +94,7 @@ public class GroupFormPoisFragment extends ListFragment {
 		GroupPoi groupPoi = (GroupPoi) fragmentGroupPois.get(info.position);
 		return groupPoi;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,23 +129,4 @@ public class GroupFormPoisFragment extends ListFragment {
 	public ArrayList<GeneralItem> getGroupPois(){
 		return fragmentGroupPois;
 	}
-	
-	 @Override
-     public void onAttach(Activity activity)
-     {
-         super.onAttach(activity);
-     }
-
-     @Override
-     public void onStart()
-     {
-         super.onStart();
-     }
-
-     @Override
-     public void onResume()
-     {
-         super.onResume();
-     }
-
 }
