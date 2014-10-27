@@ -23,6 +23,7 @@ import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.GroupDetailsInformationFragment;
 import com.example.traveljoin.fragments.GroupDeatailsInterestFragment;
+import com.example.traveljoin.fragments.GroupDetailsMembersFragment;
 import com.example.traveljoin.fragments.GroupDetailsPoisFragment;
 import com.example.traveljoin.fragments.GroupDetailsToursFragment;
 import com.example.traveljoin.fragments.PoiEventsFragment;
@@ -80,6 +81,9 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		actionBar.addTab(actionBar.newTab()
 				.setText(getString(R.string.group_tours_tab))
 				.setTabListener(this));
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.group_members_tab))
+				.setTabListener(this));
 
 		Bundle b = getIntent().getExtras();
 
@@ -95,7 +99,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!user.getId().equals(group.getUserId())) {
+		if (!user.getId().equals(group.getOwnerId())) {
 			menu.removeItem(R.id.action_edit);
 			menu.removeItem(R.id.action_delete);
 		}
@@ -149,11 +153,12 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	}
 
 	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
-		private static int NUM_ITEMS = 4;
+		private static int NUM_ITEMS = 5;
 		public static final int GROUP_INFORMATION_TAB = 0;
 		public static final int GROUP_INTERESTS_TAB = 1;
 		public static final int GROUP_POIS_TAB = 2;
 		public static final int GROUP_TOURS_TAB = 3;
+		public static final int GROUP_MEMBERS_TAB = 4;
 		
 		public MyPagerAdapter(FragmentManager fragmentManager) {
 			super(fragmentManager);
@@ -175,6 +180,8 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				return new GroupDetailsPoisFragment();
 			case GROUP_TOURS_TAB: 
 				return new GroupDetailsToursFragment();
+			case GROUP_MEMBERS_TAB: 
+				return new GroupDetailsMembersFragment();
 			default:
 				return null;
 			}

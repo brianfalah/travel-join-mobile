@@ -25,7 +25,7 @@ import com.example.traveljoin.models.GroupTour;
 import com.example.traveljoin.models.Tour;
 
 public class GroupFormToursFragment extends ListFragment {
-	GroupFormActivity groupFormActivity;
+	private GroupFormActivity groupFormActivity;
 	private ArrayList<GeneralItem> fragmentGroupTours;
 	private GeneralItemListAdapter groupToursAdapter;
 	private static final int ADD_TOURS_REQUEST = 1;

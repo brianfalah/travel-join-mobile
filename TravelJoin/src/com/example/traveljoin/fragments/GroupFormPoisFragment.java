@@ -25,7 +25,7 @@ import com.example.traveljoin.models.GroupPoi;
 import com.example.traveljoin.models.Poi;
 
 public class GroupFormPoisFragment extends ListFragment {
-	GroupFormActivity groupFormActivity;
+	private GroupFormActivity groupFormActivity;
 	private ArrayList<GeneralItem> fragmentGroupPois;
 	private GeneralItemListAdapter groupPoisAdapter;
 	private static final int ADD_POIS_REQUEST = 1;

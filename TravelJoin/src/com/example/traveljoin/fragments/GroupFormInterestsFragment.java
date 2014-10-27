@@ -26,7 +26,7 @@ import com.example.traveljoin.models.Interest;
 
 public class GroupFormInterestsFragment extends ListFragment {
 	
-	GroupFormActivity groupFormActivity;
+	private GroupFormActivity groupFormActivity;
 	private ArrayList<GeneralItem> fragmentGroupInterests;
 	private GeneralItemListAdapter groupInterestsAdapter;
 	private static final int ADD_INTERESTS_REQUEST = 1;
