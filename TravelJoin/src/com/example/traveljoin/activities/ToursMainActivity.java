@@ -215,14 +215,14 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		case CREATE_TOUR_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				getToursFromServer();
+				//Se actualiza la lista de tours en el onResume
 				break;
 			}
 			break;
 		case EDIT_TOUR_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				getToursFromServer();
+				//Se actualiza la lista de tours en el onResume
 				break;
 			}
 			break;
