@@ -28,7 +28,7 @@ public class GroupDetailsToursFragment extends ListFragment {
 
 		groupTours = new ArrayList<GeneralItem>();
 		groupTours.addAll((Collection<? extends GeneralItem>) activity.group
-				.getGroupPois());
+				.getGroupTours());
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupTours);
 		setListAdapter(adapter);
