@@ -17,46 +17,45 @@ public class GroupFormInformationFragment extends Fragment {
 
 	private static Integer PUBLIC = 0;
 	private static Integer PRIVATE = 1;
-	private EditText groupNameField;
-	private EditText groupDescriptionField;
-	private RadioGroup radioGroup;
-	private EditText groupPasswordField;
-	private GroupFormActivity groupFormActivity;
-	
-    
+	public EditText groupNameField;
+	public EditText groupDescriptionField;
+	public RadioGroup radioGroup;
+	public EditText groupPasswordField;
+	GroupFormActivity groupFormActivity;
+
+	public static GroupFormInformationFragment newInstance() {
+		GroupFormInformationFragment fragment = new GroupFormInformationFragment();
+		return fragment;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_group_form_information,
 				container, false);
-		
+
 		groupFormActivity = (GroupFormActivity) getActivity();
-		
-		groupNameField = (EditText) view
-				.findViewById(R.id.groupName);
+
+		groupNameField = (EditText) view.findViewById(R.id.groupName);
 		groupDescriptionField = (EditText) view
 				.findViewById(R.id.groupDescription);
-		radioGroup = (RadioGroup) view
-				.findViewById(R.id.radio_group_type);
+		radioGroup = (RadioGroup) view.findViewById(R.id.radio_group_type);
 		groupPasswordField = (EditText) view
 				.findViewById(R.id.private_group_password);
+
 		groupPasswordField.setEnabled(false);
 		groupPasswordField.setVisibility(View.GONE);
-		
-		
-		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
+		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
 				case R.id.radio_public_group:
-					// TODO
 					groupPasswordField.setEnabled(false);
 					groupPasswordField.setVisibility(View.GONE);
 					break;
 				case R.id.radio_private_group:
-					// TODO
 					groupPasswordField.setEnabled(true);
 					groupPasswordField.setVisibility(View.VISIBLE);
 					break;
@@ -64,35 +63,36 @@ public class GroupFormInformationFragment extends Fragment {
 
 			}
 		});
-		
-		if (groupFormActivity.group != null){
+
+		if (groupFormActivity.group != null) {
 			setFields();
 		}
 
 		return view;
 	}
-	
-	public void setFields(){
+
+	public void setFields() {
 		groupNameField.setText(groupFormActivity.group.getName());
-		groupDescriptionField.setText(groupFormActivity.group.getDescription());		
-		if (groupFormActivity.group.getType().equals(PUBLIC)){
+		groupDescriptionField.setText(groupFormActivity.group.getDescription());
+		if (groupFormActivity.group.getType().equals(PUBLIC)) {
 			radioGroup.check(R.id.radio_public_group);
-		}
-		else{
+		} else {
 			radioGroup.check(R.id.radio_private_group);
 			groupPasswordField.setText(groupFormActivity.group.getPassword());
 		}
-		
+
 	}
-	
+
 	public Boolean validateFields() {
-		if (getGroupType().equals(PUBLIC)){
-			return validateField(groupNameField) && validateField(groupDescriptionField);
+		if (getGroupType().equals(PUBLIC)) {
+			return validateField(groupNameField)
+					&& validateField(groupDescriptionField);
+		} else {
+			return validateField(groupNameField)
+					&& validateField(groupDescriptionField)
+					&& validateField(groupPasswordField);
 		}
-		else{
-			return validateField(groupNameField) && validateField(groupDescriptionField) && validateField(groupPasswordField);
-		}
-		
+
 	}
 
 	public Boolean validateField(View field) {
@@ -108,18 +108,18 @@ public class GroupFormInformationFragment extends Fragment {
 				edit_text_field.setError(null);
 				valid = true;
 			}
-		} 
+		}
 		return valid;
 	}
-	
+
 	public String getGroupName() {
 		return groupNameField.getText().toString();
 	}
-	
+
 	public String getGroupDescription() {
 		return groupDescriptionField.getText().toString();
 	}
-	
+
 	public Integer getGroupType() {
 		Integer groupType = null;
 		switch (radioGroup.getCheckedRadioButtonId()) {
@@ -132,7 +132,7 @@ public class GroupFormInformationFragment extends Fragment {
 		}
 		return groupType;
 	}
-	
+
 	public String getPassword() {
 		return groupPasswordField.getText().toString();
 	}

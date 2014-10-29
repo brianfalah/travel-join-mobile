@@ -19,14 +19,23 @@ import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupPoi;
 import com.example.traveljoin.models.Poi;
 
 public class GroupFormPoisFragment extends ListFragment {
-	private GroupFormActivity groupFormActivity;
+	GroupFormActivity groupFormActivity;
 	private ArrayList<GeneralItem> fragmentGroupPois;
 	private GeneralItemListAdapter groupPoisAdapter;
 	private static final int ADD_POIS_REQUEST = 1;
+
+	
+	public GroupFormPoisFragment(Group group){
+		fragmentGroupPois = new ArrayList<GeneralItem>();
+		if (group != null){
+			fragmentGroupPois.addAll(group.getGroupPois());
+		}
+	}
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,10 +47,6 @@ public class GroupFormPoisFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		groupFormActivity = (GroupFormActivity) getActivity();
-		fragmentGroupPois = new ArrayList<GeneralItem>();
-		if (groupFormActivity.group != null){
-			fragmentGroupPois.addAll(groupFormActivity.group.getGroupPois());
-		}	
 		groupPoisAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupPois);
 		setListAdapter(groupPoisAdapter);
 		registerForContextMenu(getListView());
@@ -76,6 +81,10 @@ public class GroupFormPoisFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if( getUserVisibleHint() == false ) 
+	    {
+	        return false;
+	    }
 		GroupPoi selectedGroupPoi;
 		switch (item.getItemId()) {
 		case R.id.context_menu_delete:
@@ -94,7 +103,7 @@ public class GroupFormPoisFragment extends ListFragment {
 		GroupPoi groupPoi = (GroupPoi) fragmentGroupPois.get(info.position);
 		return groupPoi;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -129,4 +138,5 @@ public class GroupFormPoisFragment extends ListFragment {
 	public ArrayList<GeneralItem> getGroupPois(){
 		return fragmentGroupPois;
 	}
+
 }

@@ -2,12 +2,12 @@ package com.example.traveljoin.activities;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.GroupFormInformationFragment;
 import com.example.traveljoin.fragments.GroupFormInterestsFragment;
@@ -30,8 +30,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -39,20 +41,15 @@ import android.widget.Button;
 public class GroupFormActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
-	public User user;
-	public ProgressDialog progress;
+	User user;
+	ProgressDialog progress;
 	public Group group;
-	public Button createButton;
-	public Button updateButton;
+	Button createButton;
+	Button updateButton;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
 	private MyPagerAdapter adapterViewPager;
-
-	private static int NUM_ITEMS = 4;
-	private static final int GROUP_INFORMATION_TAB = 0;
-	private static final int GROUP_INTERESTS_TAB = 1;
-	private static final int GROUP_POIS_TAB = 2;
-	private static final int GROUP_TOURS_TAB = 3;
+	private List<Fragment> listFragments;
 
 	private static final int ADD_GROUP_METHOD = 1;
 	private static final int UPDATE_GROUP_METHOD = 2;
@@ -67,13 +64,19 @@ public class GroupFormActivity extends ActionBarActivity implements
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		if (getIntent().getExtras() != null) {
+		if (getIntent().getExtras() != null)
 			initializeViewForEditingMode();
-		} else {
-			initializeViewForCreatingMode();
-		}
+		else
+			initializeVewForCreatingMode();
 
-		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+		listFragments = new ArrayList<Fragment>();
+		listFragments.add(new GroupFormInformationFragment());
+		listFragments.add(new GroupFormInterestsFragment(group));
+		listFragments.add(new GroupFormPoisFragment(group));
+		listFragments.add(new GroupFormToursFragment(group));
+
+		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(),
+				listFragments);
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(adapterViewPager);
@@ -100,7 +103,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 
 	}
 
-	private void initializeViewForCreatingMode() {
+	private void initializeVewForCreatingMode() {
 		actionBar.setSubtitle(R.string.groups_creation);
 		group = null;
 		createButton.setVisibility(View.VISIBLE);
@@ -135,12 +138,17 @@ public class GroupFormActivity extends ActionBarActivity implements
 	public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
 	}
 
-	// Extend from SmartFragmentStatePagerAdapter now instead for more dynamic
-	// ViewPager items
-	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
+	public static class MyPagerAdapter extends FragmentPagerAdapter {
+		private List<Fragment> fragments;
+		private static int NUM_ITEMS = 4;
+		private static final int GROUP_INFORMATION_TAB = 0;
+		private static final int GROUP_INTERESTS_TAB = 1;
+		private static final int GROUP_POIS_TAB = 2;
+		private static final int GROUP_TOURS_TAB = 3;
 
-		public MyPagerAdapter(FragmentManager fragmentManager) {
+		public MyPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragments) {
 			super(fragmentManager);
+			this.fragments = fragments;
 		}
 
 		@Override
@@ -150,94 +158,79 @@ public class GroupFormActivity extends ActionBarActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-			switch (position) {
-			case GROUP_INFORMATION_TAB:
-				return new GroupFormInformationFragment();
-			case GROUP_INTERESTS_TAB:
-				return new GroupFormInterestsFragment();
-			case GROUP_POIS_TAB:
-				return new GroupFormPoisFragment();
-			case GROUP_TOURS_TAB:
-				return new GroupFormToursFragment();
-			default:
-				return null;
-			}
+			return fragments.get(position);
 		}
 
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return "Page " + position;
+		public GroupFormInformationFragment getInfoFragment() {
+			return (GroupFormInformationFragment) fragments
+					.get(GROUP_INFORMATION_TAB);
+		}
+
+		public GroupFormInterestsFragment getInterestsFragment() {
+			return (GroupFormInterestsFragment) fragments
+					.get(GROUP_INTERESTS_TAB);
+		}
+
+		public GroupFormPoisFragment getPoisFragment() {
+			return (GroupFormPoisFragment) fragments.get(GROUP_POIS_TAB);
+		}
+
+		public GroupFormToursFragment getToursFragment() {
+			return (GroupFormToursFragment) fragments.get(GROUP_TOURS_TAB);
 		}
 
 	}
 
 	public void createGroup(View button) {
-		GroupFormInformationFragment infoFragment = (GroupFormInformationFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_INFORMATION_TAB);
-		GroupFormInterestsFragment interestsFragment = (GroupFormInterestsFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_INTERESTS_TAB);
-		GroupFormPoisFragment poisFragment = (GroupFormPoisFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_POIS_TAB);
-		GroupFormToursFragment toursFragment = (GroupFormToursFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_TOURS_TAB);
-
-		Boolean valid = infoFragment.validateFields();
+		Boolean valid = adapterViewPager.getInfoFragment().validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
 
-			ArrayList<GeneralItem> newSelectedGroupInterests = interestsFragment
-					.getGroupInterests();
-			ArrayList<GeneralItem> newSelectedGroupPois = poisFragment
-					.getGroupPois();
-			ArrayList<GeneralItem> newSelectedGroupTours = toursFragment
-					.getGroupTours();
+			ArrayList<GeneralItem> newSelectedGroupInterests = adapterViewPager
+					.getInterestsFragment().getGroupInterests();
+			ArrayList<GeneralItem> newSelectedGroupPois = adapterViewPager
+					.getPoisFragment().getGroupPois();
+			ArrayList<GeneralItem> newSelectedGroupTours = adapterViewPager
+					.getToursFragment().getGroupTours();
 
-			Group groupToCreate = new Group(null, infoFragment.getGroupName(),
-					infoFragment.getGroupDescription(),
-					infoFragment.getGroupType(), infoFragment.getPassword(),
-					user, user.getId(), newSelectedGroupInterests,
-					newSelectedGroupPois, newSelectedGroupTours);
+			Group group_to_create = new Group(null, adapterViewPager
+					.getInfoFragment().getGroupName(), adapterViewPager
+					.getInfoFragment().getGroupDescription(), adapterViewPager
+					.getInfoFragment().getGroupType(), adapterViewPager
+					.getInfoFragment().getPassword(), user, user.getId(),
+					newSelectedGroupInterests, newSelectedGroupPois,
+					newSelectedGroupTours);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/groups/create";
 			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(ADD_GROUP_METHOD,
-					groupToCreate);
+					group_to_create);
 			httpAsyncTask.execute(url);
-			// sigue en onPostExecute, en la parte de ADD_TOUR_METHOD
 		}
 
 	}
 
-	// cuando se clickea el boton actualizar viene aca!
 	public void updateGroup(View button) {
-		GroupFormInformationFragment infoFragment = (GroupFormInformationFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_INFORMATION_TAB);
-		GroupFormInterestsFragment interestsFragment = (GroupFormInterestsFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_INTERESTS_TAB);
-		GroupFormPoisFragment poisFragment = (GroupFormPoisFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_POIS_TAB);
-		GroupFormToursFragment toursFragment = (GroupFormToursFragment) adapterViewPager
-				.getRegisteredFragment(GROUP_TOURS_TAB);
-
-		Boolean valid = infoFragment.validateFields();
+		Boolean valid = adapterViewPager.getInfoFragment().validateFields();
 		if (valid) {
 			progress = ProgressDialog.show(this, getString(R.string.loading),
 					getString(R.string.wait), true);
 
-			ArrayList<GeneralItem> newSelectedGroupInterests = interestsFragment
-					.getGroupInterests();
-			ArrayList<GeneralItem> newSelectedGroupPois = poisFragment
-					.getGroupPois();
-			ArrayList<GeneralItem> newSelectedGroupTours = toursFragment
-					.getGroupTours();
+			ArrayList<GeneralItem> newSelectedGroupInterests = adapterViewPager
+					.getInterestsFragment().getGroupInterests();
+			ArrayList<GeneralItem> newSelectedGroupPois = adapterViewPager
+					.getPoisFragment().getGroupPois();
+			ArrayList<GeneralItem> newSelectedGroupTours = adapterViewPager
+					.getToursFragment().getGroupTours();
 
-			Group groupToUpdate = new Group(group.getId(),
-					infoFragment.getGroupName(),
-					infoFragment.getGroupDescription(),
-					infoFragment.getGroupType(), infoFragment.getPassword(),
-					user, user.getId(), new ArrayList<GeneralItem>(),
-					new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>());
+			Group groupToUpdate = new Group(group.getId(), adapterViewPager
+					.getInfoFragment().getGroupName(), adapterViewPager
+					.getInfoFragment().getGroupDescription(), adapterViewPager
+					.getInfoFragment().getGroupType(), adapterViewPager
+					.getInfoFragment().getPassword(), user, user.getId(),
+					new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>(),
+					new ArrayList<GeneralItem>());
 
 			groupToUpdate.updateGroupInterests(group.getGroupInterests(),
 					newSelectedGroupInterests);
@@ -251,12 +244,10 @@ public class GroupFormActivity extends ActionBarActivity implements
 			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
 					UPDATE_GROUP_METHOD, groupToUpdate);
 			httpAsyncTask.execute(url);
-			// sigue en HttpAsyncTask en doInBackground en UPDATE_TOUR_METHOD
 		}
 
 	}
 
-	// cuando se clickea el boton cancelar viene aca!
 	public void cancel(View button) {
 		Intent output = new Intent();
 		setResult(Activity.RESULT_CANCELED, output);
@@ -292,6 +283,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d("InputStream", result);
 			switch (this.from_method) {
 			case ADD_GROUP_METHOD:
 				progress.dismiss();
@@ -357,7 +349,6 @@ public class GroupFormActivity extends ActionBarActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// borrar la referencia a el cartelito del dialogo, sino trae problemas
 		if (progress != null)
 			progress.dismiss();
 	}
