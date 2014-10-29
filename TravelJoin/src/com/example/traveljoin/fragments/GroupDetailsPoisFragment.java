@@ -8,6 +8,7 @@ import com.example.traveljoin.activities.PoiDetailsActivity;
 
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupPoi;
 
 import android.content.Intent;
@@ -19,16 +20,21 @@ import android.widget.ListView;
 public class GroupDetailsPoisFragment extends ListFragment {
 
 	private GroupDetailsActivity activity;
-	private ArrayList<GeneralItem> groupPois;
 	private GeneralItemListAdapter adapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
 		activity = (GroupDetailsActivity) getActivity();
+		Group group = activity.group;
+		
+		initializeAdapterWithData(group);
+	}
 
-		groupPois = new ArrayList<GeneralItem>();
-		groupPois.addAll((Collection<? extends GeneralItem>) activity.group
+	private void initializeAdapterWithData(Group group) {
+		ArrayList<GeneralItem> groupPois = new ArrayList<GeneralItem>();
+		groupPois.addAll((Collection<? extends GeneralItem>) group
 				.getGroupPois());
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupPois);
@@ -40,18 +46,15 @@ public class GroupDetailsPoisFragment extends ListFragment {
 			long id) {
 		startPoiDetailActivity((GroupPoi) adapter.getItem(position));
 	}
-	
+
 	private void startPoiDetailActivity(GroupPoi selectedGroupPoi) {
 		Intent intent = new Intent(activity, PoiDetailsActivity.class);
-		intent.putExtra("poi_id", selectedGroupPoi.getPoiId()); 
+		intent.putExtra("poi_id", selectedGroupPoi.getPoiId());
 		startActivity(intent);
 	}
-	
-	public void refreshList() {
-		groupPois.clear();
-		groupPois.addAll((Collection<? extends GeneralItem>) activity.group
-				.getGroupPois());
-		adapter.notifyDataSetChanged();
+
+	public void refreshList(Group group) {
+		initializeAdapterWithData(group);
 	}
 
 }

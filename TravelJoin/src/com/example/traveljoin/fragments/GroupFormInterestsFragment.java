@@ -19,16 +19,24 @@ import com.example.traveljoin.activities.GroupFormActivity;
 import com.example.traveljoin.activities.InterestsSelectorActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupInterest;
 import com.example.traveljoin.models.Interest;
 
 public class GroupFormInterestsFragment extends ListFragment {
 	
-	private GroupFormActivity groupFormActivity;
+	GroupFormActivity groupFormActivity;
 	private ArrayList<GeneralItem> fragmentGroupInterests;
 	private GeneralItemListAdapter groupInterestsAdapter;
 	private static final int ADD_INTERESTS_REQUEST = 1;
 	
+    
+    public GroupFormInterestsFragment(Group group){
+		this.fragmentGroupInterests = new ArrayList<GeneralItem>();
+		if (group != null){
+			fragmentGroupInterests.addAll(group.getGroupInterests());
+		}	
+    }
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,11 +47,7 @@ public class GroupFormInterestsFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		groupFormActivity = (GroupFormActivity) getActivity();
-		fragmentGroupInterests = new ArrayList<GeneralItem>();
-		if (groupFormActivity.group != null){
-			fragmentGroupInterests.addAll(groupFormActivity.group.getGroupInterests());
-		}		
+		groupFormActivity = (GroupFormActivity) getActivity();	
 		groupInterestsAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupInterests);
 		setListAdapter(groupInterestsAdapter);
 		registerForContextMenu(getListView());
@@ -78,6 +82,10 @@ public class GroupFormInterestsFragment extends ListFragment {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if( getUserVisibleHint() == false ) 
+	    {
+	        return false;
+	    }
 		GroupInterest selectedGroupInterest;
 		switch (item.getItemId()) {
 			case R.id.context_menu_delete:
@@ -123,7 +131,6 @@ public class GroupFormInterestsFragment extends ListFragment {
 				break;
 			}
 			break;
-
 		}
 
 	}
@@ -131,5 +138,5 @@ public class GroupFormInterestsFragment extends ListFragment {
 	public ArrayList<GeneralItem> getGroupInterests(){
 		return fragmentGroupInterests;
 	}
-	
+
 }

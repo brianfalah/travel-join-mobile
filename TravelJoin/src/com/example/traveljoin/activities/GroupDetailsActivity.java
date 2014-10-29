@@ -1,5 +1,8 @@
 package com.example.traveljoin.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -19,14 +23,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.GroupDetailsInformationFragment;
-import com.example.traveljoin.fragments.GroupDeatailsInterestFragment;
+import com.example.traveljoin.fragments.GroupDeatailsInterestsFragment;
 import com.example.traveljoin.fragments.GroupDetailsMembersFragment;
 import com.example.traveljoin.fragments.GroupDetailsPoisFragment;
 import com.example.traveljoin.fragments.GroupDetailsToursFragment;
-import com.example.traveljoin.fragments.PoiEventsFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
@@ -37,24 +39,43 @@ import com.example.traveljoin.models.User;
 public class GroupDetailsActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
-	private SmartFragmentStatePagerAdapter adapterViewPager;
+	private MyPagerAdapter adapterViewPager;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
+
+	private static int NUM_ITEMS = 5;
+	public static final int GROUP_INFORMATION_TAB = 0;
+	public static final int GROUP_INTERESTS_TAB = 1;
+	public static final int GROUP_POIS_TAB = 2;
+	public static final int GROUP_TOURS_TAB = 3;
+	public static final int GROUP_MEMBERS_TAB = 4;
+
 	private static final int EDIT_GROUP_REQUEST = 1;
 	protected static final int DELETE_GROUP_METHOD = 2;
 	protected static final int JOIN_GROUP_METHOD = 3;
 	protected static final int DISJOIN_GROUP_METHOD = 4;
 
-	ProgressDialog progress;
+	public ProgressDialog progress;
 	public Group group;
-	User user;
+	public User user;
+	private List<Fragment> listFragments;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_details);
 		initializeUser();
-		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+
+		listFragments = new ArrayList<Fragment>();
+		listFragments.add(new GroupDetailsInformationFragment());
+		listFragments.add(new GroupDeatailsInterestsFragment());
+		listFragments.add(new GroupDetailsPoisFragment());
+		listFragments.add(new GroupDetailsToursFragment());
+		listFragments.add(new GroupDetailsMembersFragment());
+
+		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(),
+				listFragments);
+
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.group_view);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -152,16 +173,13 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			FragmentTransaction fragmentTransaction) {
 	}
 
-	public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
-		private static int NUM_ITEMS = 5;
-		public static final int GROUP_INFORMATION_TAB = 0;
-		public static final int GROUP_INTERESTS_TAB = 1;
-		public static final int GROUP_POIS_TAB = 2;
-		public static final int GROUP_TOURS_TAB = 3;
-		public static final int GROUP_MEMBERS_TAB = 4;
-		
-		public MyPagerAdapter(FragmentManager fragmentManager) {
+	public static class MyPagerAdapter extends FragmentPagerAdapter {
+		private List<Fragment> fragments;
+
+		public MyPagerAdapter(FragmentManager fragmentManager,
+				List<Fragment> fragments) {
 			super(fragmentManager);
+			this.fragments = fragments;
 		}
 
 		@Override
@@ -171,20 +189,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-			switch (position) {
-			case GROUP_INFORMATION_TAB: 
-				return new GroupDetailsInformationFragment();
-			case GROUP_INTERESTS_TAB: 
-				return new GroupDeatailsInterestFragment();
-			case GROUP_POIS_TAB: 
-				return new GroupDetailsPoisFragment();
-			case GROUP_TOURS_TAB: 
-				return new GroupDetailsToursFragment();
-			case GROUP_MEMBERS_TAB: 
-				return new GroupDetailsMembersFragment();
-			default:
-				return null;
-			}
+			return fragments.get(position);
 		}
 
 		@Override
@@ -264,29 +269,35 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				Bundle b = data.getExtras();
 				group = (Group) b.get("group_created_or_updated");
 				group.setIsJoined(group.getIsJoined());
+
 				invalidateOptionsMenu();
-				GroupDetailsInformationFragment infoFragment = (GroupDetailsInformationFragment) adapterViewPager
-						.getRegisteredFragment(0);
-				infoFragment.setFields();
-				//TODO: Setear los demas fragments y eliminar el de events
-				PoiEventsFragment eventsFragment = (PoiEventsFragment) adapterViewPager
-						.getRegisteredFragment(1);
-				eventsFragment.refreshList();
+
+				GroupDetailsInformationFragment informationFragment = (GroupDetailsInformationFragment) listFragments
+						.get(GROUP_INFORMATION_TAB);
+				GroupDeatailsInterestsFragment interestsFragment = (GroupDeatailsInterestsFragment) listFragments
+						.get(GROUP_INTERESTS_TAB);
+				GroupDetailsPoisFragment poisFragment = (GroupDetailsPoisFragment) listFragments
+			 			.get(GROUP_POIS_TAB);
+				GroupDetailsToursFragment toursFragment = (GroupDetailsToursFragment) listFragments
+						.get(GROUP_TOURS_TAB);
+
+				informationFragment.setFields(group);
+				interestsFragment.refreshList(group);
+				poisFragment.refreshList(group);
+				toursFragment.refreshList(group);
 				break;
 			}
 			break;
 		}
 
 	}
-	
-	//TODO: Modificar esta parte del llamado a la API
+
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
 		private Integer from_method;
 		private Object object_to_send;
 		private ApiResult api_result;
 
-		// contructor para setearle info extra
 		public HttpAsyncTask(Integer from_method, Object object_to_send) {
 			this.from_method = from_method;
 			this.object_to_send = object_to_send;
@@ -294,8 +305,6 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 		@Override
 		protected String doInBackground(String... urls) {
-			// despues de cualquiera de estos metodo vuelve al postexecute de
-			// aca
 			switch (this.from_method) {
 			case DELETE_GROUP_METHOD:
 				api_result = apiInterface.POST(urls[0], object_to_send,
@@ -312,10 +321,8 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			return api_result.getResult();
 		}
 
-		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
-			// Log.d("InputStream", result);
 			switch (this.from_method) {
 			case DELETE_GROUP_METHOD:
 				progress.dismiss();

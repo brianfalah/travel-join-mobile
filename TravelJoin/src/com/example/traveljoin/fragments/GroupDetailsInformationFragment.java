@@ -17,8 +17,7 @@ public class GroupDetailsInformationFragment extends Fragment {
 	private TextView nameField;
 	private TextView descriptionField;
 	private TextView groupTypeField;
-	private Group group;
-
+	
 	private static Integer PUBLIC_GROUP = 0;
 	private static Integer PRIVATE_GROUP = 1;
 
@@ -30,12 +29,13 @@ public class GroupDetailsInformationFragment extends Fragment {
 				container, false);
 
 		GroupDetailsActivity activity = (GroupDetailsActivity) getActivity();
-		group = activity.group;
+		Group group = activity.group;
+		
 		initializeViewReferences(view);
-		initializeOwnerInformation(view);
+		initializeOwnerInformation(view, group);
 
-		if (activity.group != null)
-			setFields();
+		if (group != null)
+			setFields(group);
 
 		return view;
 	}
@@ -46,7 +46,7 @@ public class GroupDetailsInformationFragment extends Fragment {
 		groupTypeField = (TextView) view.findViewById(R.id.groupType);
 	}
 
-	private void initializeOwnerInformation(View view) {
+	private void initializeOwnerInformation(View view, Group group) {
 		ProfilePictureView profilePictureView = (ProfilePictureView) view
 				.findViewById(R.id.selection_profile_pic);
 		profilePictureView.setCropped(true);
@@ -58,7 +58,7 @@ public class GroupDetailsInformationFragment extends Fragment {
 		userOwnerNameView.setText(owner.getFullName());
 	}
 
-	public void setFields() {
+	public void setFields(Group group) {
 		nameField.setText(group.getName());
 		descriptionField.setText(group.getDescription());
 
@@ -67,7 +67,6 @@ public class GroupDetailsInformationFragment extends Fragment {
 			groupTypeField.setText(getString(R.string.group_public));
 		else if (groupType.equals(PRIVATE_GROUP))
 			groupTypeField.setText(getString(R.string.group_private));
-
 	}
 
 }

@@ -7,6 +7,7 @@ import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.activities.TourDetailsActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
+import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupTour;
 
 import android.content.Intent;
@@ -18,16 +19,21 @@ import android.widget.ListView;
 public class GroupDetailsToursFragment extends ListFragment {
 	
 	private GroupDetailsActivity activity;
-	private ArrayList<GeneralItem> groupTours;
 	private GeneralItemListAdapter adapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
 		activity = (GroupDetailsActivity) getActivity();
+		Group group = activity.group;
+		
+		initializeAdapterWithData(group);
+	}
 
-		groupTours = new ArrayList<GeneralItem>();
-		groupTours.addAll((Collection<? extends GeneralItem>) activity.group
+	private void initializeAdapterWithData(Group group) {
+		ArrayList<GeneralItem> groupTours = new ArrayList<GeneralItem>();
+		groupTours.addAll((Collection<? extends GeneralItem>) group
 				.getGroupTours());
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupTours);
@@ -46,11 +52,8 @@ public class GroupDetailsToursFragment extends ListFragment {
 		startActivity(intent);
 	}
 	
-	public void refreshList() {
-		groupTours.clear();
-		groupTours.addAll((Collection<? extends GeneralItem>) activity.group
-				.getGroupTours());
-		adapter.notifyDataSetChanged();
+	public void refreshList(Group group) {
+		initializeAdapterWithData(group);
 	}
 
 }

@@ -53,7 +53,13 @@ public class UserProfileActivity extends ActionBarActivity implements
 		actionBar.addTab(actionBar.newTab().setText(getString(R.string.favourites_user_profile_tab))
 				.setTabListener(this));
 	}
-
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		//TODO: refrescar los contenidos
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
