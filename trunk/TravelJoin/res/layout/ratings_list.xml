@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"   
+    android:id="@+id/ratingsListLayout"
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="5dp"
+        android:paddingTop="15dp"
+        android:text="ÚLTIMAS CALIFICACIONES"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/holo_blue_light" >
+    </TextView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/dividerVertical" />
+    
+    <ListView
+        android:id="@android:id/list"
+        android:tag="ratingsListView"
+        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent" >
+
+    </ListView>
+    
+
+</LinearLayout>

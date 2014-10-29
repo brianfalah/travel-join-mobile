@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class TourDetailInformationFragment  extends Fragment {
@@ -18,6 +20,9 @@ public class TourDetailInformationFragment  extends Fragment {
 	TextView tvDesc;
 	private ProfilePictureView profilePictureView;
 	private TextView userOwnerNameView;
+	private TextView  tvRatingAvg;
+	private RatingBar ratingBar;
+	private ScrollView scrollView;
 	TourDetailsActivity activity;	
 	
 	@Override
@@ -29,8 +34,12 @@ public class TourDetailInformationFragment  extends Fragment {
 
 		activity = (TourDetailsActivity) getActivity();
 		// get reference to the views
+		scrollView = (ScrollView) view.findViewById(R.id.ScrollViewTourDetails);	
 		tvName = (TextView) view.findViewById(R.id.TourName);
 		tvDesc = (TextView) view.findViewById(R.id.TourDescription);  
+		tvRatingAvg = (TextView) view.findViewById(R.id.ratingAvg);
+		ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+		
 		profilePictureView = (ProfilePictureView) view
 				.findViewById(R.id.selection_profile_pic);
 		profilePictureView.setCropped(true);
@@ -48,6 +57,12 @@ public class TourDetailInformationFragment  extends Fragment {
 	public void setFields(){
         tvName.setText(activity.tour.getName());
         tvDesc.setText(activity.tour.getDescription());
+        tvRatingAvg.setText(String.format("%.1f", activity.tour.getRatingAvg()));
+        ratingBar.setRating(activity.tour.getRatingForBar());
 	}	
+	
+    public void scrollTop(){
+    	scrollView.smoothScrollTo(0,0);
+    }
 
 }

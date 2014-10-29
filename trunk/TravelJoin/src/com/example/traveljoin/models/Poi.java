@@ -27,16 +27,12 @@ public class Poi implements Serializable, GeneralItem{
 	private String categoryName;
 	private Boolean isFavorite;
 	private Rating rating;
+	private Integer ratingsCount;
+	private Double ratingsSum;
+	private ArrayList<Rating> lastRatings;
 	
 	private ArrayList<PoiEvent> poiEvents;
-	private ArrayList<PoiEvent> poiEventsToDelete;
-	
-	//TODO: borrar este constructor. Solo se esta usando para la lista de Poi. Presentacion de interfaces de usuario
-	public Poi(String name,String description) {
-		super();
-		this.name = name;
-		this.description = description;
-	}
+	private ArrayList<PoiEvent> poiEventsToDelete;	
 		
 	//constructor
 	public Poi(Integer id, Double latitude, Double longitude, String name,
@@ -154,6 +150,36 @@ public class Poi implements Serializable, GeneralItem{
 		this.rating = rating;
 	}
 
+	public Integer getRatingsCount() {
+		return ratingsCount;
+	}
+
+
+	public void setRatingsCount(Integer ratingsCount) {
+		this.ratingsCount = ratingsCount;
+	}
+
+
+	public Double getRatingsSum() {
+		return ratingsSum;
+	}
+
+
+	public void setRatingsSum(Double ratingsSum) {
+		this.ratingsSum = ratingsSum;
+	}
+
+
+	public ArrayList<Rating> getLastRatings() {
+		return lastRatings;
+	}
+
+
+	public void setLastRatings(ArrayList<Rating> lastRatings) {
+		this.lastRatings = lastRatings;
+	}
+
+
 	public static Poi fromJSON(JSONObject poiJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> poiEventsToAdd = new ArrayList<GeneralItem>();
 		JSONArray poiEventsJson = poiJson.getJSONArray("events");
@@ -173,9 +199,31 @@ public class Poi implements Serializable, GeneralItem{
 		
 		poi.setIsFavorite(poiJson.getBoolean("is_favorite"));
 		
+		//esto es el objeto rating, si es que el usuario logueado hizo una calificacion, sino viene en null
 		if (poiJson.has("rating") && !poiJson.isNull("rating")){
 			Rating rating = Rating.fromJSON(poiJson.getJSONObject("rating"));
 			poi.setRating(rating);
+		}	
+		
+		if (poiJson.has("ratings_count") && !poiJson.isNull("ratings_count")){
+			poi.setRatingsCount(poiJson.getInt("ratings_count"));
+		}	
+		
+		if (poiJson.has("ratings_sum") && !poiJson.isNull("ratings_sum")){
+			poi.setRatingsSum(poiJson.getDouble("ratings_sum"));
+		}	
+		
+		if (poiJson.has("last_ratings") && !poiJson.isNull("last_ratings")){
+			ArrayList<Rating> ratingsToAdd = new ArrayList<Rating>();
+			JSONArray ratingsJson = poiJson.getJSONArray("last_ratings");
+			
+			for (int i = 0; i < ratingsJson.length(); i++) {
+	    	    JSONObject ratingJson = ratingsJson.getJSONObject(i);    	        
+	    	    Rating rating = Rating.fromJSON(ratingJson);
+	    	    ratingsToAdd.add(rating);    	    
+	    	}
+			
+			poi.setLastRatings(ratingsToAdd);
 		}		
 		
 		return poi;
@@ -254,5 +302,20 @@ public class Poi implements Serializable, GeneralItem{
 	@Override
 	public int hashCode() {
 		return this.id.hashCode();
+	}
+
+
+	public Double getRatingAvg() {
+		if (getRatingsCount().equals(0)){
+			return 0.0;
+		}
+		else{
+			return (getRatingsSum() / getRatingsCount());
+		}		
+	}
+
+
+	public float getRatingForBar() {
+		return (float) (Math.ceil(getRatingAvg() * 2) / 2);		
 	}
 }
