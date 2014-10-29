@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
@@ -33,10 +34,12 @@ import com.example.traveljoin.R;
 
 import android.content.DialogInterface;
 
+import com.example.traveljoin.activities.MapActivity.MapFragmentView;
 import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.PoiEventsFragment;
 import com.example.traveljoin.fragments.PoiInformationFragment;
+import com.example.traveljoin.fragments.PoiInformationRatingsFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
@@ -48,7 +51,7 @@ import com.example.traveljoin.models.User;
 public class PoiDetailsActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
-	private SmartFragmentStatePagerAdapter adapterViewPager;
+	private MyPagerAdapter adapterViewPager;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
 	private RatingBar ratingBar;
@@ -226,6 +229,15 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		public CharSequence getPageTitle(int position) {
 			return "Page " + position;
 		}
+		
+		public PoiInformationFragment getInfoFragment(){
+			return (PoiInformationFragment) getRegisteredFragment(POI_INFORMATION_TAB);
+		}
+		
+		public PoiEventsFragment getEventsFragment(){
+			return (PoiEventsFragment) getRegisteredFragment(POI_EVENTS_TAB);
+		}
+		
 
 	}
 
@@ -313,7 +325,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 					String url = getResources().getString(R.string.api_url)
 							+ "/ratings/add";
 					Rating rating = new Rating(user.getId(), poi.getId(), "Poi",
-							value, editTextComment.getText().toString());
+							value, editTextComment.getText().toString(), null, null);
 					HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
 							ADD_RATING_METHOD, rating);
 					httpAsyncTask.execute(url);
@@ -364,22 +376,18 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		switch (requestCode) {
 		case EDIT_POI_REQUEST:
 			switch (resultCode) {
-			case Activity.RESULT_OK:
-				Bundle b = data.getExtras(); 
-				Boolean isFavorite = poi.getIsFavorite();
-				Rating rating = poi.getRating();
-				
-				poi = (Poi) b.get("poi_created_or_updated");
-				poi.setIsFavorite(isFavorite);
-				poi.setRating(rating);
-				
-				invalidateOptionsMenu();
-				PoiInformationFragment infoFragment = (PoiInformationFragment) adapterViewPager
-						.getRegisteredFragment(0);
-				infoFragment.setFields();
-				PoiEventsFragment eventsFragment = (PoiEventsFragment) adapterViewPager
-						.getRegisteredFragment(1);
-				eventsFragment.refreshList();				
+				case Activity.RESULT_OK:
+					Bundle b = data.getExtras(); 
+					Boolean isFavorite = poi.getIsFavorite();
+					Rating rating = poi.getRating();
+					
+					poi = (Poi) b.get("poi_created_or_updated");
+					poi.setIsFavorite(isFavorite);
+					poi.setRating(rating);
+					
+					invalidateOptionsMenu();
+					adapterViewPager.getInfoFragment().setFields();
+					adapterViewPager.getEventsFragment().refreshList();				
 				break;
 			}
 			break;
@@ -438,13 +446,15 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 						try {
 							poiJson = new JSONObject(result);
 							poi = Poi.fromJSON(poiJson);
-							PoiInformationFragment infoFragment = (PoiInformationFragment) adapterViewPager
-									.getRegisteredFragment(0);
+							PoiInformationFragment infoFragment = adapterViewPager.getInfoFragment();
 							infoFragment.setFields();
 							infoFragment.setOwnerInformation();
-							PoiEventsFragment eventsFragment = (PoiEventsFragment) adapterViewPager
-									.getRegisteredFragment(1);
-							eventsFragment.refreshList();
+							adapterViewPager.getEventsFragment().refreshList();
+							if (poi.getLastRatings() != null && !poi.getLastRatings().isEmpty()){
+								android.support.v4.app.FragmentManager fragment_manager = getSupportFragmentManager();
+								fragment_manager.beginTransaction().add(R.id.fragmentPoiInformation, new PoiInformationRatingsFragment()).commit();
+							}							
+							infoFragment.scrollTop();
 						} catch (JSONException e) {
 							showExceptionError(e);
 						} catch (ParseException e) {
@@ -501,11 +511,23 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 					if (api_result.ok()){	
 						try {
 							ratingJson = new JSONObject(result);
-							Rating rating = Rating.fromJSON(ratingJson);
+							Rating rating = Rating.fromJSON(ratingJson);							
+							if (poi.getRating() != null){
+								//si antes teniamos un rating, significa que acabamos de actualizarlo, le restamos el viejo y sumamos el nuevo
+								poi.setRatingsSum(poi.getRatingsSum() - poi.getRating().getValue() + rating.getValue());
+							}
+							else{
+								//sino significa que acabamos de crear un nuevo rating
+								poi.setRatingsCount(poi.getRatingsCount() + 1);
+								poi.setRatingsSum(poi.getRatingsSum() + rating.getValue());
+							}
 							poi.setRating(rating);
+							adapterViewPager.getInfoFragment().setFields();
 							rankDialog.hide();
 							Toast.makeText(PoiDetailsActivity.this, R.string.poi_ranked_ok_message, Toast.LENGTH_SHORT).show();
 						} catch (JSONException e) {
+							showExceptionError(e);
+						} catch (ParseException e) {
 							showExceptionError(e);
 						}								
 					}					

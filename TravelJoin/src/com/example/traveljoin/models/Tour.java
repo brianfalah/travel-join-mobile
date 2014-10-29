@@ -19,6 +19,9 @@ public class Tour implements Serializable, GeneralItem {
 	private User user;
 	private Boolean isFavorite;
 	private Rating rating;
+	private Integer ratingsCount;
+	private Double ratingsSum;
+	private ArrayList<Rating> lastRatings;
 	
 	private ArrayList<TourPoi> tourPois;
 	private ArrayList<TourPoi> tourPoisToDelete;
@@ -158,6 +161,30 @@ public class Tour implements Serializable, GeneralItem {
 		this.rating = rating;
 	}
 
+	public Integer getRatingsCount() {
+		return ratingsCount;
+	}
+
+	public void setRatingsCount(Integer ratingsCount) {
+		this.ratingsCount = ratingsCount;
+	}
+
+	public Double getRatingsSum() {
+		return ratingsSum;
+	}
+
+	public void setRatingsSum(Double ratingsSum) {
+		this.ratingsSum = ratingsSum;
+	}
+
+	public ArrayList<Rating> getLastRatings() {
+		return lastRatings;
+	}
+
+	public void setLastRatings(ArrayList<Rating> lastRatings) {
+		this.lastRatings = lastRatings;
+	}
+
 	public static Tour fromJSON(JSONObject tourJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> tourPoisToAdd = new ArrayList<GeneralItem>();
 		JSONArray tourPoisJson = tourJson.getJSONArray("tours_pois");
@@ -178,6 +205,27 @@ public class Tour implements Serializable, GeneralItem {
 		if (tourJson.has("rating") && !tourJson.isNull("rating")){
 			Rating rating = Rating.fromJSON(tourJson.getJSONObject("rating"));
 			tour.setRating(rating);
+		}
+		
+		if (tourJson.has("ratings_count") && !tourJson.isNull("ratings_count")){
+			tour.setRatingsCount(tourJson.getInt("ratings_count"));
+		}	
+		
+		if (tourJson.has("ratings_sum") && !tourJson.isNull("ratings_sum")){
+			tour.setRatingsSum(tourJson.getDouble("ratings_sum"));
+		}	
+		
+		if (tourJson.has("last_ratings") && !tourJson.isNull("last_ratings")){
+			ArrayList<Rating> ratingsToAdd = new ArrayList<Rating>();
+			JSONArray ratingsJson = tourJson.getJSONArray("last_ratings");
+			
+			for (int i = 0; i < ratingsJson.length(); i++) {
+	    	    JSONObject ratingJson = ratingsJson.getJSONObject(i);    	        
+	    	    Rating rating = Rating.fromJSON(ratingJson);
+	    	    ratingsToAdd.add(rating);    	    
+	    	}
+			
+			tour.setLastRatings(ratingsToAdd);
 		}
 		
 		return tour;
@@ -248,5 +296,18 @@ public class Tour implements Serializable, GeneralItem {
 		return this.id.hashCode();
 	}
 	
+	public Double getRatingAvg() {
+		if (getRatingsCount().equals(0)){
+			return 0.0;
+		}
+		else{
+			return (getRatingsSum() / getRatingsCount());
+		}		
+	}
+
+
+	public float getRatingForBar() {
+		return (float) (Math.ceil(getRatingAvg() * 2) / 2);		
+	}
 	
 }

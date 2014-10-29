@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
+import java.util.Calendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,15 +17,19 @@ public class Rating implements Serializable{
 	private String ratingableType;
 	private Float value;
 	private	String comment;
+	private Calendar updatedAt;
+	private User user;
 	
 	public Rating(Integer userId, Integer ratingableId, String ratingableType,
-			Float value, String comment) {
+			Float value, String comment, Calendar updatedAt, User user) {
 		super();
 		this.userId = userId;
 		this.ratingableId = ratingableId;
 		this.ratingableType = ratingableType;
 		this.value = value;
 		this.comment = comment;
+		this.updatedAt = updatedAt;
+		this.user = user;
 	}
 
 	public Integer getUserId() {
@@ -67,10 +72,29 @@ public class Rating implements Serializable{
 		this.comment = comment;
 	}
 
-	public static Rating fromJSON(JSONObject jsonObject) throws JSONException {
+	public Calendar getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Calendar updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public static Rating fromJSON(JSONObject jsonObject) throws JSONException, ParseException {
+		Calendar updatedAt = TimeFormatter.toCalendar(jsonObject.getString("updated_at"));
+		User user = User.fromJSON(jsonObject.getJSONObject("user"));
+		
 		return new Rating(jsonObject.getInt("user_id"), jsonObject.getInt("ratingable_id"),
 				jsonObject.getString("ratingable_type"), (float) jsonObject.getDouble("value"),
-				jsonObject.getString("comment"));
+				jsonObject.getString("comment"), updatedAt, user);
 	}
 	
 	public JSONObject toJSON() throws UnsupportedEncodingException{
