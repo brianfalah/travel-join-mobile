@@ -23,6 +23,8 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,14 +166,26 @@ public class MapActivity extends SlidingFragmentActivity implements
         
     }
     
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.map_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+    
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:			
 			toggle();
 			return true;
+		case R.id.map_filter:
+			filter();
+			return true;
+		case R.id.help:
+			//TODO: Lanzar la actividad de ayuda	
+		default:
+			return super.onContextItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 	//Para cerrar el menu cuando se toca el boton atras
@@ -597,20 +611,18 @@ public class MapActivity extends SlidingFragmentActivity implements
         }
     }
     
-    // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
-        // Global field to contain the error dialog
         private Dialog mDialog;
-        // Default constructor. Sets the dialog field to null
+     
         public ErrorDialogFragment() {
             super();
             mDialog = null;
         }
-        // Set the dialog to display
+
         public void setDialog(Dialog dialog) {
             mDialog = dialog;
         }
-        // Return a Dialog to the DialogFragment.
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
@@ -674,19 +686,10 @@ public class MapActivity extends SlidingFragmentActivity implements
         dialogFragment.show(getSupportFragmentManager(), "errordialog");
     } 
     
-    public void filter(View button){    	
+    public void filter(){    	
 		Intent intent = new Intent(this, MapFilterActivity.class);		
-		intent.putExtra("mapFilters", mapFilters); //le pasamos los filtros actuales
-		//va al form y espera un result_code(para saber si se creo o no)
+		intent.putExtra("mapFilters", mapFilters); 
 		startActivityForResult(intent, CHANGE_FILTERS_REQUEST);		
     }
- 
-    
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.main, menu);
-//		return true;
-//	}
     
 }
