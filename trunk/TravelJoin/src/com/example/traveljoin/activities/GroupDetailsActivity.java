@@ -32,8 +32,8 @@ import com.example.traveljoin.fragments.GroupDetailsToursFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
-import com.example.traveljoin.models.Favorite;
 import com.example.traveljoin.models.Group;
+import com.example.traveljoin.models.GroupMember;
 import com.example.traveljoin.models.User;
 
 public class GroupDetailsActivity extends ActionBarActivity implements
@@ -43,7 +43,6 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	private ViewPager viewPager;
 	private ActionBar actionBar;
 
-	private static int NUM_ITEMS = 5;
 	public static final int GROUP_INFORMATION_TAB = 0;
 	public static final int GROUP_INTERESTS_TAB = 1;
 	public static final int GROUP_POIS_TAB = 2;
@@ -65,21 +64,16 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_details);
 		initializeUser();
-
+		
+		Bundle bundle = getIntent().getExtras();
+		group = (Group) bundle.get("group");
+		
 		listFragments = new ArrayList<Fragment>();
 		listFragments.add(new GroupDetailsInformationFragment());
 		listFragments.add(new GroupDeatailsInterestsFragment());
-		listFragments.add(new GroupDetailsPoisFragment());
-		listFragments.add(new GroupDetailsToursFragment());
-		listFragments.add(new GroupDetailsMembersFragment());
-
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(),
 				listFragments);
-
-		actionBar = getActionBar();
-		actionBar.setSubtitle(R.string.group_view);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+		
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(adapterViewPager);
 		viewPager
@@ -88,27 +82,34 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
 					}
-				});
-
+				});	
+		
+		actionBar = getActionBar();
+		actionBar.setSubtitle(R.string.group_view);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab()
 				.setText(getString(R.string.group_general_information_tab))
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab()
 				.setText(getString(R.string.group_interests_tab))
 				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab()
-				.setText(getString(R.string.group_pois_tab))
-				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab()
-				.setText(getString(R.string.group_tours_tab))
-				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab()
-				.setText(getString(R.string.group_members_tab))
-				.setTabListener(this));
 
-		Bundle b = getIntent().getExtras();
-
-		group = (Group) b.get("group");
+		if (group.isPublic() || group.isJoined()) {
+			listFragments.add(new GroupDetailsPoisFragment());
+			listFragments.add(new GroupDetailsToursFragment());
+			listFragments.add(new GroupDetailsMembersFragment());
+			adapterViewPager.notifyDataSetChanged();
+			
+			actionBar.addTab(actionBar.newTab()
+					.setText(getString(R.string.group_pois_tab))
+					.setTabListener(this));
+			actionBar.addTab(actionBar.newTab()
+					.setText(getString(R.string.group_tours_tab))
+					.setTabListener(this));
+			actionBar.addTab(actionBar.newTab()
+					.setText(getString(R.string.group_members_tab))
+					.setTabListener(this));		
+		}
 	}
 
 	@Override
@@ -120,16 +121,15 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!user.getId().equals(group.getOwnerId())) {
+		if (!group.isOwner(user)) {
 			menu.removeItem(R.id.action_edit);
 			menu.removeItem(R.id.action_delete);
 		}
 
-		if (group.getIsJoined()) {
+		if (group.isJoined())
 			menu.removeItem(R.id.action_join_group);
-		} else {
+		else
 			menu.removeItem(R.id.action_disjoin_group);
-		}
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -184,7 +184,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 		@Override
 		public int getCount() {
-			return NUM_ITEMS;
+			return fragments.size();
 		}
 
 		@Override
@@ -242,10 +242,10 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		progress = ProgressDialog.show(GroupDetailsActivity.this,
 				getString(R.string.loading), getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/favorites/add";
-		Favorite favorite = new Favorite(user.getId(), group.getId(), "group");
+				+ "/groups/join_user";
+		GroupMember groupMember = new GroupMember(user.getId(), group.getId());
 		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(JOIN_GROUP_METHOD,
-				favorite);
+				groupMember);
 		httpAsyncTask.execute(url);
 	}
 
@@ -253,10 +253,10 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		progress = ProgressDialog.show(GroupDetailsActivity.this,
 				getString(R.string.loading), getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/favorites/remove";
-		Favorite favorite = new Favorite(user.getId(), group.getId(), "group");
+				+ "/groups/disjoin_user";
+		GroupMember groupMember = new GroupMember(user.getId(), group.getId());
 		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(DISJOIN_GROUP_METHOD,
-				favorite);
+				groupMember);
 		httpAsyncTask.execute(url);
 	}
 
@@ -268,7 +268,6 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			case Activity.RESULT_OK:
 				Bundle b = data.getExtras();
 				group = (Group) b.get("group_created_or_updated");
-				group.setIsJoined(group.getIsJoined());
 
 				invalidateOptionsMenu();
 
@@ -277,7 +276,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				GroupDeatailsInterestsFragment interestsFragment = (GroupDeatailsInterestsFragment) listFragments
 						.get(GROUP_INTERESTS_TAB);
 				GroupDetailsPoisFragment poisFragment = (GroupDetailsPoisFragment) listFragments
-			 			.get(GROUP_POIS_TAB);
+						.get(GROUP_POIS_TAB);
 				GroupDetailsToursFragment toursFragment = (GroupDetailsToursFragment) listFragments
 						.get(GROUP_TOURS_TAB);
 
@@ -338,7 +337,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			case JOIN_GROUP_METHOD:
 				progress.dismiss();
 				if (api_result.ok()) {
-					group.setIsJoined(true);
+					group.joined(true);
 					invalidateOptionsMenu();
 					Toast.makeText(GroupDetailsActivity.this,
 							R.string.poi_added_to_favorites_message,
@@ -352,7 +351,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			case DISJOIN_GROUP_METHOD:
 				progress.dismiss();
 				if (api_result.ok()) {
-					group.setIsJoined(false);
+					group.joined(false);
 					invalidateOptionsMenu();
 					Toast.makeText(GroupDetailsActivity.this,
 							R.string.poi_removed_from_favorites_message,

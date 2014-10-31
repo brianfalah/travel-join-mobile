@@ -1,7 +1,6 @@
 package com.example.traveljoin.models;
 
 import java.io.Serializable;
-import java.text.ParseException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +52,7 @@ public class Favorite implements Serializable{
 	        jsonObject.put("favoritable_type", getFavoritableType());
 	        return jsonObject;
 	    } catch (JSONException e) {
+	        //TODO: Handlear?
 	        e.printStackTrace();
 	        return jsonObject;
 	    }
