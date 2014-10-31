@@ -159,6 +159,10 @@ public class ApiInterface {
             	jsonObject = ((Favorite) object).toJSON();	            	            	
             }
             
+            if (object instanceof GroupMember){            
+            	jsonObject = ((GroupMember) object).toJSON();	            	            	
+            }
+            
             if (object instanceof Rating){            
             	jsonObject = ((Rating) object).toJSON();
             }

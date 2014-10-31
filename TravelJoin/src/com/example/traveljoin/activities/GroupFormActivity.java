@@ -146,7 +146,8 @@ public class GroupFormActivity extends ActionBarActivity implements
 		private static final int GROUP_POIS_TAB = 2;
 		private static final int GROUP_TOURS_TAB = 3;
 
-		public MyPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragments) {
+		public MyPagerAdapter(FragmentManager fragmentManager,
+				List<Fragment> fragments) {
 			super(fragmentManager);
 			this.fragments = fragments;
 		}
@@ -194,18 +195,18 @@ public class GroupFormActivity extends ActionBarActivity implements
 			ArrayList<GeneralItem> newSelectedGroupTours = adapterViewPager
 					.getToursFragment().getGroupTours();
 
-			Group group_to_create = new Group(null, adapterViewPager
+			Group groupToCreate = new Group(null, adapterViewPager
 					.getInfoFragment().getGroupName(), adapterViewPager
 					.getInfoFragment().getGroupDescription(), adapterViewPager
 					.getInfoFragment().getGroupType(), adapterViewPager
 					.getInfoFragment().getPassword(), user, user.getId(),
 					newSelectedGroupInterests, newSelectedGroupPois,
-					newSelectedGroupTours);
+					newSelectedGroupTours, true);
 
 			String url = getResources().getString(R.string.api_url)
 					+ "/groups/create";
 			HttpAsyncTask httpAsyncTask = new HttpAsyncTask(ADD_GROUP_METHOD,
-					group_to_create);
+					groupToCreate);
 			httpAsyncTask.execute(url);
 		}
 
@@ -230,7 +231,7 @@ public class GroupFormActivity extends ActionBarActivity implements
 					.getInfoFragment().getGroupType(), adapterViewPager
 					.getInfoFragment().getPassword(), user, user.getId(),
 					new ArrayList<GeneralItem>(), new ArrayList<GeneralItem>(),
-					new ArrayList<GeneralItem>());
+					new ArrayList<GeneralItem>(), true);
 
 			groupToUpdate.updateGroupInterests(group.getGroupInterests(),
 					newSelectedGroupInterests);

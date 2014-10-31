@@ -11,15 +11,18 @@ import org.json.JSONObject;
 
 public class Group implements Serializable, GeneralItem {
 
+	private static Integer PUBLIC = 0;
+	private static Integer PRIVATE = 1;
+
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private String description;
 	private Integer type;
 	private String password;
-	private Boolean joined;
 	private User owner;
 	private Integer ownerId;
+	private Boolean joined;
 
 	private ArrayList<GroupInterest> groupInterests;
 	private ArrayList<GroupInterest> groupInterestsToDelete;
@@ -33,16 +36,20 @@ public class Group implements Serializable, GeneralItem {
 			String password, User owner, Integer ownerId,
 			ArrayList<GeneralItem> groupInterests,
 			ArrayList<GeneralItem> groupPois,
-			ArrayList<GeneralItem> groupTours, ArrayList<User> members) {
+			ArrayList<GeneralItem> groupTours, boolean joined,
+			ArrayList<User> members) {
+		
 		this(id, name, description, type, password, owner, ownerId,
-				groupInterests, groupPois, groupTours);
+				groupInterests, groupPois, groupTours, joined);
 		this.members = members;
 	}
 
 	public Group(Integer id, String name, String description, Integer type,
 			String password, User owner, Integer ownerId,
 			ArrayList<GeneralItem> groupInterests,
-			ArrayList<GeneralItem> groupPois, ArrayList<GeneralItem> groupTours) {
+			ArrayList<GeneralItem> groupPois,
+			ArrayList<GeneralItem> groupTours, boolean joined) {
+		
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -50,20 +57,18 @@ public class Group implements Serializable, GeneralItem {
 		this.password = password;
 		this.owner = owner;
 		this.ownerId = ownerId;
+		this.joined = joined;
 
 		this.groupInterests = new ArrayList<GroupInterest>();
-		this.groupInterests.clear();
 		this.groupInterests
 				.addAll((Collection<? extends GroupInterest>) groupInterests);
 		this.groupInterestsToDelete = new ArrayList<GroupInterest>();
 
 		this.groupPois = new ArrayList<GroupPoi>();
-		this.groupPois.clear();
 		this.groupPois.addAll((Collection<? extends GroupPoi>) groupPois);
 		this.groupPoisToDelete = new ArrayList<GroupPoi>();
 
 		this.groupTours = new ArrayList<GroupTour>();
-		this.groupTours.clear();
 		this.groupTours.addAll((Collection<? extends GroupTour>) groupTours);
 		this.groupToursToDelete = new ArrayList<GroupTour>();
 	}
@@ -119,16 +124,6 @@ public class Group implements Serializable, GeneralItem {
 		this.ownerId = ownerId;
 	}
 
-	public Boolean getIsJoined() {
-		// TODO
-		// return joined;
-		return false;
-	}
-
-	public void setIsJoined(Boolean joined) {
-		this.joined = joined;
-	}
-
 	public User getOwner() {
 		return owner;
 	}
@@ -136,7 +131,7 @@ public class Group implements Serializable, GeneralItem {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
-	
+
 	public ArrayList<User> getMembers() {
 		return members;
 	}
@@ -144,7 +139,7 @@ public class Group implements Serializable, GeneralItem {
 	public void setMembers(ArrayList<User> members) {
 		this.members = members;
 	}
-	
+
 	public ArrayList<GroupPoi> getGroupPois() {
 		return groupPois;
 	}
@@ -185,6 +180,14 @@ public class Group implements Serializable, GeneralItem {
 		return groupTours;
 	}
 
+	public Boolean isJoined() {
+		return joined;
+	}
+
+	public void joined(Boolean joined) {
+		this.joined = joined;
+	}
+
 	public void setGroupTours(ArrayList<GeneralItem> groupTours) {
 		this.groupTours.clear();
 		this.groupTours.addAll((Collection<? extends GroupTour>) groupTours);
@@ -196,6 +199,18 @@ public class Group implements Serializable, GeneralItem {
 
 	public void setGroupToursToDelete(ArrayList<GroupTour> groupToursToDelete) {
 		this.groupToursToDelete = groupToursToDelete;
+	}
+
+	public boolean isPrivate() {
+		return type.equals(PRIVATE);
+	}
+
+	public boolean isPublic() {
+		return type.equals(PUBLIC);
+	}
+
+	public boolean isOwner(User user) {
+		return ownerId.equals(user.getId());
 	}
 
 	public void updateGroupInterests(
@@ -371,7 +386,7 @@ public class Group implements Serializable, GeneralItem {
 				groupJson.getString("password"), User.fromJSON(groupJson
 						.getJSONObject("user")), groupJson.getInt("user_id"),
 				groupInterestsToAdd, groupPoisToAdd, groupToursToAdd,
-				groupMembers);
+				groupJson.getBoolean("joined"), groupMembers);
 
 		return group;
 	}
