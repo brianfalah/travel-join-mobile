@@ -13,6 +13,7 @@ import android.support.v4.app.ListFragment;
 
 public class GroupDetailsMembersFragment extends ListFragment {
 	
+	private GroupDetailsActivity activity;
 	private ArrayList<User> members;
 	private UsersListAdapter adapter;
 	
@@ -20,14 +21,23 @@ public class GroupDetailsMembersFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		GroupDetailsActivity activity = (GroupDetailsActivity) getActivity();
+		activity = (GroupDetailsActivity) getActivity();
 		Group group = activity.group;
 		
+		initializeAdapterWithData(group);
+	}
+
+	private void initializeAdapterWithData(Group group) {
 		members = new ArrayList<User>();
 		members.addAll((Collection<User>) group
 				.getMembers());
-
-		adapter = new UsersListAdapter(getActivity(), members);
+		getActivity();
+		adapter = new UsersListAdapter(activity, members);
 		setListAdapter(adapter);
+	}
+
+	public void refreshList(Group group) {
+		if(activity != null)
+			initializeAdapterWithData(group);	
 	}
 }

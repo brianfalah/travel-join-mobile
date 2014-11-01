@@ -134,6 +134,14 @@
     <string name="delete_group_error_message">No se ha podido borrar el grupo correctamente.</string>
     <string name="group_public">Público</string>
     <string name="group_private">Privado</string>
+    <string name="private_group_dialog_title">Grupo privado</string>
+    <string name="private_group_hint">Se requiere la contraseña de acceso:</string>
+    <string name="private_group_insert_password">Ingrese la contraseña</string>
+    <string name="invalid_private_group_password">Contraseña inválida. No se pudo unir al grupo.</string>
+    <string name="group_joined_message">Se ha unido al grupo correctamente.</string>
+    <string name="group_already_joined_message">Usted ya pertenece a este grupo.</string>
+    <string name="group_disjoined_message">Ha dejado el grupo correctamente.</string>
+    <string name="group_already_disjoined_message">Usted ya no pertenece a este grupo.</string>
     <!-- FIN groups -->
     
     <!-- Login -->

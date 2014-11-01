@@ -15,6 +15,7 @@ import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Group;
+import com.example.traveljoin.models.GroupMember;
 import com.example.traveljoin.models.User;
 
 import android.os.AsyncTask;
@@ -22,38 +23,51 @@ import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView.OnQueryTextListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 
 public class GroupsMainActivity extends Activity implements OnQueryTextListener {
-	
+
 	private ProgressDialog progress;
 	private ActionBar actionBar;
 	private ListView listView;
 	private GeneralItemListAdapter adapter;
 	private ArrayList<GeneralItem> groups;
 	private User user;
-	
+
+	private Dialog passwordDialog;
+	private EditText insertedPrivateGroupPassword;
+	private Button okButton;
+	private Button cancelButton;
+
 	private static final int CREATE_GROUP_REQUEST = 1;
 	private static final int EDIT_GROUP_REQUEST = 2;
 	// para el asynctask
 	protected static final int GET_GROUPS_METHOD = 1;
 	protected static final int DELETE_GROUP_METHOD = 2;
+	protected static final int JOIN_GROUP_METHOD = 3;
+	protected static final int DISJOIN_GROUP_METHOD = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +92,7 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		super.onResume();
 		getGroupsFromServer();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.groups_activity_actions, menu);
@@ -124,17 +138,24 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.group_list_item_context_menu, menu);
-		
+
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		Group group = (Group) listView.getItemAtPosition(info.position);
-		if (!group.getOwnerId().equals(user.getId())) {
+		if (!group.isOwner(user)) {
 			menu.removeItem(R.id.group_context_menu_edit);
 			menu.removeItem(R.id.group_context_menu_delete);
 		}
-		else{
+		
+		if (group.isOwner(user)) {
 			menu.removeItem(R.id.group_context_menu_join);
 			menu.removeItem(R.id.group_context_menu_disjoin);
 		}
+		
+		if (group.isJoined())
+			menu.removeItem(R.id.group_context_menu_join);
+		else
+			menu.removeItem(R.id.group_context_menu_disjoin);
+
 	}
 
 	OnItemClickListener groupItemClickListener = new OnItemClickListener() {
@@ -144,7 +165,7 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 			startGroupDetailActivity((Group) adapter.getItem(position));
 		}
 	};
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		final Group selectedGroup = getGroupItem(item);
@@ -191,18 +212,108 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 					.show();
 			return true;
 		case R.id.group_context_menu_join:
-			// TODO: Ejecutar la misma funcion para eliminar un Grupo
-			Toast.makeText(this, "Unirse", Toast.LENGTH_SHORT).show();
+			joinGroup(selectedGroup);
 			return true;
 		case R.id.group_context_menu_disjoin:
-			// TODO: Ejecutar la misma funcion para eliminar un Grupo
-			Toast.makeText(this, "Dejar el grupo", Toast.LENGTH_SHORT).show();
+			disjoinGroup(selectedGroup);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
+	public void joinGroup(Group group) {
+		if (group.isPrivate()) {
+			performJoinPrivateGroup(group);
+		} else
+			performJoinPublicGroup(group);
+	}
+
+	private void performJoinPublicGroup(Group group) {
+		performJoinGroup(group);
+	}
+
+	private void performJoinPrivateGroup(Group group) {
+		passwordDialog = new Dialog(this);
+		passwordDialog.setContentView(R.layout.private_group_password_request);
+		passwordDialog.setTitle(getString(R.string.private_group_dialog_title));
+		passwordDialog.setCancelable(true);
+		insertedPrivateGroupPassword = (EditText) passwordDialog
+				.findViewById(R.id.private_group_password);
+		okButton = (Button) passwordDialog.findViewById(R.id.btnOk);
+		cancelButton = (Button) passwordDialog.findViewById(R.id.btnCancel);
+
+		addListenerOnPasswordField();
+		addListenerOnButtons(group);
+		passwordDialog.show();
+	}
+
+	private void performJoinGroup(Group group) {
+		progress = ProgressDialog.show(GroupsMainActivity.this,
+				getString(R.string.loading), getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/groups/join_user";
+		GroupMember groupMember = new GroupMember(user.getId(), group.getId());
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(JOIN_GROUP_METHOD,
+				groupMember);
+		httpAsyncTask.execute(url);
+	}
+
+	public void addListenerOnPasswordField() {
+		insertedPrivateGroupPassword.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if (insertedPrivateGroupPassword.getText().length() > 0)
+					okButton.setEnabled(true);
+				else
+					okButton.setEnabled(false);
+			}
+		});
+	}
+
+	public void addListenerOnButtons(final Group group) {
+		okButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (insertedPrivateGroupPassword.getText().toString()
+						.equals(group.getPassword())) {
+					passwordDialog.hide();
+					performJoinGroup(group);
+				} else {
+					passwordDialog.hide();
+					showError(getString(R.string.invalid_private_group_password));
+				}
+			}
+		});
+
+		cancelButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				passwordDialog.hide();
+			}
+		});
+
+	}
+
+	public void disjoinGroup(Group group) {
+		progress = ProgressDialog.show(GroupsMainActivity.this,
+				getString(R.string.loading), getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/groups/disjoin_group";
+		GroupMember groupMember = new GroupMember(user.getId(), group.getId());
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(DISJOIN_GROUP_METHOD,
+				groupMember);
+		httpAsyncTask.execute(url);
+	}
+
 	private void startGroupDetailActivity(final Group selectedGroup) {
 		Intent intent = new Intent(this, GroupDetailsActivity.class);
 		intent.putExtra("group", selectedGroup);
@@ -231,14 +342,14 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 		case CREATE_GROUP_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de grupos en el onResume
+				// Se actualiza la lista de grupos en el onResume
 				break;
 			}
 			break;
 		case EDIT_GROUP_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de grupos en el onResume
+				// Se actualiza la lista de grupos en el onResume
 				break;
 			}
 			break;
@@ -268,8 +379,6 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 
 		@Override
 		protected String doInBackground(String... urls) {
-			// despues de cualquiera de estos metodo vuelve al postexecute de
-			// aca
 			switch (this.from_method) {
 			case GET_GROUPS_METHOD:
 				api_result = apiInterface.GET(urls[0]);
@@ -278,12 +387,16 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 				api_result = apiInterface.POST(urls[0], object_to_send,
 						"delete");
 				break;
+			case JOIN_GROUP_METHOD:
+				api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;
+			case DISJOIN_GROUP_METHOD:
+				api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;
 			}
-
 			return api_result.getResult();
 		}
 
-		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
 			switch (this.from_method) {
@@ -326,8 +439,49 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 					exception.alertExceptionMessage(GroupsMainActivity.this);
 				}
 				break;
+			case JOIN_GROUP_METHOD:
+				progress.dismiss();
+				if (api_result.ok()) {
+					getGroupsFromServer();
+					invalidateOptionsMenu();
+
+					Toast.makeText(GroupsMainActivity.this,
+							R.string.group_joined_message, Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.group_already_joined_message));
+					exception.alertExceptionMessage(GroupsMainActivity.this);
+				}
+				break;
+			case DISJOIN_GROUP_METHOD:
+				progress.dismiss();
+				if (api_result.ok()) {
+					getGroupsFromServer();
+					invalidateOptionsMenu();
+
+					Toast.makeText(GroupsMainActivity.this,
+							R.string.group_disjoined_message,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.group_already_disjoined_message));
+					exception.alertExceptionMessage(GroupsMainActivity.this);
+				}
+				break;
 			}
+
 		}
+	}
+
+	public void showExceptionError(Exception e) {
+		showError(e.getMessage());
+	}
+
+	public void showError(String errorMessage) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				errorMessage);
+		exception.alertExceptionMessage(this);
 	}
 
 }

@@ -25,10 +25,10 @@ public class GroupDetailsPoisFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		activity = (GroupDetailsActivity) getActivity();
 		Group group = activity.group;
-		
+
 		initializeAdapterWithData(group);
 	}
 
@@ -54,7 +54,8 @@ public class GroupDetailsPoisFragment extends ListFragment {
 	}
 
 	public void refreshList(Group group) {
-		initializeAdapterWithData(group);
+		if (activity != null)
+			initializeAdapterWithData(group);
 	}
 
 }

@@ -212,6 +212,29 @@ public class Group implements Serializable, GeneralItem {
 	public boolean isOwner(User user) {
 		return ownerId.equals(user.getId());
 	}
+	
+	public void addMember(User member) {
+		members.add(member);	
+	}
+	
+	public void removeMember(User member) {
+		members.remove(member);
+	}
+	
+	public void findAndRemoveMember(User member) {
+		User existingMember = findMember(member);
+		removeMember(existingMember);		
+	}
+	
+	public User findMember(User memberToFind) {
+		User member = null; 
+		for (User existingMember : members)
+			if(existingMember.getId().equals(memberToFind.getId())) {
+					member = existingMember;
+					break;
+			}
+		return member;
+	}
 
 	public void updateGroupInterests(
 			ArrayList<GroupInterest> oldGroupInterests,
@@ -446,5 +469,5 @@ public class Group implements Serializable, GeneralItem {
 		}
 
 	}
-
+	
 }
