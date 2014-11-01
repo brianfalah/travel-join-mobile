@@ -11,16 +11,17 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
 public class GroupDeatailsInterestsFragment extends ListFragment {
-	
+
+	private GroupDetailsActivity activity;
 	private GeneralItemListAdapter adapter;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		GroupDetailsActivity activity = (GroupDetailsActivity) getActivity();              	
+
+		activity = (GroupDetailsActivity) getActivity();
 		Group group = activity.group;
-		
+
 		initializeAdapterWithData(group);
 	}
 
@@ -28,12 +29,12 @@ public class GroupDeatailsInterestsFragment extends ListFragment {
 		ArrayList<GeneralItem> groupInterests = new ArrayList<GeneralItem>();
 		groupInterests.addAll(group.getGroupInterests());
 
-		adapter = new GeneralItemListAdapter(
-				getActivity(), groupInterests);
+		adapter = new GeneralItemListAdapter(getActivity(), groupInterests);
 		setListAdapter(adapter);
 	}
-	
-	public void refreshList(Group group){
-		initializeAdapterWithData(group);
+
+	public void refreshList(Group group) {
+		if (activity != null)
+			initializeAdapterWithData(group);
 	}
 }

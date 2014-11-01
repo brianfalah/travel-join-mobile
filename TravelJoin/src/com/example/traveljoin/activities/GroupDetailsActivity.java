@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,9 +18,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.traveljoin.R;
@@ -42,6 +49,10 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	private MyPagerAdapter adapterViewPager;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
+	private Dialog passwordDialog;
+	private EditText insertedPrivateGroupPassword;
+	private Button okButton;
+	private Button cancelButton;
 
 	public static final int GROUP_INFORMATION_TAB = 0;
 	public static final int GROUP_INTERESTS_TAB = 1;
@@ -64,16 +75,17 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_details);
 		initializeUser();
-		
+
 		Bundle bundle = getIntent().getExtras();
 		group = (Group) bundle.get("group");
-		
+
 		listFragments = new ArrayList<Fragment>();
 		listFragments.add(new GroupDetailsInformationFragment());
 		listFragments.add(new GroupDeatailsInterestsFragment());
+		
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(),
 				listFragments);
-		
+
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(adapterViewPager);
 		viewPager
@@ -82,8 +94,8 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
 					}
-				});	
-		
+				});
+
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.group_view);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -94,22 +106,25 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				.setText(getString(R.string.group_interests_tab))
 				.setTabListener(this));
 
-		if (group.isPublic() || group.isJoined()) {
-			listFragments.add(new GroupDetailsPoisFragment());
-			listFragments.add(new GroupDetailsToursFragment());
-			listFragments.add(new GroupDetailsMembersFragment());
-			adapterViewPager.notifyDataSetChanged();
-			
-			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.group_pois_tab))
-					.setTabListener(this));
-			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.group_tours_tab))
-					.setTabListener(this));
-			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.group_members_tab))
-					.setTabListener(this));		
-		}
+		if (group.isPublic() || group.isJoined())
+			initializePublicGroupContent();
+	}
+
+	private void initializePublicGroupContent() {
+		listFragments.add(new GroupDetailsPoisFragment());
+		listFragments.add(new GroupDetailsToursFragment());
+		listFragments.add(new GroupDetailsMembersFragment());
+		adapterViewPager.notifyDataSetChanged();
+
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.group_pois_tab))
+				.setTabListener(this));
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.group_tours_tab))
+				.setTabListener(this));
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.group_members_tab))
+				.setTabListener(this));
 	}
 
 	@Override
@@ -125,7 +140,12 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			menu.removeItem(R.id.action_edit);
 			menu.removeItem(R.id.action_delete);
 		}
-
+		
+		if (group.isOwner(user)) {
+			menu.removeItem(R.id.action_join_group);
+			menu.removeItem(R.id.action_disjoin_group);
+		}
+		
 		if (group.isJoined())
 			menu.removeItem(R.id.action_join_group);
 		else
@@ -239,6 +259,32 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	}
 
 	public void joinGroup() {
+		if (group.isPrivate()) {
+			performJoinPrivateGroup();
+		} else
+			performJoinPublicGroup();
+	}
+
+	private void performJoinPublicGroup() {
+		performJoinGroup();
+	}
+
+	private void performJoinPrivateGroup() {
+		passwordDialog = new Dialog(this);
+		passwordDialog.setContentView(R.layout.private_group_password_request);
+		passwordDialog.setTitle(getString(R.string.private_group_dialog_title));
+		passwordDialog.setCancelable(true);
+		insertedPrivateGroupPassword = (EditText) passwordDialog
+				.findViewById(R.id.private_group_password);
+		okButton = (Button) passwordDialog.findViewById(R.id.btnOk);
+		cancelButton = (Button) passwordDialog.findViewById(R.id.btnCancel);
+
+		addListenerOnPasswordField();
+		addListenerOnButtons();
+		passwordDialog.show();
+	}
+
+	private void performJoinGroup() {
 		progress = ProgressDialog.show(GroupDetailsActivity.this,
 				getString(R.string.loading), getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
@@ -249,11 +295,55 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		httpAsyncTask.execute(url);
 	}
 
+	public void addListenerOnPasswordField() {
+		insertedPrivateGroupPassword.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if (insertedPrivateGroupPassword.getText().length() > 0)
+					okButton.setEnabled(true);
+				else
+					okButton.setEnabled(false);
+			}
+		});
+	}
+
+	public void addListenerOnButtons() {
+		okButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (insertedPrivateGroupPassword.getText().toString().equals(
+						group.getPassword())) {
+					passwordDialog.hide();
+					performJoinGroup();
+				} else {
+					passwordDialog.hide();
+					showError(getString(R.string.invalid_private_group_password));
+				}
+			}
+		});
+
+		cancelButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				passwordDialog.hide();
+			}
+		});
+
+	}
+
 	public void disjoinGroup() {
 		progress = ProgressDialog.show(GroupDetailsActivity.this,
 				getString(R.string.loading), getString(R.string.wait), true);
 		String url = getResources().getString(R.string.api_url)
-				+ "/groups/disjoin_user";
+				+ "/groups/disjoin_group";
 		GroupMember groupMember = new GroupMember(user.getId(), group.getId());
 		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(DISJOIN_GROUP_METHOD,
 				groupMember);
@@ -271,24 +361,46 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 				invalidateOptionsMenu();
 
-				GroupDetailsInformationFragment informationFragment = (GroupDetailsInformationFragment) listFragments
-						.get(GROUP_INFORMATION_TAB);
-				GroupDeatailsInterestsFragment interestsFragment = (GroupDeatailsInterestsFragment) listFragments
-						.get(GROUP_INTERESTS_TAB);
-				GroupDetailsPoisFragment poisFragment = (GroupDetailsPoisFragment) listFragments
-						.get(GROUP_POIS_TAB);
-				GroupDetailsToursFragment toursFragment = (GroupDetailsToursFragment) listFragments
-						.get(GROUP_TOURS_TAB);
-
-				informationFragment.setFields(group);
-				interestsFragment.refreshList(group);
-				poisFragment.refreshList(group);
-				toursFragment.refreshList(group);
+				refreshInformationFragment();
+				refreshInterestsFragment();
+				refreshPoisFragment();
+				refreshToursFragment();
+				refreshMembersFragment();				
 				break;
 			}
 			break;
 		}
 
+	}
+
+	private void refreshMembersFragment() {
+		GroupDetailsMembersFragment membersFragment = (GroupDetailsMembersFragment) listFragments
+				.get(GROUP_MEMBERS_TAB);
+		membersFragment.refreshList(group);
+	}
+
+	private void refreshToursFragment() {
+		GroupDetailsToursFragment toursFragment = (GroupDetailsToursFragment) listFragments
+				.get(GROUP_TOURS_TAB);
+		toursFragment.refreshList(group);
+	}
+
+	private void refreshPoisFragment() {
+		GroupDetailsPoisFragment poisFragment = (GroupDetailsPoisFragment) listFragments
+				.get(GROUP_POIS_TAB);
+		poisFragment.refreshList(group);
+	}
+
+	private void refreshInterestsFragment() {
+		GroupDeatailsInterestsFragment interestsFragment = (GroupDeatailsInterestsFragment) listFragments
+				.get(GROUP_INTERESTS_TAB);
+		interestsFragment.refreshList(group);
+	}
+
+	private void refreshInformationFragment() {
+		GroupDetailsInformationFragment informationFragment = (GroupDetailsInformationFragment) listFragments
+				.get(GROUP_INFORMATION_TAB);
+		informationFragment.setFields(group);
 	}
 
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
@@ -329,7 +441,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 					finish();
 				else {
 					CustomTravelJoinException exception = new CustomTravelJoinException(
-							getString(R.string.delete_poi_error_message));
+							getString(R.string.delete_group_message));
 					exception.alertExceptionMessage(GroupDetailsActivity.this);
 				}
 
@@ -337,28 +449,37 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			case JOIN_GROUP_METHOD:
 				progress.dismiss();
 				if (api_result.ok()) {
+					group.addMember(user);
 					group.joined(true);
 					invalidateOptionsMenu();
+					
+					if(group.isPrivate())
+						initializePublicGroupContent();
+					else
+						refreshMembersFragment();
+					
 					Toast.makeText(GroupDetailsActivity.this,
-							R.string.poi_added_to_favorites_message,
+							R.string.group_joined_message,
 							Toast.LENGTH_SHORT).show();
 				} else {
 					CustomTravelJoinException exception = new CustomTravelJoinException(
-							getString(R.string.poi_already_in_favorites_message));
+							getString(R.string.group_already_joined_message));
 					exception.alertExceptionMessage(GroupDetailsActivity.this);
 				}
 				break;
 			case DISJOIN_GROUP_METHOD:
 				progress.dismiss();
 				if (api_result.ok()) {
+					group.findAndRemoveMember(user);
 					group.joined(false);
 					invalidateOptionsMenu();
+					refreshMembersFragment();
 					Toast.makeText(GroupDetailsActivity.this,
-							R.string.poi_removed_from_favorites_message,
+							R.string.group_disjoined_message,
 							Toast.LENGTH_SHORT).show();
 				} else {
 					CustomTravelJoinException exception = new CustomTravelJoinException(
-							getString(R.string.poi_already_removed_from_favorites_message));
+							getString(R.string.group_already_disjoined_message));
 					exception.alertExceptionMessage(GroupDetailsActivity.this);
 				}
 				break;
@@ -379,10 +500,12 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	}
 
 	public void showExceptionError(Exception e) {
-		CustomTravelJoinException exception = new CustomTravelJoinException(
-				e.getMessage());
-		exception.alertExceptionMessage(this);
-		e.printStackTrace();
+		showError(e.getMessage());
 	}
 
+	public void showError(String errorMessage) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				errorMessage);
+		exception.alertExceptionMessage(this);
+	}
 }

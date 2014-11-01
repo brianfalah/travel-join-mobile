@@ -17,17 +17,17 @@ import android.view.View;
 import android.widget.ListView;
 
 public class GroupDetailsToursFragment extends ListFragment {
-	
+
 	private GroupDetailsActivity activity;
 	private GeneralItemListAdapter adapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		activity = (GroupDetailsActivity) getActivity();
 		Group group = activity.group;
-		
+
 		initializeAdapterWithData(group);
 	}
 
@@ -45,15 +45,16 @@ public class GroupDetailsToursFragment extends ListFragment {
 			long id) {
 		startTourDetailActivity((GroupTour) adapter.getItem(position));
 	}
-	
+
 	private void startTourDetailActivity(GroupTour selectedGroupTour) {
 		Intent intent = new Intent(activity, TourDetailsActivity.class);
-		intent.putExtra("tour_id", selectedGroupTour.getTourId()); 
+		intent.putExtra("tour_id", selectedGroupTour.getTourId());
 		startActivity(intent);
 	}
-	
+
 	public void refreshList(Group group) {
-		initializeAdapterWithData(group);
+		if (activity != null)
+			initializeAdapterWithData(group);
 	}
 
 }
