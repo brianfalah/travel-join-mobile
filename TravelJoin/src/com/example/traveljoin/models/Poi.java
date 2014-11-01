@@ -30,6 +30,7 @@ public class Poi implements Serializable, GeneralItem{
 	private Integer ratingsCount;
 	private Double ratingsSum;
 	private ArrayList<Rating> lastRatings;
+	private Boolean denounced; 
 	
 	private ArrayList<PoiEvent> poiEvents;
 	private ArrayList<PoiEvent> poiEventsToDelete;	
@@ -180,6 +181,16 @@ public class Poi implements Serializable, GeneralItem{
 	}
 
 
+	public Boolean getDenounced() {
+		return denounced;
+	}
+
+
+	public void setDenounced(Boolean denounced) {
+		this.denounced = denounced;
+	}
+
+
 	public static Poi fromJSON(JSONObject poiJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> poiEventsToAdd = new ArrayList<GeneralItem>();
 		JSONArray poiEventsJson = poiJson.getJSONArray("events");
@@ -203,7 +214,8 @@ public class Poi implements Serializable, GeneralItem{
 		if (poiJson.has("rating") && !poiJson.isNull("rating")){
 			Rating rating = Rating.fromJSON(poiJson.getJSONObject("rating"));
 			poi.setRating(rating);
-		}	
+		}
+	
 		
 		if (poiJson.has("ratings_count") && !poiJson.isNull("ratings_count")){
 			poi.setRatingsCount(poiJson.getInt("ratings_count"));
@@ -225,7 +237,10 @@ public class Poi implements Serializable, GeneralItem{
 			
 			poi.setLastRatings(ratingsToAdd);
 		}		
-		
+	
+		if (poiJson.has("denounced") && !poiJson.isNull("denounced")){
+			poi.setDenounced(poiJson.getBoolean("denounced"));
+		}
 		return poi;
 	}
 	
