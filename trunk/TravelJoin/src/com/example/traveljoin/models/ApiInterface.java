@@ -166,7 +166,10 @@ public class ApiInterface {
             if (object instanceof Rating){            
             	jsonObject = ((Rating) object).toJSON();
             }
-            	
+            
+            if (object instanceof Complaint){            
+            	jsonObject = ((Complaint) object).toJSON();
+            }	
 
             // 4. convert JSONObject to JSON to String
             json = jsonObject.toString();
