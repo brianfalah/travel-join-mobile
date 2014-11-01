@@ -3,8 +3,8 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.133:3001</string>
-<!--     <string name="api_url">http://travel-join-api.herokuapp.com</string> -->
+<!--     <string name="api_url">http://192.168.1.133:3001</string> -->
+    <string name="api_url">http://travel-join-api.herokuapp.com</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="append_required">" es requerido"</string>
@@ -73,6 +73,7 @@
     <string name="delete_poi_message">¿Está seguro de que desea borrar este punto?</string>
     <string name="delete_poi_error_message">No se ha podido borrar el punto correctamente.</string>
     <string name="rank_poi">Calificar punto</string>
+    <string name="denounce_poi">Denunciar punto</string>
     <string name="description">Descripción</string>
     <string name="name">Nombre</string>
     <string name="poi_form_description">Ingrese los datos del punto de interés:</string>
@@ -90,6 +91,8 @@
 	<string name="poi_already_in_favorites_message">Usted ya ha agregado este punto a sus favoritos.</string>    
 	<string name="poi_already_removed_from_favorites_message">Usted ya ha borrado este punto de sus favoritos.</string>
 	<string name="poi_ranked_ok_message">El punto fue calificado correctamente.</string>
+    <string name="poi_denounced_ok_message">El punto fue denunciado correctamente.</string>
+    
     <!-- FIN pois -->
 
     <!-- events -->
@@ -134,7 +137,7 @@
     <string name="delete_group_error_message">No se ha podido borrar el grupo correctamente.</string>
     <string name="group_public">Público</string>
     <string name="group_private">Privado</string>
-    <string name="private_group_dialog_title">Grupo privado</string>
+     <string name="private_group_dialog_title">Grupo privado</string>
     <string name="private_group_hint">Se requiere la contraseña de acceso:</string>
     <string name="private_group_insert_password">Ingrese la contraseña</string>
     <string name="invalid_private_group_password">Contraseña inválida. No se pudo unir al grupo.</string>
