@@ -96,6 +96,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MainActivity" />
         </activity>
+        
+        <activity
+            android:name="com.example.traveljoin.activities.HelpActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
+
+            <!-- con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.traveljoin.MapActivity" />
+        </activity>
+        
 
         <!-- actividad inicial para los Puntos de interes -->
         <activity
