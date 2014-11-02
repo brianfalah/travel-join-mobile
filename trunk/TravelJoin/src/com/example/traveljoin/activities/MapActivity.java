@@ -182,7 +182,8 @@ public class MapActivity extends SlidingFragmentActivity implements
 			filter();
 			return true;
 		case R.id.help:
-			//TODO: Lanzar la actividad de ayuda	
+			help();
+			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
@@ -691,5 +692,10 @@ public class MapActivity extends SlidingFragmentActivity implements
 		intent.putExtra("mapFilters", mapFilters); 
 		startActivityForResult(intent, CHANGE_FILTERS_REQUEST);		
     }
+    
+    public void help(){    	
+  		Intent intent = new Intent(this, HelpActivity.class);		
+  		startActivity(intent);	
+      }
     
 }
