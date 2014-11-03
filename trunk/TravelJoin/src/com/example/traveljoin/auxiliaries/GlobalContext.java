@@ -2,7 +2,6 @@ package com.example.traveljoin.auxiliaries;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -13,7 +12,6 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.models.ApiInterface;
@@ -21,7 +19,6 @@ import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Category;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
-import com.example.traveljoin.models.GroupPoi;
 import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.User;
 import com.facebook.Request;
@@ -57,25 +54,18 @@ public class GlobalContext extends Application {
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
-	
+
 	public ArrayList<GeneralItem> getInterests() {
 		return interests;
 	}
 
 	public void setInterests(ArrayList<GeneralItem> interests) {
 		this.interests = interests;
-//		this.interests.clear();
-//		this.interests.addAll((Collection<? extends Interest>) interests);
 	}
-	
+
 	public void initializeContext(FragmentActivity requesterActivity) {
-		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
-		progressDialog.setTitle(getString(R.string.loading));
-		progressDialog.setMessage(getString(R.string.wait));
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setCancelable(false);
-		progressDialog.show();
-		
+		ProgressDialog progressDialog = createProgressDialog(requesterActivity);
+
 		resetRunningTaskCounter();
 		initializeUser(requesterActivity, progressDialog);
 		initializeCategories(requesterActivity, progressDialog);
@@ -85,7 +75,7 @@ public class GlobalContext extends Application {
 	private void resetRunningTaskCounter() {
 		taskCurrentExcutingInProgressDialog = TASK_TO_EXECUTED;
 	}
-	
+
 	private void initializeUser(final FragmentActivity requesterActivity,
 			final ProgressDialog progressDialog) {
 		final Session session = Session.getActiveSession();
@@ -117,14 +107,57 @@ public class GlobalContext extends Application {
 				});
 		request.executeAsync();
 	}
+	
+	public void refreshUser(final FragmentActivity requesterActivity) {
+		final ProgressDialog progressDialog = createProgressDialog(requesterActivity);
+		progressDialog.show();
+		
+		final Session session = Session.getActiveSession();
 
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser facebookUser,
+							Response response) {
+						if (session == Session.getActiveSession()) {
+							if (facebookUser != null) {
+								String url = requesterActivity.getResources()
+										.getString(R.string.api_url)
+										+ "/users/get_or_create";
+								User user = new User(facebookUser.getId(),
+										null, facebookUser.getFirstName(),
+										facebookUser.getLastName());
+
+								RefreshUserTask httpAsyncTask = new RefreshUserTask(
+										user, requesterActivity, progressDialog);
+								httpAsyncTask.execute(url);
+							}
+						}
+						if (response.getError() != null) {
+							// Handle errors, will do so later.
+						}
+
+					}
+				});
+		request.executeAsync();
+	}
+
+	private ProgressDialog createProgressDialog(final FragmentActivity requesterActivity) {
+		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
+		progressDialog.setTitle(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setCancelable(false);
+		return progressDialog;
+	}
+	
 	private void initializeCategories(FragmentActivity requesterActivity,
 			ProgressDialog progressDialog) {
 		String url = getResources().getString(R.string.api_url)
 				+ "/categories/index.json";
 		new GetCategoriesTask(progressDialog).execute(url);
 	}
-	
+
 	private void initializeInterests(FragmentActivity requesterActivity,
 			ProgressDialog progressDialog) {
 		String url = getResources().getString(R.string.api_url)
@@ -181,6 +214,53 @@ public class GlobalContext extends Application {
 		}
 	}
 
+	private class RefreshUserTask extends
+			AsyncTask<String, Void, String> {
+
+		private ApiInterface apiInterface = new ApiInterface();
+		private Object objectToSend;
+		private ApiResult apiResult;
+		private FragmentActivity requesterActivity;
+		private ProgressDialog progressDialog;
+
+		public RefreshUserTask(Object objectToSend,
+				FragmentActivity requesterActivity,
+				ProgressDialog progressDialog) {
+			this.objectToSend = objectToSend;
+			this.requesterActivity = requesterActivity;
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected String doInBackground(String... urls) {
+			apiResult = apiInterface.POST(urls[0], objectToSend, null);
+			return apiResult.getResult();
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (apiResult.ok()) {
+					JSONObject jsonObject = new JSONObject(result);
+					GlobalContext globalContext = (GlobalContext) getApplicationContext();
+					globalContext.setUser(User.fromJSON(jsonObject));
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.fetching_user_error));
+					exception.alertExceptionMessage(requesterActivity);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} finally {
+				if (progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+			}
+		}
+	}
+
 	private class GetCategoriesTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
 		private ApiResult apiResult;
@@ -198,7 +278,6 @@ public class GlobalContext extends Application {
 
 		@Override
 		protected void onPostExecute(String result) {
-			Log.d("InputStream", result);
 			try {
 				if (apiResult.ok()) {
 					List<Category> categories = getCategoriesFromJSON(new JSONArray(
@@ -234,7 +313,7 @@ public class GlobalContext extends Application {
 			return categories;
 		}
 	}
-	
+
 	private class GetInterestsTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
 		private ApiResult apiResult;
@@ -252,7 +331,6 @@ public class GlobalContext extends Application {
 
 		@Override
 		protected void onPostExecute(String result) {
-			Log.d("InputStream", result);
 			try {
 				if (apiResult.ok()) {
 					ArrayList<GeneralItem> interests = getInterestsFromJSON(new JSONArray(
@@ -274,8 +352,8 @@ public class GlobalContext extends Application {
 
 		}
 
-		private ArrayList<GeneralItem> getInterestsFromJSON(JSONArray interestsJSON)
-				throws JSONException {
+		private ArrayList<GeneralItem> getInterestsFromJSON(
+				JSONArray interestsJSON) throws JSONException {
 			ArrayList<GeneralItem> interests = new ArrayList<GeneralItem>();
 
 			for (int i = 0; i < interestsJSON.length(); i++) {
@@ -288,7 +366,7 @@ public class GlobalContext extends Application {
 			return interests;
 		}
 	}
-	
+
 	// TODO Refactor de showConnectionError y showExceptionError a un Error
 	// Handler si es que siempre se hace lo mismo con las excepciones. Buscar
 	// esos metodos en todo el proyecto

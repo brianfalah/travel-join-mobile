@@ -3,8 +3,8 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-<!--     <string name="api_url">http://192.168.1.111:3001</string> -->
-    <string name="api_url">http://travel-join-api.herokuapp.com</string>
+    <string name="api_url">http://192.168.1.133:3001</string>
+<!--     <string name="api_url">http://travel-join-api.herokuapp.com</string> -->
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="append_required">" es requerido"</string>
@@ -143,7 +143,7 @@
     <string name="delete_group_error_message">No se ha podido borrar el grupo correctamente.</string>
     <string name="group_public">Público</string>
     <string name="group_private">Privado</string>
-     <string name="private_group_dialog_title">Grupo privado</string>
+    <string name="private_group_dialog_title">Grupo privado</string>
     <string name="private_group_hint">Se requiere la contraseña de acceso:</string>
     <string name="private_group_insert_password">Ingrese la contraseña</string>
     <string name="invalid_private_group_password">Contraseña inválida. No se pudo unir al grupo.</string>
@@ -168,9 +168,14 @@
     <!-- User profile -->
     <string name="general_user_profile_tab">General</string>
     <string name="groups_user_profile_tab">Grupos</string>
-    <string name="favourites_user_profile_tab">Favoritos</string>
-    <string name="favourite_pois_group">Puntos de interés</string>
-    <string name="favourite_tours_group">Circuitos turísticos</string>
+    <string name="pois_user_profile_tab">Puntos de interés</string>
+    <string name="tours_user_profile_tab">Circuitos</string>
+    <string name="own_pois_group">Puntos de interés propios</string>
+    <string name="favourite_pois_group">Puntos de interés favoritos</string>
+    <string name="own_tours_group">Circuitos propios</string>
+    <string name="favourite_tours_group">Circuitos favoritos</string>
+    <string name="own_groups_group">Grupos propios</string>
+    <string name="joined_groups_group">Grupos a los que pertenece</string>
     <!-- FIN User Profile -->
     
     <!-- General item list context menu -->

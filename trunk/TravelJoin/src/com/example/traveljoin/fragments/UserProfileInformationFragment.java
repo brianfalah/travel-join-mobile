@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.activities.UserProfileActivity;
 import com.example.traveljoin.models.User;
 import com.facebook.widget.ProfilePictureView;
 
-public class UserInformationFragment extends Fragment {
+public class UserProfileInformationFragment extends Fragment {
 
 	private ProfilePictureView profilePictureView;
 	private TextView userNameView;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -28,10 +28,10 @@ public class UserInformationFragment extends Fragment {
 				.findViewById(R.id.selection_profile_pic);
 		profilePictureView.setCropped(true);
 		userNameView = (TextView) view.findViewById(R.id.selection_user_name);
-
-		GlobalContext globalContext = (GlobalContext) getActivity()
-				.getApplicationContext();
-		User user = globalContext.getUser();
+		
+		UserProfileActivity activity = (UserProfileActivity) getActivity();
+		User user = activity.user;
+		
 		profilePictureView.setProfileId(user.getFacebookId());
 		userNameView.setText(user.getFullName());
 
