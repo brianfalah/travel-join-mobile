@@ -1,25 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:facebook="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ScrollViewPoiDetails"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
-    <com.facebook.widget.ProfilePictureView
+
+        <com.facebook.widget.ProfilePictureView
             android:id="@+id/selection_profile_pic"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             facebook:preset_size="large" />
-    <TextView
+
+        <TextView
             android:id="@+id/selection_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             android:textColor="#333"
             android:textSize="18sp" />
-</LinearLayout>
+
+        <!-- Groups -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="GRUPOS"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <TextView
+            android:id="@+id/ownGroupsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/joinedGroupsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <!-- Pois -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="PUNTOS DE INTERÉS"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <TextView
+            android:id="@+id/ownPoisText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/favoritePoisText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <!-- Tours -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:text="CIRCUITOS"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_blue_light" >
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <TextView
+            android:id="@+id/ownToursText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/favoriteToursText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" >
+        </TextView>
+    </LinearLayout>
+
+</ScrollView>
