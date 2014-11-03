@@ -48,6 +48,7 @@ public class GroupFormToursFragment extends ListFragment {
 		groupFormActivity = (GroupFormActivity) getActivity();
 		groupToursAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupTours);
 		setListAdapter(groupToursAdapter);
+		setEmptyText("Este grupo aún no tiene circuitos turísticos.");
 		registerForContextMenu(getListView());
 	}
 

@@ -8,12 +8,14 @@ import com.example.traveljoin.activities.TourDetailsActivity;
 import com.example.traveljoin.adapters.RatingsListAdapter;
 import com.example.traveljoin.auxiliaries.Helper;
 import com.example.traveljoin.models.Rating;
+
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class TourInformationRatingsFragment extends ListFragment {
 	
@@ -36,7 +38,6 @@ public class TourInformationRatingsFragment extends ListFragment {
 				container, false);
 		
 		activity = (TourDetailsActivity) getActivity();
-		//TODO ver por que me da null el listview
 		View ratingsListLayout = view.findViewById(R.id.ratingsListLayout); 
 		listView = (ListView) ratingsListLayout.findViewWithTag("ratingsListView");
 

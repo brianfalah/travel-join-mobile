@@ -38,6 +38,7 @@ public class GroupDetailsSuggestionsFragment extends ListFragment {
 		
 		getListView().setItemsCanFocus(false);
 		setListAdapter(adapter);
+		setEmptyText("Este grupo aún no tiene sugerencias.");
 		/**
 		 * get on item click listener
 		 */

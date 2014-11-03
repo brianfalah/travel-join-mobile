@@ -44,6 +44,7 @@ public class PoiFormEventsFragment extends ListFragment {
 		fragmentPoiEvents.addAll(activity.poiEvents);
 		poiEventsAdapter = new GeneralItemListAdapter(activity, fragmentPoiEvents);
 		setListAdapter(poiEventsAdapter);
+		setEmptyText("Este punto aún no tiene eventos.");
 		registerForContextMenu(getListView());
 	}
 

@@ -34,6 +34,7 @@ public class GroupDetailsMembersFragment extends ListFragment {
 		getActivity();
 		adapter = new UsersListAdapter(activity, members);
 		setListAdapter(adapter);
+		setEmptyText("Este grupo aún no tiene miembros.");
 	}
 
 	public void refreshList(Group group) {

@@ -7,6 +7,7 @@ import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Group;
 
+import android.R;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
@@ -31,6 +32,7 @@ public class GroupDetailsInterestsFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupInterests);
 		setListAdapter(adapter);
+		setEmptyText("Este grupo aún no tiene intereses.");
 	}
 
 	public void refreshList(Group group) {

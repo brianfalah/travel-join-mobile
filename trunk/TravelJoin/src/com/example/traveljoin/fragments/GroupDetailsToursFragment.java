@@ -38,6 +38,7 @@ public class GroupDetailsToursFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupTours);
 		setListAdapter(adapter);
+		setEmptyText("Este grupo aún no tiene circuitos turísticos.");
 	}
 
 	@Override
