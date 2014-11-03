@@ -39,6 +39,7 @@ public class GroupDetailsPoisFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupPois);
 		setListAdapter(adapter);
+		setEmptyText("Este grupo aún no tiene puntos de interés.");
 	}
 
 	@Override

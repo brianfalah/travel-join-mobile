@@ -23,17 +23,17 @@ public class TourDetailPoisFragment extends ListFragment {
 	TourDetailsActivity activity;
 	private ArrayList<GeneralItem> tourPois;
 	GeneralItemListAdapter adapter;
-	ListView listView;
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.fragment_general_list,
-				container, false);
-		listView = (ListView) view.findViewById(R.id.list);
-		return view;
-	}
+//	ListView listView;
+//
+//	@Override
+//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//			Bundle savedInstanceState) {
+//
+//		View view = inflater.inflate(R.layout.fragment_general_list,
+//				container, false);
+//		listView = (ListView) view.findViewById(R.id.list);
+//		return view;
+//	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class TourDetailPoisFragment extends ListFragment {
 		adapter = new GeneralItemListAdapter(
 				getActivity(), tourPois);
 		setListAdapter(adapter);
+		setEmptyText("Este circuito aún no tiene puntos de interés.");
 	}
 	
 	@Override

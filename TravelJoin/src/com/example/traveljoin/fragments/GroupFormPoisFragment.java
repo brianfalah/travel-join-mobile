@@ -49,6 +49,7 @@ public class GroupFormPoisFragment extends ListFragment {
 		groupFormActivity = (GroupFormActivity) getActivity();
 		groupPoisAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupPois);
 		setListAdapter(groupPoisAdapter);
+		setEmptyText("Este grupo aún no tiene puntos de interés.");
 		registerForContextMenu(getListView());
 	}
 
