@@ -37,6 +37,9 @@ import android.content.DialogInterface;
 import com.example.traveljoin.activities.MapActivity.MapFragmentView;
 import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.fragments.DateTimePickerDialog;
+import com.example.traveljoin.fragments.ListDialogSelectGroupFragment;
+import com.example.traveljoin.fragments.ListDialogSelectGroupFragment.OnListDialogItemSelect;
 import com.example.traveljoin.fragments.PoiEventsFragment;
 import com.example.traveljoin.fragments.PoiInformationFragment;
 import com.example.traveljoin.fragments.PoiInformationRatingsFragment;
@@ -45,12 +48,14 @@ import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.Complaint;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Favorite;
+import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.Rating;
+import com.example.traveljoin.models.Suggestion;
 import com.example.traveljoin.models.User;
 
 public class PoiDetailsActivity extends ActionBarActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener, OnListDialogItemSelect {
 
 	private MyPagerAdapter adapterViewPager;
 	private ViewPager viewPager;
@@ -70,6 +75,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	protected static final int ADD_RATING_METHOD = 5;
 	protected static final int GET_POI_METHOD = 6;
 	protected static final int ADD_COMPLAINT_METHOD = 7;
+	protected static final int ADD_SUGGESTION_METHOD = 8;
 
 	ProgressDialog progress;
 	public Poi poi = null;
@@ -135,8 +141,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 				menu.removeItem(R.id.action_delete);
 				if (poi.getDenounced()){
 					menu.removeItem(R.id.action_denounce);
-				}
-			
+				}			
 			}
 			else{
 				//si es el dueño
@@ -177,6 +182,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 			removeFromFavourites();
 			return true;			
 		case R.id.action_suggest:
+			suggestPoi();
 			return true;
 		case R.id.action_denounce:
 			denouncePoi();
@@ -307,20 +313,6 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		rankDialog.show();
 	}
 	
-	public void denouncePoi(){
-		denounceDialog = new Dialog(this);
-		denounceDialog.setContentView(R.layout.denounce);
-		denounceDialog.setTitle(getString(R.string.denounce_poi));
-		denounceDialog.setCancelable(true);
-		editTextDenounceComment = (EditText) denounceDialog.findViewById(R.id.comment);
-		btnDenounceOk = (Button)denounceDialog.findViewById(R.id.btnDenounceOk);
-		btnDenounceCancel = (Button)denounceDialog.findViewById(R.id.btnDenounceCancel);
-		btnDenounceOk.setEnabled(true);
-		
-		addListenerOnDenounceButtons();
-		denounceDialog.show();
-	}
-	
 	  public void addListenerOnRatingBar() {		  	 
 		//if rating value is changed,
 		//display the current rating value in the result (textview) automatically
@@ -364,6 +356,21 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		  });		  
 	 
 	  }
+	  
+	  public void denouncePoi(){
+		denounceDialog = new Dialog(this);
+		denounceDialog.setContentView(R.layout.denounce);
+		denounceDialog.setTitle(getString(R.string.denounce_poi));
+		denounceDialog.setCancelable(true);
+		editTextDenounceComment = (EditText) denounceDialog.findViewById(R.id.comment);
+		btnDenounceOk = (Button)denounceDialog.findViewById(R.id.btnDenounceOk);
+		btnDenounceCancel = (Button)denounceDialog.findViewById(R.id.btnDenounceCancel);
+		btnDenounceOk.setEnabled(true);
+		
+		addListenerOnDenounceButtons();
+		denounceDialog.show();
+	}
+	  
 	public void addListenerOnDenounceButtons(){
 				
 		  btnDenounceOk.setOnClickListener(new OnClickListener() {	 
@@ -392,6 +399,27 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 			  });	
 		
 	}
+	
+	public void suggestPoi(){
+		FragmentManager fm = getSupportFragmentManager();
+		ListDialogSelectGroupFragment groupsFragment = 
+				new ListDialogSelectGroupFragment(this, user.getGroups(), "¿A qué grupo desea sugerir este punto?");
+		groupsFragment.show(fm, "groups_picker");	
+	}
+	
+	//cuando se selecciona el grupo al cual sugerir el Poi
+    @Override
+    public void onListItemSelected(GeneralItem selection) {    
+		progress = ProgressDialog.show(PoiDetailsActivity.this,
+				getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/suggestions/add";
+		Suggestion suggestion = new Suggestion(null, user.getId(),selection.getId(), poi.getId(), "Poi");
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+				ADD_SUGGESTION_METHOD, suggestion);
+		httpAsyncTask.execute(url);
+    }
 	
 	public void addToFavourites() {
 		progress = ProgressDialog.show(PoiDetailsActivity.this,
@@ -482,6 +510,10 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 				break;
 				case ADD_COMPLAINT_METHOD:
 					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;	
+				case ADD_SUGGESTION_METHOD:
+					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;
 			}
 
 			return api_result.getResult();
@@ -591,21 +623,43 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 						exception.alertExceptionMessage(PoiDetailsActivity.this);
 					}			
 				break;
-                case ADD_COMPLAINT_METHOD:
-					
+                case ADD_COMPLAINT_METHOD:					
 					progress.dismiss();
-					if (api_result.ok()){	
-											
-							poi.setDenounced(true);
-							denounceDialog.hide();
-							invalidateOptionsMenu();
-							Toast.makeText(PoiDetailsActivity.this, R.string.poi_denounced_ok_message, Toast.LENGTH_SHORT).show();
-																				
+					if (api_result.ok()){												
+						poi.setDenounced(true);
+						denounceDialog.hide();
+						invalidateOptionsMenu();
+						Toast.makeText(PoiDetailsActivity.this, R.string.poi_denounced_ok_message, Toast.LENGTH_SHORT).show();																				
+					}				
+					else{
+						if (api_result.unprocessableEntity()){
+							CustomTravelJoinException exception = new CustomTravelJoinException(
+									api_result.getResult());
+							exception.alertExceptionMessage(PoiDetailsActivity.this);
+						}
+						else{
+							CustomTravelJoinException exception = new CustomTravelJoinException(
+									getString(R.string.connection_error_message));
+							exception.alertExceptionMessage(PoiDetailsActivity.this);
+						}
+					}						
+				break;
+                case ADD_SUGGESTION_METHOD:					
+					progress.dismiss();
+					if (api_result.ok()){												
+						Toast.makeText(PoiDetailsActivity.this, R.string.poi_suggested_ok_message, Toast.LENGTH_SHORT).show();																				
 					}					
-					else {
-						CustomTravelJoinException exception = new CustomTravelJoinException(
-								getString(R.string.connection_error_message));
-						exception.alertExceptionMessage(PoiDetailsActivity.this);
+					else{
+						if (api_result.unprocessableEntity()){
+							CustomTravelJoinException exception = new CustomTravelJoinException(
+									getString(R.string.error_message), api_result.getResult());
+							exception.alertExceptionMessage(PoiDetailsActivity.this);
+						}
+						else{
+							CustomTravelJoinException exception = new CustomTravelJoinException(
+									getString(R.string.connection_error_message));
+							exception.alertExceptionMessage(PoiDetailsActivity.this);
+						}
 					}			
 				break;
 			}								

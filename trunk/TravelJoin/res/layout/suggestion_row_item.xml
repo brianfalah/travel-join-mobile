@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/suggestionableName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Name"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/suggestionableDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/suggestionableName"
+        android:layout_marginTop="5dp"
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="16sp" />
+    
+    <TextView
+        android:id="@+id/suggestionableType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/suggestionableDescription"
+        android:layout_marginTop="5dp"
+        android:text="Tipo"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnAcceptSuggestion"
+        style="?android:buttonBarButtonStyle"
+        android:drawableLeft="@drawable/ic_action_accept"
+        android:textSize="14sp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"        
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Aceptar"/>
+
+    <Button
+        android:id="@+id/btnRejectSuggestion"
+        style="?android:buttonBarButtonStyle"
+        android:drawableLeft="@drawable/ic_action_cancel"
+        android:textSize="14sp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/btnAcceptSuggestion"
+        android:layout_marginTop="3dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Rechazar"/>
+
+</RelativeLayout>

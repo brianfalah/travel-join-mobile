@@ -1,7 +1,10 @@
 package com.example.traveljoin.models;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +17,7 @@ public class User implements Serializable {
 	private String email;
 	private String name;
 	private String surname;
+	private ArrayList<GeneralItem> groups;
 
 	public User(String facebookId, Integer id, String name, String surname) {
 		super();
@@ -67,10 +71,33 @@ public class User implements Serializable {
 		return getName() + " " + getSurname();
 	}
 
-	public static User fromJSON(JSONObject jsonObject) throws JSONException {
-		return new User(jsonObject.getString("facebook_id"),
+	public ArrayList<GeneralItem> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(ArrayList<GeneralItem> groups) {
+		this.groups = groups;
+	}
+
+	public static User fromJSON(JSONObject jsonObject) throws JSONException, ParseException {
+		User user = new User(jsonObject.getString("facebook_id"),
 				jsonObject.getInt("id"), jsonObject.getString("name"),
 				jsonObject.getString("surname"));
+		
+		if (jsonObject.has("groups") && !jsonObject.isNull("groups")){
+			ArrayList<GeneralItem> groupsToAdd = new ArrayList<GeneralItem>();
+			JSONArray groupsJson = jsonObject.getJSONArray("groups");
+			
+			for (int i = 0; i < groupsJson.length(); i++) {
+	    	    JSONObject groupJson = groupsJson.getJSONObject(i);    	        
+	    	    Group group = Group.fromJSON(groupJson);
+	    	    groupsToAdd.add(group);    	    
+	    	}
+			
+			user.setGroups(groupsToAdd);
+		}
+		
+		return user;
 	}
 
 	public JSONObject toJSON() {

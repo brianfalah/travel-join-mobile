@@ -36,4 +36,22 @@ public class ApiResult {
 			return false;			
 		}
 	}
+	
+	public boolean unprocessableEntity(){
+		if (this.getStatus_code() == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+			return true;
+		}
+		else{
+			return false;			
+		}
+	}
+	
+	public boolean notAcceptable(){
+		if (this.getStatus_code() == HttpStatus.SC_NOT_ACCEPTABLE){
+			return true;
+		}
+		else{
+			return false;			
+		}
+	}
 }

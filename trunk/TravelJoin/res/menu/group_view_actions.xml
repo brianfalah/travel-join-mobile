@@ -17,4 +17,8 @@
           android:title="@string/disjoin_group"
           compat:showAsAction="never"  />
     
+    <item android:id="@+id/action_view_suggestions"          
+          android:title="@string/view_suggestions"
+          compat:showAsAction="never"  />
+    
 </menu>
