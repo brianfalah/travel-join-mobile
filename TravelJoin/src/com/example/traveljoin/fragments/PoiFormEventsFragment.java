@@ -117,6 +117,7 @@ public class PoiFormEventsFragment extends ListFragment {
 		Integer position = fragmentPoiEvents.indexOf(selectedPoiEvent);
 		Intent intent = new Intent(activity, PoiEventFormActivity.class);
 		if (activity.poi != null) {
+//			intent.putExtra("event_id", activity.poi.getId());
 			intent.putExtra("poi_id", activity.poi.getId());
 			intent.putExtra("poi_event", selectedPoiEvent);
 			intent.putExtra("position", position);

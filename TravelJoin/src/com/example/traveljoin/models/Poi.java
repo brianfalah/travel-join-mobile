@@ -3,6 +3,7 @@ package com.example.traveljoin.models;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 import org.json.JSONArray;
@@ -193,13 +194,16 @@ public class Poi implements Serializable, GeneralItem{
 
 	public static Poi fromJSON(JSONObject poiJson) throws JSONException, ParseException{	
 		ArrayList<GeneralItem> poiEventsToAdd = new ArrayList<GeneralItem>();
-		JSONArray poiEventsJson = poiJson.getJSONArray("events");
-		
-		for (int i = 0; i < poiEventsJson.length(); i++) {
-    	    JSONObject poiEventJson = poiEventsJson.getJSONObject(i);    	        
-    	    PoiEvent poiEvent = PoiEvent.fromJSON(poiEventJson);
-    	    poiEventsToAdd.add(poiEvent);    	    
-    	}
+		if (poiJson.has("active_events") && !poiJson.isNull("active_events")){								
+			JSONArray poiEventsJson = poiJson.getJSONArray("active_events");
+			
+			for (int i = 0; i < poiEventsJson.length(); i++) {
+	    	    JSONObject poiEventJson = poiEventsJson.getJSONObject(i);    	        
+	    	    PoiEvent poiEvent = PoiEvent.fromJSON(poiEventJson);    	    
+	    	    poiEventsToAdd.add(poiEvent);    	
+	    	        	       
+	    	}
+		}
 		
 		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"), poiJson.getDouble("longitude"),
 	    		poiJson.getString("name"), poiJson.getString("description"), poiJson.getString("address"),

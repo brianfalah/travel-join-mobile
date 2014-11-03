@@ -271,7 +271,7 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		TextView edit_text_field = (TextView) field;
 		if (timeFrom != null && timeTo != null && timeTo.compareTo(timeFrom) <= 0){
 			edit_text_field.requestFocus();
-			edit_text_field.setError("El d��a y la hora de fin debe ser mayor al d��a y la hora de inicio");
+			edit_text_field.setError("El día y la hora de fin debe ser mayor al día y la hora de inicio");
 			valid = false;
 		}	
 		else{
