@@ -127,8 +127,8 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		Tour tour = (Tour) listView.getItemAtPosition(info.position);
 		if (!tour.getUserId().equals(user.getId())) {
-			menu.removeItem(R.id.poi_context_menu_edit);
-			menu.removeItem(R.id.poi_context_menu_delete);
+			menu.removeItem(R.id.tour_context_menu_edit);
+			menu.removeItem(R.id.tour_context_menu_delete);
 		}
 	}
 
