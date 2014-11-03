@@ -24,6 +24,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -81,6 +82,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	public Group group;
 	public User user;
 	private List<Fragment> listFragments;
+	private boolean mIsMenuFirstClick = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +180,18 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			menu.removeItem(R.id.action_disjoin_group);
 
 		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    switch(keyCode) {
+	    case KeyEvent.KEYCODE_MENU:
+	        if(mIsMenuFirstClick  ) {
+	            mIsMenuFirstClick = false;
+	            supportInvalidateOptionsMenu();
+	        }
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

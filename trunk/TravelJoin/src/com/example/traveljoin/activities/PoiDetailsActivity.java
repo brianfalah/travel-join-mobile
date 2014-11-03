@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,6 +83,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	User user;
 	private Dialog rankDialog;
 	private Dialog denounceDialog;
+	private boolean mIsMenuFirstClick = true;
 	
 
 	@Override
@@ -158,6 +160,18 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 		}
 		
 		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    switch(keyCode) {
+	    case KeyEvent.KEYCODE_MENU:
+	        if(mIsMenuFirstClick ) {
+	            mIsMenuFirstClick = false;
+	            supportInvalidateOptionsMenu();
+	        }
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
