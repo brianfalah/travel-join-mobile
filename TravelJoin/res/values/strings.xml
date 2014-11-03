@@ -3,7 +3,7 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-<!--     <string name="api_url">http://192.168.1.133:3001</string> -->
+<!--     <string name="api_url">http://192.168.1.111:3001</string> -->
     <string name="api_url">http://travel-join-api.herokuapp.com</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
@@ -65,6 +65,7 @@
     <string name="explore_button">Explorar!</string>
     <string name="join_group">Unirse al grupo</string>
     <string name="disjoin_group">Dejar el grupo</string>
+    <string name="view_suggestions">Ver sugerencias</string>
     <!-- FIN Actions -->
     
     <!-- POIs -->    
@@ -92,6 +93,7 @@
 	<string name="poi_already_removed_from_favorites_message">Usted ya ha borrado este punto de sus favoritos.</string>
 	<string name="poi_ranked_ok_message">El punto fue calificado correctamente.</string>
     <string name="poi_denounced_ok_message">El punto fue denunciado correctamente.</string>
+    <string name="poi_suggested_ok_message">El punto fue sugerido correctamente.</string>
     
     <!-- FIN pois -->
 
@@ -102,6 +104,8 @@
     <string name="select_date_time_start">Fecha y hora de inicio</string>
     <string name="select_date_time_end">Fecha y hora de fin</string>
     <string name="date_time_picker_message">Seleccione el día y la hora del evento</string>
+    <string name="date_time_picker_start_message">Seleccione el día y la hora de inicio del evento</string>
+    <string name="date_time_picker_end_message">Seleccione el día y la hora de fin del evento</string>
     <!-- FIN events -->
     
     <!-- Tours -->
@@ -118,6 +122,7 @@
 	<string name="tour_already_in_favorites_message">Usted ya ha agregado este circuito a sus favoritos.</string>    
 	<string name="tour_already_removed_from_favorites_message">Usted ya ha borrado este circuito de sus favoritos.</string>
 	<string name="tour_ranked_ok_message">El circuito fue calificado correctamente.</string>
+	<string name="tour_suggested_ok_message">El circuito fue sugerido correctamente.</string>
     <!-- FIN tours -->
 	
 	<!-- Groups -->
@@ -127,6 +132,7 @@
     <string name="group_tours_tab">Circuitos</string> 
     <string name="group_interests_tab">Intereses</string>
     <string name="group_members_tab">Miembros</string>
+    <string name="group_suggestions_tab">Sugerencias</string>
     <string name="radio_public_group">Público</string>
     <string name="radio_private_group">Privado</string>
     <string name="group_password">Contraseña</string>
@@ -145,6 +151,8 @@
     <string name="group_already_joined_message">Usted ya pertenece a este grupo.</string>
     <string name="group_disjoined_message">Ha dejado el grupo correctamente.</string>
     <string name="group_already_disjoined_message">Usted ya no pertenece a este grupo.</string>
+    <string name="suggestion_accepted">Sugerencia aceptada.</string>
+    <string name="suggestion_rejected">Sugerencia rechazada.</string>
     <!-- FIN groups -->
     
     <!-- Login -->
@@ -190,6 +198,7 @@
     
     <!-- Exception mesaages -->
 	<string name="retry_message">"Intente de nuevo"</string>
+	<string name="error_message">"Error"</string>
 	<string name="connection_error_message">Ha ocurrido un problema con la conexión a los servidores. Por favor, intente de nuevo.</string>			
     <!-- FIN Exception mesaages -->
     

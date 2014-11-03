@@ -31,6 +31,7 @@ public class Group implements Serializable, GeneralItem {
 	private ArrayList<GroupTour> groupTours;
 	private ArrayList<GroupTour> groupToursToDelete;
 	private ArrayList<User> members;
+	private ArrayList<Suggestion> pendingSuggestions;
 
 	public Group(Integer id, String name, String description, Integer type,
 			String password, User owner, Integer ownerId,
@@ -148,6 +149,10 @@ public class Group implements Serializable, GeneralItem {
 		this.groupPois.clear();
 		this.groupPois.addAll((Collection<? extends GroupPoi>) groupPois);
 	}
+	
+	public void addGroupPoi(GroupPoi groupPoi){
+		this.groupPois.add(groupPoi);
+	}
 
 	public ArrayList<GroupPoi> getGroupPoisToDelete() {
 		return groupPoisToDelete;
@@ -180,6 +185,23 @@ public class Group implements Serializable, GeneralItem {
 		return groupTours;
 	}
 
+	public void setGroupTours(ArrayList<GeneralItem> groupTours) {
+		this.groupTours.clear();
+		this.groupTours.addAll((Collection<? extends GroupTour>) groupTours);
+	}	
+
+	public ArrayList<GroupTour> getGroupToursToDelete() {
+		return groupToursToDelete;
+	}
+
+	public void setGroupToursToDelete(ArrayList<GroupTour> groupToursToDelete) {
+		this.groupToursToDelete = groupToursToDelete;
+	}
+	
+	public void addGroupTour(GroupTour groupTour){
+		this.groupTours.add(groupTour);
+	}
+	
 	public Boolean isJoined() {
 		return joined;
 	}
@@ -188,17 +210,16 @@ public class Group implements Serializable, GeneralItem {
 		this.joined = joined;
 	}
 
-	public void setGroupTours(ArrayList<GeneralItem> groupTours) {
-		this.groupTours.clear();
-		this.groupTours.addAll((Collection<? extends GroupTour>) groupTours);
+	public ArrayList<Suggestion> getPendingSuggestions() {
+		return pendingSuggestions;
 	}
 
-	public ArrayList<GroupTour> getGroupToursToDelete() {
-		return groupToursToDelete;
+	public void setPendingSuggestions(ArrayList<Suggestion> pendingSuggestions) {
+		this.pendingSuggestions = pendingSuggestions;
 	}
-
-	public void setGroupToursToDelete(ArrayList<GroupTour> groupToursToDelete) {
-		this.groupToursToDelete = groupToursToDelete;
+	
+	public void removeSuggestion(Suggestion suggestion) {
+		this.pendingSuggestions.remove(suggestion);
 	}
 
 	public boolean isPrivate() {
@@ -410,6 +431,19 @@ public class Group implements Serializable, GeneralItem {
 						.getJSONObject("user")), groupJson.getInt("user_id"),
 				groupInterestsToAdd, groupPoisToAdd, groupToursToAdd,
 				groupJson.getBoolean("joined"), groupMembers);
+		
+		if (groupJson.has("pending_suggestions") && !groupJson.isNull("pending_suggestions")){
+			ArrayList<Suggestion> suggestionsToAdd = new ArrayList<Suggestion>();
+			JSONArray suggestionsJson = groupJson.getJSONArray("pending_suggestions");
+			
+			for (int i = 0; i < suggestionsJson.length(); i++) {
+	    	    JSONObject suggestionJson = suggestionsJson.getJSONObject(i);    	        
+	    	    Suggestion suggestion = Suggestion.fromJSON(suggestionJson);
+	    	    suggestionsToAdd.add(suggestion);    	    
+	    	}
+			
+			group.setPendingSuggestions(suggestionsToAdd);
+		}
 
 		return group;
 	}

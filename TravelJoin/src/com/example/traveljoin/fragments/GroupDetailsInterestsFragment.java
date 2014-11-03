@@ -10,7 +10,7 @@ import com.example.traveljoin.models.Group;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
-public class GroupDeatailsInterestsFragment extends ListFragment {
+public class GroupDetailsInterestsFragment extends ListFragment {
 
 	private GroupDetailsActivity activity;
 	private GeneralItemListAdapter adapter;

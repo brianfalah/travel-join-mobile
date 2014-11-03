@@ -35,6 +35,8 @@ import android.content.DialogInterface;
 
 import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.fragments.ListDialogSelectGroupFragment;
+import com.example.traveljoin.fragments.ListDialogSelectGroupFragment.OnListDialogItemSelect;
 import com.example.traveljoin.fragments.PoiEventsFragment;
 import com.example.traveljoin.fragments.PoiInformationFragment;
 import com.example.traveljoin.fragments.PoiInformationRatingsFragment;
@@ -45,12 +47,14 @@ import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Favorite;
+import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Rating;
+import com.example.traveljoin.models.Suggestion;
 import com.example.traveljoin.models.Tour;
 import com.example.traveljoin.models.User;
 
 public class TourDetailsActivity extends ActionBarActivity implements
-	ActionBar.TabListener{
+	ActionBar.TabListener, OnListDialogItemSelect{
 	
 	private MyPagerAdapter adapterViewPager;
 	private ViewPager viewPager;
@@ -66,6 +70,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	protected static final int REMOVE_FROM_FAVORITES_METHOD = 4;
 	protected static final int ADD_RATING_METHOD = 5;
 	protected static final int GET_TOUR_METHOD = 6;
+	protected static final int ADD_SUGGESTION_METHOD = 7;
 	
 	ProgressDialog progress;
 	public Tour tour = null;
@@ -130,7 +135,6 @@ public class TourDetailsActivity extends ActionBarActivity implements
 			else{
 				//si es el dueño
 				menu.removeItem(R.id.action_calificate);
-				menu.removeItem(R.id.action_denounce);
 			}
 			//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
 			if (tour.getIsFavorite()){
@@ -166,8 +170,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 			removeFromFavourites();
 			return true;	
 		case R.id.action_suggest:
-			return true;
-		case R.id.action_denounce:
+			suggestTour();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -331,6 +334,27 @@ public class TourDetailsActivity extends ActionBarActivity implements
 		  });		  
 	 
 	  }
+	  
+	public void suggestTour(){
+		FragmentManager fm = getSupportFragmentManager();
+		ListDialogSelectGroupFragment groupsFragment = 
+				new ListDialogSelectGroupFragment(this, user.getGroups(), "¿A qué grupo desea sugerir este circuito?");
+		groupsFragment.show(fm, "groups_picker");	
+	}
+	
+	//cuando se selecciona el grupo al cual sugerir el Poi
+    @Override
+    public void onListItemSelected(GeneralItem selection) {    
+		progress = ProgressDialog.show(TourDetailsActivity.this,
+				getString(R.string.loading),
+				getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/suggestions/add";
+		Suggestion suggestion = new Suggestion(null, user.getId(),selection.getId(), tour.getId(), "Tour");
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(
+				ADD_SUGGESTION_METHOD, suggestion);
+		httpAsyncTask.execute(url);
+    }  
     
 	public void addToFavourites() {
 		progress = ProgressDialog.show(TourDetailsActivity.this,
@@ -414,6 +438,9 @@ public class TourDetailsActivity extends ActionBarActivity implements
 				case ADD_RATING_METHOD:
 					api_result = apiInterface.POST(urls[0], object_to_send, "");
 				break;
+				case ADD_SUGGESTION_METHOD:
+					api_result = apiInterface.POST(urls[0], object_to_send, "");
+				break;				
         	}
         	
         	return api_result.getResult();             
@@ -522,6 +549,24 @@ public class TourDetailsActivity extends ActionBarActivity implements
 						exception.alertExceptionMessage(TourDetailsActivity.this);
 					}			
 				break;
+                case ADD_SUGGESTION_METHOD:					
+					progress.dismiss();
+					if (api_result.ok()){												
+						Toast.makeText(TourDetailsActivity.this, R.string.tour_suggested_ok_message, Toast.LENGTH_SHORT).show();																				
+					}					
+					else{
+						if (api_result.unprocessableEntity()){
+							CustomTravelJoinException exception = new CustomTravelJoinException(
+									getString(R.string.error_message), api_result.getResult());
+							exception.alertExceptionMessage(TourDetailsActivity.this);
+						}
+						else{
+							CustomTravelJoinException exception = new CustomTravelJoinException(
+									getString(R.string.connection_error_message));
+							exception.alertExceptionMessage(TourDetailsActivity.this);
+						}
+					}			
+				break;				
         	}
        }        
     }

@@ -287,11 +287,11 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		switch (v.getId()) {
 		    case (R.id.dateFromImg):
 		    	editNameDialog = new DateTimePickerDialog(DATE_FROM);
-	        	editNameDialog.show(fm, "Seleccione el d��a y la hora de inicio del evento");
+	        	editNameDialog.show(fm, getResources().getString(R.string.date_time_picker_start_message));
 		    break;
 		    case (R.id.dateToImg):
 		    	editNameDialog = new DateTimePickerDialog(DATE_TO);
-        		editNameDialog.show(fm, "Seleccione el d��a y la hora de fin del evento");
+        		editNameDialog.show(fm, getResources().getString(R.string.date_time_picker_end_message));
 		    break;
 	    }		
 	}	       

@@ -1,7 +1,11 @@
 package com.example.traveljoin.activities;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -32,15 +36,20 @@ import android.widget.Toast;
 import com.example.traveljoin.R;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.GroupDetailsInformationFragment;
-import com.example.traveljoin.fragments.GroupDeatailsInterestsFragment;
+import com.example.traveljoin.fragments.GroupDetailsInterestsFragment;
 import com.example.traveljoin.fragments.GroupDetailsMembersFragment;
 import com.example.traveljoin.fragments.GroupDetailsPoisFragment;
+import com.example.traveljoin.fragments.GroupDetailsSuggestionsFragment;
 import com.example.traveljoin.fragments.GroupDetailsToursFragment;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
 import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.GroupMember;
+import com.example.traveljoin.models.GroupPoi;
+import com.example.traveljoin.models.GroupTour;
+import com.example.traveljoin.models.Poi;
+import com.example.traveljoin.models.Suggestion;
 import com.example.traveljoin.models.User;
 
 public class GroupDetailsActivity extends ActionBarActivity implements
@@ -59,11 +68,14 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	public static final int GROUP_POIS_TAB = 2;
 	public static final int GROUP_TOURS_TAB = 3;
 	public static final int GROUP_MEMBERS_TAB = 4;
+	public static final int GROUP_SUGGESTIONS_TAB = 5;
 
 	private static final int EDIT_GROUP_REQUEST = 1;
 	protected static final int DELETE_GROUP_METHOD = 2;
 	protected static final int JOIN_GROUP_METHOD = 3;
 	protected static final int DISJOIN_GROUP_METHOD = 4;
+	protected static final int ACCEPT_SUGGESTION_METHOD = 5;
+	protected static final int REJECT_SUGGESTION_METHOD = 6;
 
 	public ProgressDialog progress;
 	public Group group;
@@ -81,7 +93,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 		listFragments = new ArrayList<Fragment>();
 		listFragments.add(new GroupDetailsInformationFragment());
-		listFragments.add(new GroupDeatailsInterestsFragment());
+		listFragments.add(new GroupDetailsInterestsFragment());
 		
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(),
 				listFragments);
@@ -108,6 +120,10 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 		if (group.isPublic() || group.isJoined())
 			initializePublicGroupContent();
+		
+		if (group.isOwner(user)) {
+			initializeOwnerContent();
+		}
 	}
 
 	private void initializePublicGroupContent() {
@@ -126,6 +142,15 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				.setText(getString(R.string.group_members_tab))
 				.setTabListener(this));
 	}
+	
+	public void initializeOwnerContent(){
+		listFragments.add(new GroupDetailsSuggestionsFragment());
+		adapterViewPager.notifyDataSetChanged();
+
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.group_suggestions_tab))
+				.setTabListener(this));
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,6 +164,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		if (!group.isOwner(user)) {
 			menu.removeItem(R.id.action_edit);
 			menu.removeItem(R.id.action_delete);
+			menu.removeItem(R.id.action_view_suggestions);
 		}
 		
 		if (group.isOwner(user)) {
@@ -172,6 +198,9 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		case R.id.action_disjoin_group:
 			disjoinGroup();
 			return true;
+		case R.id.action_view_suggestions:			
+			actionBar.setSelectedNavigationItem((listFragments.size() - 1)); 
+			return true;			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -373,6 +402,26 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 
 	}
 
+	public void acceptSuggestion(Suggestion suggestion){
+		progress = ProgressDialog.show(GroupDetailsActivity.this,
+				getString(R.string.loading), getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/suggestions/accept";
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(ACCEPT_SUGGESTION_METHOD,
+				suggestion);
+		httpAsyncTask.execute(url);
+	}
+	
+	public void rejectSuggestion(Suggestion suggestion){
+		progress = ProgressDialog.show(GroupDetailsActivity.this,
+				getString(R.string.loading), getString(R.string.wait), true);
+		String url = getResources().getString(R.string.api_url)
+				+ "/suggestions/reject";
+		HttpAsyncTask httpAsyncTask = new HttpAsyncTask(REJECT_SUGGESTION_METHOD,
+				suggestion);
+		httpAsyncTask.execute(url);
+	}
+	
 	private void refreshMembersFragment() {
 		GroupDetailsMembersFragment membersFragment = (GroupDetailsMembersFragment) listFragments
 				.get(GROUP_MEMBERS_TAB);
@@ -392,7 +441,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 	}
 
 	private void refreshInterestsFragment() {
-		GroupDeatailsInterestsFragment interestsFragment = (GroupDeatailsInterestsFragment) listFragments
+		GroupDetailsInterestsFragment interestsFragment = (GroupDetailsInterestsFragment) listFragments
 				.get(GROUP_INTERESTS_TAB);
 		interestsFragment.refreshList(group);
 	}
@@ -401,6 +450,12 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 		GroupDetailsInformationFragment informationFragment = (GroupDetailsInformationFragment) listFragments
 				.get(GROUP_INFORMATION_TAB);
 		informationFragment.setFields(group);
+	}
+	
+	private void refreshSuggestionsFragment() {
+		GroupDetailsSuggestionsFragment suggestionsFragment = (GroupDetailsSuggestionsFragment) listFragments
+				.get((listFragments.size() - 1));
+		suggestionsFragment.refreshList(group);
 	}
 
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
@@ -420,13 +475,19 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 			case DELETE_GROUP_METHOD:
 				api_result = apiInterface.POST(urls[0], object_to_send,
 						"delete");
-				break;
+			break;
 			case JOIN_GROUP_METHOD:
 				api_result = apiInterface.POST(urls[0], object_to_send, "");
-				break;
+			break;
 			case DISJOIN_GROUP_METHOD:
 				api_result = apiInterface.POST(urls[0], object_to_send, "");
-				break;
+			break;
+			case ACCEPT_SUGGESTION_METHOD:
+				api_result = apiInterface.POST(urls[0], object_to_send, "");
+			break;
+			case REJECT_SUGGESTION_METHOD:
+				api_result = apiInterface.POST(urls[0], object_to_send, "");
+			break;
 			}
 
 			return api_result.getResult();
@@ -452,12 +513,12 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 					group.addMember(user);
 					group.joined(true);
 					invalidateOptionsMenu();
-					
+
 					if(group.isPrivate())
 						initializePublicGroupContent();
 					else
 						refreshMembersFragment();
-					
+
 					Toast.makeText(GroupDetailsActivity.this,
 							R.string.group_joined_message,
 							Toast.LENGTH_SHORT).show();
@@ -476,6 +537,55 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 					refreshMembersFragment();
 					Toast.makeText(GroupDetailsActivity.this,
 							R.string.group_disjoined_message,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.group_already_disjoined_message));
+					exception.alertExceptionMessage(GroupDetailsActivity.this);
+				}
+				break;
+			case ACCEPT_SUGGESTION_METHOD:
+				progress.dismiss();
+				if (api_result.ok()) {					
+					Suggestion suggestion = (Suggestion) object_to_send;
+					try {
+						if (suggestion.ofPoi()){
+							JSONObject groupPoiJson;
+							groupPoiJson = new JSONObject(result);						
+							GroupPoi groupPoi = GroupPoi.fromJSON(groupPoiJson);
+							group.addGroupPoi(groupPoi);
+							refreshPoisFragment();
+						}					
+						if (suggestion.ofTour()){
+							JSONObject groupTourJson = new JSONObject(result);
+							GroupTour groupTour = GroupTour.fromJSON(groupTourJson);
+							group.addGroupTour(groupTour);
+							refreshToursFragment();
+						}
+					} catch (JSONException e) {
+						showExceptionError(e);
+					} catch (ParseException e) {
+						showExceptionError(e);
+					}
+																				
+					group.removeSuggestion(suggestion);
+					refreshSuggestionsFragment();
+					Toast.makeText(GroupDetailsActivity.this,
+							R.string.suggestion_accepted,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.group_already_disjoined_message));
+					exception.alertExceptionMessage(GroupDetailsActivity.this);
+				}
+				break;	
+			case REJECT_SUGGESTION_METHOD:
+				progress.dismiss();
+				if (api_result.ok()) {
+					group.removeSuggestion((Suggestion) object_to_send);
+					refreshSuggestionsFragment();
+					Toast.makeText(GroupDetailsActivity.this,
+							R.string.suggestion_rejected,
 							Toast.LENGTH_SHORT).show();
 				} else {
 					CustomTravelJoinException exception = new CustomTravelJoinException(

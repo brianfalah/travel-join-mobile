@@ -24,8 +24,4 @@
     <item android:id="@+id/action_calificate"          
           android:title="Calificar"
           compat:showAsAction="never"  />
-    
-    <item android:id="@+id/action_denounce"          
-          android:title="Denunciar"
-          compat:showAsAction="never"  />
 </menu>

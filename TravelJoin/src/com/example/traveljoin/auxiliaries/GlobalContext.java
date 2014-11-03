@@ -1,5 +1,6 @@
 package com.example.traveljoin.auxiliaries;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -167,7 +168,8 @@ public class GlobalContext extends Application {
 					exception.alertExceptionMessage(requesterActivity);
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
 				e.printStackTrace();
 			} finally {
 				taskCurrentExcutingInProgressDialog--;
