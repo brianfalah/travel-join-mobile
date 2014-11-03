@@ -1,9 +1,15 @@
 package com.example.traveljoin.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.traveljoin.R;
-import com.example.traveljoin.fragments.UserFavouritesFragment;
-import com.example.traveljoin.fragments.UserGroupListFragment;
-import com.example.traveljoin.fragments.UserInformationFragment;
+import com.example.traveljoin.auxiliaries.GlobalContext;
+import com.example.traveljoin.fragments.UserProfilePoisFragment;
+import com.example.traveljoin.fragments.UserProfileGroupsFragment;
+import com.example.traveljoin.fragments.UserProfileInformationFragment;
+import com.example.traveljoin.fragments.UserProfileToursFragment;
+import com.example.traveljoin.models.User;
 import com.facebook.Session;
 
 import android.app.ActionBar;
@@ -25,13 +31,22 @@ public class UserProfileActivity extends ActionBarActivity implements
 	private AppSectionsPagerAdapter appSectionsPagerAdapter;
 	private ViewPager viewPager;
 	private ActionBar actionBar;
-
+	private List<Fragment> listFragments;
+	public User user;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile);
+		initializeUser();
+		
+		listFragments = new ArrayList<Fragment>();
+		listFragments.add(new UserProfileInformationFragment());
+		listFragments.add(new UserProfileGroupsFragment());
+		listFragments.add(new UserProfilePoisFragment());
+		listFragments.add(new UserProfileToursFragment());
 
 		appSectionsPagerAdapter = new AppSectionsPagerAdapter(
-				getSupportFragmentManager());
+				getSupportFragmentManager(), listFragments);
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.profile);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -45,21 +60,33 @@ public class UserProfileActivity extends ActionBarActivity implements
 						actionBar.setSelectedNavigationItem(position);
 					}
 				});
-		
-		actionBar.addTab(actionBar.newTab().setText(getString(R.string.general_user_profile_tab))
+
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.general_user_profile_tab))
 				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText(getString(R.string.groups_user_profile_tab))
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.groups_user_profile_tab))
 				.setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText(getString(R.string.favourites_user_profile_tab))
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.pois_user_profile_tab))
 				.setTabListener(this));
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.tours_user_profile_tab))
+				.setTabListener(this));
+	}
+	
+	private void initializeUser() {
+		GlobalContext globalContext = (GlobalContext) getApplicationContext();
+		globalContext.refreshUser(this);
+		user = globalContext.getUser();
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		//TODO: refrescar los contenidos
+		// TODO: refrescar los contenidos
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -102,39 +129,21 @@ public class UserProfileActivity extends ActionBarActivity implements
 	}
 
 	public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
-		public static final int USER_INFORMATION_TAB = 0;
-		public static final int USER_GROUPS_TAB = 1;
-		public static final int USER_FAVOURITES_TAB = 2;
-		public static final int TABS_AMOUNT = 3;
-
-		public AppSectionsPagerAdapter(FragmentManager fragmentManager) {
+		private List<Fragment> fragments;
+		
+		public AppSectionsPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragments) {
 			super(fragmentManager);
+			this.fragments = fragments;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			Fragment fragment;
-			switch (position) {
-			case USER_INFORMATION_TAB:
-				fragment = new UserInformationFragment();
-				break;
-			case USER_GROUPS_TAB:
-				fragment = new UserGroupListFragment();
-				break;
-			case USER_FAVOURITES_TAB:
-				fragment = new UserFavouritesFragment();
-				break;
-			default:
-				fragment = new UserInformationFragment();
-				break;
-			}
-			return fragment;
+			return fragments.get(position);
 		}
 
 		@Override
 		public int getCount() {
-			return TABS_AMOUNT;
+			return fragments.size();
 		}
 	}
 
