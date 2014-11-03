@@ -3,8 +3,8 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.133:3001</string>
-<!--     <string name="api_url">http://travel-join-api.herokuapp.com</string> -->
+<!--     <string name="api_url">http://192.168.1.133:3001</string> -->
+    <string name="api_url">http://travel-join-api.herokuapp.com</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="append_required">" es requerido"</string>
@@ -176,6 +176,12 @@
     <string name="favourite_tours_group">Circuitos favoritos</string>
     <string name="own_groups_group">Grupos propios</string>
     <string name="joined_groups_group">Grupos a los que pertenece</string>
+    <string name="own_groups">Como administrador: </string>
+    <string name="joined_groups">Como miembro: </string>
+    <string name="own_pois">Como administrador: </string>
+    <string name="favorite_pois">Favoritos: </string>
+    <string name="own_tours">Como administrador: </string>
+    <string name="favorite_tours">Favoritos: </string>
     <!-- FIN User Profile -->
     
     <!-- General item list context menu -->

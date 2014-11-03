@@ -64,8 +64,13 @@ public class GlobalContext extends Application {
 	}
 
 	public void initializeContext(FragmentActivity requesterActivity) {
-		ProgressDialog progressDialog = createProgressDialog(requesterActivity);
-
+		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
+		progressDialog.setTitle(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+		
 		resetRunningTaskCounter();
 		initializeUser(requesterActivity, progressDialog);
 		initializeCategories(requesterActivity, progressDialog);
@@ -109,7 +114,11 @@ public class GlobalContext extends Application {
 	}
 	
 	public void refreshUser(final FragmentActivity requesterActivity) {
-		final ProgressDialog progressDialog = createProgressDialog(requesterActivity);
+		final ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
+		progressDialog.setTitle(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setCancelable(false);
 		progressDialog.show();
 		
 		final Session session = Session.getActiveSession();
@@ -140,15 +149,6 @@ public class GlobalContext extends Application {
 					}
 				});
 		request.executeAsync();
-	}
-
-	private ProgressDialog createProgressDialog(final FragmentActivity requesterActivity) {
-		ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
-		progressDialog.setTitle(getString(R.string.loading));
-		progressDialog.setMessage(getString(R.string.wait));
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setCancelable(false);
-		return progressDialog;
 	}
 	
 	private void initializeCategories(FragmentActivity requesterActivity,
