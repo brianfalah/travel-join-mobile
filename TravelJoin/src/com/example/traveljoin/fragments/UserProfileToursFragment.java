@@ -19,35 +19,37 @@ public class UserProfileToursFragment extends Fragment {
 	private final static int OWN_TOURS_GROUP_KEY = 0;
 	private final static int FAVOURITE_TOURS_GROUP_KEY = 1;
 
-	private User user;
 	private GeneralItemsGroup ownToursGroup;
 	private GeneralItemsGroup favouriteToursGroup;
 	private SparseArray<GeneralItemsGroup> groups;
-
+	private View view;
+		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.fragment_user_favourites,
+		view = inflater.inflate(R.layout.fragment_user_favourites,
 				container, false);
 
 		UserProfileActivity activity = (UserProfileActivity) getActivity();
-		user = activity.user;
-		createItemsGroups();
+		initializeGroupedList(activity.user);
 
+		return view;
+	}
+	
+	public void initializeGroupedList(User user) {
+		createItemsGroups(user);
 		ExpandableListView expadableListView = (ExpandableListView) view
 				.findViewById(R.id.favouritesExpandableListView);
 		GeneralItemListExpandableAdapter adapter = new GeneralItemListExpandableAdapter(
 				getActivity(), groups);
 		expadableListView.setAdapter(adapter);
 
-		registerForContextMenu(expadableListView);
-
-		return view;
+		registerForContextMenu(expadableListView);		
 	}
-
-	public void createItemsGroups() {
+	
+	public void createItemsGroups(User user) {
 		ownToursGroup = new GeneralItemsGroup(
 				getString(R.string.own_tours_group),
 				R.drawable.ic_action_split, user.getOwnTours());

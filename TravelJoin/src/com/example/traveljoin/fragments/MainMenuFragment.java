@@ -19,7 +19,7 @@ import com.example.traveljoin.activities.GroupsMainActivity;
 import com.example.traveljoin.activities.MapActivity;
 import com.example.traveljoin.activities.PoisMainActivity;
 import com.example.traveljoin.activities.ToursMainActivity;
-import com.example.traveljoin.activities.UserProfileActivity;
+import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.Poi;
 
 public class MainMenuFragment extends ListFragment {
@@ -56,7 +56,9 @@ public class MainMenuFragment extends ListFragment {
 		
 		Bundle b = new Bundle();
 		if (title.equals(getString(R.string.profile))) {
-			cls = UserProfileActivity.class;	
+			GlobalContext globalContext = (GlobalContext) getActivity().getApplicationContext();
+			globalContext.refreshUserAndLaunchUserProfile((MapActivity) getActivity());
+			return;
 		} else if (title.equals(getString(R.string.pois))) {
 			cls = PoisMainActivity.class;
 		} else if (title.equals(getString(R.string.tours))) {

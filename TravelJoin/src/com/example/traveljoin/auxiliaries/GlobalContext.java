@@ -21,6 +21,8 @@ import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Interest;
 import com.example.traveljoin.models.User;
+import com.example.traveljoin.activities.MapActivity;
+import com.example.traveljoin.activities.UserProfileActivity;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -70,7 +72,7 @@ public class GlobalContext extends Application {
 		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setCancelable(false);
 		progressDialog.show();
-		
+
 		resetRunningTaskCounter();
 		initializeUser(requesterActivity, progressDialog);
 		initializeCategories(requesterActivity, progressDialog);
@@ -112,15 +114,16 @@ public class GlobalContext extends Application {
 				});
 		request.executeAsync();
 	}
-	
-	public void refreshUser(final FragmentActivity requesterActivity) {
-		final ProgressDialog progressDialog = new ProgressDialog(requesterActivity);
+
+	public void refreshUserAndLaunchUserProfile(final MapActivity userProfileActivity) {
+		final ProgressDialog progressDialog = new ProgressDialog(
+				userProfileActivity);
 		progressDialog.setTitle(getString(R.string.loading));
 		progressDialog.setMessage(getString(R.string.wait));
 		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setCancelable(false);
 		progressDialog.show();
-		
+
 		final Session session = Session.getActiveSession();
 
 		Request request = Request.newMeRequest(session,
@@ -130,15 +133,15 @@ public class GlobalContext extends Application {
 							Response response) {
 						if (session == Session.getActiveSession()) {
 							if (facebookUser != null) {
-								String url = requesterActivity.getResources()
+								String url = userProfileActivity.getResources()
 										.getString(R.string.api_url)
 										+ "/users/get_or_create";
 								User user = new User(facebookUser.getId(),
 										null, facebookUser.getFirstName(),
 										facebookUser.getLastName());
 
-								RefreshUserTask httpAsyncTask = new RefreshUserTask(
-										user, requesterActivity, progressDialog);
+								RefreshUserAndLaunchUserProfileTask httpAsyncTask = new RefreshUserAndLaunchUserProfileTask(
+										user, userProfileActivity, progressDialog);
 								httpAsyncTask.execute(url);
 							}
 						}
@@ -150,7 +153,48 @@ public class GlobalContext extends Application {
 				});
 		request.executeAsync();
 	}
-	
+
+	public void fetchUserAndRefreshUserProfile(
+			final UserProfileActivity userProfileActivity) {
+		final ProgressDialog progressDialog = new ProgressDialog(
+				userProfileActivity);
+		progressDialog.setTitle(getString(R.string.loading));
+		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+
+		final Session session = Session.getActiveSession();
+
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser facebookUser,
+							Response response) {
+						if (session == Session.getActiveSession()) {
+							if (facebookUser != null) {
+								String url = userProfileActivity.getResources()
+										.getString(R.string.api_url)
+										+ "/users/get_or_create";
+								User user = new User(facebookUser.getId(),
+										null, facebookUser.getFirstName(),
+										facebookUser.getLastName());
+
+								RefreshUserAndUpdateUserProfileTask httpAsyncTask = new RefreshUserAndUpdateUserProfileTask(
+										user, userProfileActivity,
+										progressDialog);
+								httpAsyncTask.execute(url);
+							}
+						}
+						if (response.getError() != null) {
+							// Handle errors, will do so later.
+						}
+
+					}
+				});
+		request.executeAsync();
+	}
+
 	private void initializeCategories(FragmentActivity requesterActivity,
 			ProgressDialog progressDialog) {
 		String url = getResources().getString(R.string.api_url)
@@ -214,20 +258,19 @@ public class GlobalContext extends Application {
 		}
 	}
 
-	private class RefreshUserTask extends
-			AsyncTask<String, Void, String> {
+	private class RefreshUserAndLaunchUserProfileTask extends AsyncTask<String, Void, String> {
 
 		private ApiInterface apiInterface = new ApiInterface();
 		private Object objectToSend;
 		private ApiResult apiResult;
-		private FragmentActivity requesterActivity;
+		private MapActivity mapActivity;
 		private ProgressDialog progressDialog;
 
-		public RefreshUserTask(Object objectToSend,
-				FragmentActivity requesterActivity,
+		public RefreshUserAndLaunchUserProfileTask(Object objectToSend,
+				MapActivity mapActivity,
 				ProgressDialog progressDialog) {
 			this.objectToSend = objectToSend;
-			this.requesterActivity = requesterActivity;
+			this.mapActivity = mapActivity;
 			this.progressDialog = progressDialog;
 		}
 
@@ -244,10 +287,59 @@ public class GlobalContext extends Application {
 					JSONObject jsonObject = new JSONObject(result);
 					GlobalContext globalContext = (GlobalContext) getApplicationContext();
 					globalContext.setUser(User.fromJSON(jsonObject));
+					mapActivity.startUserProfileActivity();
 				} else {
 					CustomTravelJoinException exception = new CustomTravelJoinException(
 							getString(R.string.fetching_user_error));
-					exception.alertExceptionMessage(requesterActivity);
+					exception.alertExceptionMessage(mapActivity);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} finally {
+				if (progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+			}
+		}
+	}
+
+	private class RefreshUserAndUpdateUserProfileTask extends
+			AsyncTask<String, Void, String> {
+
+		private ApiInterface apiInterface = new ApiInterface();
+		private Object objectToSend;
+		private ApiResult apiResult;
+		private UserProfileActivity userProfileActivity;
+		private ProgressDialog progressDialog;
+
+		public RefreshUserAndUpdateUserProfileTask(Object objectToSend,
+				UserProfileActivity userProfileActivity,
+				ProgressDialog progressDialog) {
+			this.objectToSend = objectToSend;
+			this.userProfileActivity = userProfileActivity;
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected String doInBackground(String... urls) {
+			apiResult = apiInterface.POST(urls[0], objectToSend, null);
+			return apiResult.getResult();
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (apiResult.ok()) {
+					JSONObject jsonObject = new JSONObject(result);
+					GlobalContext globalContext = (GlobalContext) getApplicationContext();
+					globalContext.setUser(User.fromJSON(jsonObject));
+					userProfileActivity.refreshUserProfile(user);
+				} else {
+					CustomTravelJoinException exception = new CustomTravelJoinException(
+							getString(R.string.fetching_user_error));
+					exception.alertExceptionMessage(userProfileActivity);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
