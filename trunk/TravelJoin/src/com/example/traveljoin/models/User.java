@@ -185,6 +185,7 @@ public class User implements Serializable {
 			for (int i = 0; i < groupsJson.length(); i++) {
 	    	    JSONObject groupJson = groupsJson.getJSONObject(i);    	        
 	    	    Group group = Group.fromJSON(groupJson);
+	    	    group.joined(true);
 	    	    groupsToAdd.add(group);    	    
 	    	}
 			user.setGroups(groupsToAdd);

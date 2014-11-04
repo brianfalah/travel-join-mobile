@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -697,5 +696,10 @@ public class MapActivity extends SlidingFragmentActivity implements
   		Intent intent = new Intent(this, HelpActivity.class);		
   		startActivity(intent);	
       }
+
+	public void startUserProfileActivity() {
+		Intent intent = new Intent(this, UserProfileActivity.class);
+        startActivity(intent);
+	}
     
 }
