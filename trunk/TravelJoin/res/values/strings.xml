@@ -3,8 +3,8 @@
 	    
     <!-- Generales -->
     <string name="app_name">TravelJoin</string>
-    <string name="api_url">http://192.168.1.133:3001</string>
-<!--     <string name="api_url">http://travel-join-api.herokuapp.com</string> -->
+<!--     <string name="api_url">http://192.168.1.133:3001</string> -->
+    <string name="api_url">http://travel-join-api.herokuapp.com</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="append_required">" es requerido"</string>
@@ -25,6 +25,7 @@
     <string name="tours">Circuitos turísticos</string>
     <string name="groups">Grupos</string>
     <string name="augmented_reality">Realidad Aumentada</string>
+    <string name="help">Ayuda</string>
     <!-- FIN Menu -->
     
     <!-- Map -->
