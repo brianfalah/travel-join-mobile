@@ -3,13 +3,17 @@ package com.example.traveljoin.fragments;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.example.traveljoin.activities.GenericUserDetailsActivity;
 import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.adapters.UsersListAdapter;
 import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.View;
+import android.widget.ListView;
 
 public class GroupDetailsMembersFragment extends ListFragment {
 	
@@ -35,6 +39,18 @@ public class GroupDetailsMembersFragment extends ListFragment {
 		adapter = new UsersListAdapter(activity, members);
 		setListAdapter(adapter);
 		setEmptyText("Este grupo aún no tiene miembros.");
+	}
+	
+	@Override
+	public void onListItemClick(ListView listView, View view, int position,
+			long id) {
+		startMemberDetailActivity((User) adapter.getItem(position));
+	}
+
+	private void startMemberDetailActivity(User selectedMember) {
+		Intent intent = new Intent(activity, GenericUserDetailsActivity.class);
+		intent.putExtra("user", selectedMember);
+		startActivity(intent);
 	}
 
 	public void refreshList(Group group) {

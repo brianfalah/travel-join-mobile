@@ -308,6 +308,13 @@
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan" >
         </activity>
+        
+        <!-- Vista generica de usuario -->
+        <activity
+            android:name="com.example.traveljoin.activities.GenericUserDetailsActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
 
         <!-- para incluir la libreria de google play services(y google maps) -->
         <meta-data

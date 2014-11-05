@@ -4,14 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.activities.GenericUserDetailsActivity;
 import com.example.traveljoin.models.Rating;
 import com.example.traveljoin.models.User;
 import com.facebook.widget.ProfilePictureView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -25,7 +28,7 @@ public class RatingsListAdapter extends ArrayAdapter<Rating> {
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
 	       
-	       Rating rating = getItem(position);    
+	       final Rating rating = getItem(position);    
 	       
 	       if (convertView == null) {
 	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.rating_list_item, parent, false);
@@ -44,6 +47,16 @@ public class RatingsListAdapter extends ArrayAdapter<Rating> {
 			
 			profilePictureView.setCropped(true);
 			profilePictureView.setProfileId(rating.getUser().getFacebookId());
+			profilePictureView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(getContext(),
+							GenericUserDetailsActivity.class);
+					intent.putExtra("user", rating.getUser());
+					getContext().startActivity(intent);
+				}
+			});
+
 			commentOwnerNameView.setText(rating.getUser().getFullName());
 			commentRatingBar.setRating(rating.getValue());
 			
