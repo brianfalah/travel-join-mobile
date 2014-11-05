@@ -245,9 +245,9 @@ public class GlobalContext extends Application {
 					exception.alertExceptionMessage(requesterActivity);
 				}
 			} catch (JSONException e) {
-				e.printStackTrace();
+				showExceptionError(e);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				showExceptionError(e);
 			} finally {
 				taskCurrentExcutingInProgressDialog--;
 				if (progressDialog.isShowing()
@@ -294,9 +294,9 @@ public class GlobalContext extends Application {
 					exception.alertExceptionMessage(mapActivity);
 				}
 			} catch (JSONException e) {
-				e.printStackTrace();
+				showExceptionError(e);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				showExceptionError(e);
 			} finally {
 				if (progressDialog.isShowing()) {
 					progressDialog.dismiss();
@@ -378,7 +378,6 @@ public class GlobalContext extends Application {
 					globalContext.setCategories(categories);
 				}
 			} catch (JSONException e) {
-				// TODO
 				showExceptionError(e);
 
 			} finally {
@@ -430,8 +429,7 @@ public class GlobalContext extends Application {
 					GlobalContext globalContext = (GlobalContext) getApplicationContext();
 					globalContext.setInterests(interests);
 				}
-			} catch (JSONException e) {
-				// TODO
+			} catch (JSONException e)  {
 				showExceptionError(e);
 
 			} finally {
@@ -465,7 +463,6 @@ public class GlobalContext extends Application {
 	public void showConnectionError() {
 		CustomTravelJoinException exception = new CustomTravelJoinException();
 		exception.alertConnectionProblem(this);
-		// e.printStackTrace();
 	}
 
 	public void showExceptionError(Exception e) {

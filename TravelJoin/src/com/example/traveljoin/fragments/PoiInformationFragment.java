@@ -1,17 +1,19 @@
 package com.example.traveljoin.fragments;
 
 import com.example.traveljoin.R;
+import com.example.traveljoin.activities.GenericUserDetailsActivity;
 import com.example.traveljoin.activities.PoiDetailsActivity;
-import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.User;
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -55,14 +57,23 @@ public class PoiInformationFragment  extends Fragment {
 				.findViewById(R.id.selection_profile_pic);
 		profilePictureView.setCropped(true);
 		userOwnerNameView = (TextView) view.findViewById(R.id.selection_owner_name);
-		//initializeOwnerInformation(view);
 		
 		return view;
 	}	
 	
 	public void setOwnerInformation() {		
-		User owner = activity.poi.getUser();
+		final User owner = activity.poi.getUser();
 		profilePictureView.setProfileId(owner.getFacebookId());
+		profilePictureView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(),
+						GenericUserDetailsActivity.class);
+				intent.putExtra("user", owner);
+				startActivity(intent);
+			}
+		});
+
 		userOwnerNameView.setText(owner.getFullName());
 	}
 	
