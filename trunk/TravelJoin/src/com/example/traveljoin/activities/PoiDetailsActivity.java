@@ -27,7 +27,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
@@ -35,10 +34,8 @@ import com.example.traveljoin.R;
 
 import android.content.DialogInterface;
 
-import com.example.traveljoin.activities.MapActivity.MapFragmentView;
 import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
-import com.example.traveljoin.fragments.DateTimePickerDialog;
 import com.example.traveljoin.fragments.ListDialogSelectGroupFragment;
 import com.example.traveljoin.fragments.ListDialogSelectGroupFragment.OnListDialogItemSelect;
 import com.example.traveljoin.fragments.PoiEventsFragment;

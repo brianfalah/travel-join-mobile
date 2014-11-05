@@ -8,7 +8,6 @@ import com.example.traveljoin.models.Suggestion;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SuggestionsListAdapter extends ArrayAdapter<Suggestion> {
 	Context context;

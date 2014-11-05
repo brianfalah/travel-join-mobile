@@ -2,7 +2,6 @@ package com.example.traveljoin.models;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Calendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,9 +96,9 @@ public class Suggestion implements Serializable{
 	
 	public String getSuggestionableTypeDescription(){
 		if (ofPoi())
-			return "(Punto de Interés)";
+			return "(Punto de Inter��s)";
 		if (ofTour())
-			return "(Circuito Turístico)";
+			return "(Circuito Tur��stico)";
 		return "";
 	}
 

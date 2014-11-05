@@ -2,12 +2,12 @@ package com.example.traveljoin.fragments;
 
 import java.util.ArrayList;
 
+import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Group;
 
-import android.R;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
@@ -32,7 +32,7 @@ public class GroupDetailsInterestsFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupInterests);
 		setListAdapter(adapter);
-		setEmptyText("Este grupo aún no tiene intereses.");
+		setEmptyText(getString(R.string.group_interests_empty_list));
 	}
 
 	public void refreshList(Group group) {

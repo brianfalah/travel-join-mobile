@@ -3,6 +3,7 @@ package com.example.traveljoin.fragments;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.activities.PoiDetailsActivity;
 
@@ -39,7 +40,7 @@ public class GroupDetailsPoisFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupPois);
 		setListAdapter(adapter);
-		setEmptyText("Este grupo aún no tiene puntos de interés.");
+		setEmptyText(getString(R.string.group_pois_empty_list));
 	}
 
 	@Override

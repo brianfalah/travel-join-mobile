@@ -3,6 +3,7 @@ package com.example.traveljoin.fragments;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GenericUserDetailsActivity;
 import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.adapters.UsersListAdapter;
@@ -38,7 +39,7 @@ public class GroupDetailsMembersFragment extends ListFragment {
 		getActivity();
 		adapter = new UsersListAdapter(activity, members);
 		setListAdapter(adapter);
-		setEmptyText("Este grupo aún no tiene miembros.");
+		setEmptyText(getString(R.string.group_members_empty_list));
 	}
 	
 	@Override

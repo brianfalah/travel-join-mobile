@@ -38,9 +38,6 @@ import com.example.traveljoin.adapters.SmartFragmentStatePagerAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.fragments.ListDialogSelectGroupFragment;
 import com.example.traveljoin.fragments.ListDialogSelectGroupFragment.OnListDialogItemSelect;
-import com.example.traveljoin.fragments.PoiEventsFragment;
-import com.example.traveljoin.fragments.PoiInformationFragment;
-import com.example.traveljoin.fragments.PoiInformationRatingsFragment;
 import com.example.traveljoin.fragments.TourDetailInformationFragment;
 import com.example.traveljoin.fragments.TourDetailPoisFragment;
 import com.example.traveljoin.fragments.TourInformationRatingsFragment;
@@ -130,12 +127,12 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (tour != null){				
 			if (!user.getId().equals(tour.getUserId())) {
-				//si no es el dueño
+				//si no es el due��o
 				menu.removeItem(R.id.action_edit);
 				menu.removeItem(R.id.action_delete);
 			}
 			else{
-				//si es el dueño
+				//si es el due��o
 				menu.removeItem(R.id.action_calificate);
 			}
 			//si ya es favorito solo le va a aparecer la accion para borrarlo de favoritos
@@ -352,7 +349,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	public void suggestTour(){
 		FragmentManager fm = getSupportFragmentManager();
 		ListDialogSelectGroupFragment groupsFragment = 
-				new ListDialogSelectGroupFragment(this, user.getGroups(), "¿A qué grupo desea sugerir este circuito?");
+				new ListDialogSelectGroupFragment(this, user.getGroups(), "��A qu�� grupo desea sugerir este circuito?");
 		groupsFragment.show(fm, "groups_picker");	
 	}
 	

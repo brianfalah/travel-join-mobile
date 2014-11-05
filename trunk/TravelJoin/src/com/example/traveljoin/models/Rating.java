@@ -2,7 +2,6 @@ package com.example.traveljoin.models;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.Calendar;
 

@@ -12,6 +12,7 @@ import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.User;
 import com.facebook.widget.ProfilePictureView;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +37,9 @@ public class GenericUserDetailsActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.fragment_user_information);
-
+		ActionBar actionBar = getActionBar();
+		actionBar.setSubtitle(R.string.user_view);
+		
 		profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
 		profilePictureView.setCropped(true);
 		userNameView = (TextView) findViewById(R.id.selection_user_name);

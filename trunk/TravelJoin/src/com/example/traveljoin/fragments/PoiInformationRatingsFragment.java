@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.example.traveljoin.R;
-import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.activities.PoiDetailsActivity;
 import com.example.traveljoin.adapters.RatingsListAdapter;
-import com.example.traveljoin.adapters.UsersListAdapter;
 import com.example.traveljoin.auxiliaries.Helper;
 import com.example.traveljoin.models.Rating;
-import com.example.traveljoin.models.User;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -48,8 +45,9 @@ public class PoiInformationRatingsFragment extends ListFragment {
 		ratings.addAll((Collection<Rating>) activity.poi.getLastRatings());
 
 		adapter = new RatingsListAdapter(getActivity(), ratings);
+		
 		listView.setAdapter(adapter);
-//		setListAdapter(adapter);
+
 		Helper.getListViewSize(listView);
 		
 		return view;

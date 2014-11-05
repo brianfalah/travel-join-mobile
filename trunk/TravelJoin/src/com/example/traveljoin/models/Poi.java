@@ -3,7 +3,6 @@ package com.example.traveljoin.models;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 
 import org.json.JSONArray;
