@@ -13,9 +13,7 @@ import com.example.traveljoin.models.TourPoi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class TourDetailPoisFragment extends ListFragment {
@@ -45,7 +43,7 @@ public class TourDetailPoisFragment extends ListFragment {
 		adapter = new GeneralItemListAdapter(
 				getActivity(), tourPois);
 		setListAdapter(adapter);
-		setEmptyText("Este circuito aún no tiene puntos de interés.");
+		setEmptyText(getString(R.string.tour_pois_empty_list));
 	}
 	
 	@Override

@@ -52,6 +52,7 @@
     <string name="tours_view">Detalle de circuito</string>
     <string name="tours_creation">Nuevo circuito</string>
     <string name="tours_edition">Editar circuito</string>
+    <string name="user_view">Detalle de usuario</string>
 	<!-- FIN Sutitulos  -->
 	
 	<!-- Actions -->
@@ -165,6 +166,17 @@
 	<!-- General item list -->
     <string name="item_list_image_description">Imagen del elemento</string>
     <!-- FIN events -->
+    
+    <!-- Empty list message placeholder -->
+    <string name="group_interests_empty_list">Este grupo aún no tiene intereses.</string>
+    <string name="group_members_empty_list">Este grupo aún no tiene miembros.</string>
+    <string name="group_pois_empty_list">Este grupo aún no tiene puntos de interés.</string>
+    <string name="group_suggestions_empty_list">Este grupo no tiene sugerencias.</string>
+    <string name="group_tours_empty_list">Este grupo aún no tiene circuitos turísticos.</string>
+    <string name="poi_events_empty_list">Este punto de interés aún no tiene eventos.</string>
+    <string name="tour_pois_empty_list">Este circuito aún no tiene puntos de interés.</string>
+    <string name="user_group_empty_list">Sin grupos.</string>
+    <!-- FIN Empty list message placeholder -->
     
     <!-- User profile -->
     <string name="general_user_profile_tab">General</string>

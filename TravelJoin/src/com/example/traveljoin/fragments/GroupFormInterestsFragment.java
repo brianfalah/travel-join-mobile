@@ -50,7 +50,7 @@ public class GroupFormInterestsFragment extends ListFragment {
 		groupFormActivity = (GroupFormActivity) getActivity();	
 		groupInterestsAdapter = new GeneralItemListAdapter(groupFormActivity, fragmentGroupInterests);
 		setListAdapter(groupInterestsAdapter);
-		setEmptyText("Este grupo aún no tiene intereses.");
+		setEmptyText(getString(R.string.group_interests_empty_list));
 		registerForContextMenu(getListView());
 	}
 	

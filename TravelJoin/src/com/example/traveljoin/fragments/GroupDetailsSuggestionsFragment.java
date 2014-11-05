@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupDetailsActivity;
-import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.adapters.SuggestionsListAdapter;
-import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Group;
 import com.example.traveljoin.models.Suggestion;
 
@@ -38,7 +36,7 @@ public class GroupDetailsSuggestionsFragment extends ListFragment {
 		
 		getListView().setItemsCanFocus(false);
 		setListAdapter(adapter);
-		setEmptyText("Este grupo aún no tiene sugerencias.");
+		setEmptyText(getString(R.string.group_suggestions_empty_list));
 		/**
 		 * get on item click listener
 		 */

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GenericUserDetailsActivity;
 import com.example.traveljoin.models.Rating;
-import com.example.traveljoin.models.User;
 import com.facebook.widget.ProfilePictureView;
 
 import android.content.Context;

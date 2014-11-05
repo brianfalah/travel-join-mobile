@@ -3,6 +3,7 @@ package com.example.traveljoin.fragments;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.example.traveljoin.R;
 import com.example.traveljoin.activities.GroupDetailsActivity;
 import com.example.traveljoin.activities.TourDetailsActivity;
 import com.example.traveljoin.adapters.GeneralItemListAdapter;
@@ -38,7 +39,7 @@ public class GroupDetailsToursFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupTours);
 		setListAdapter(adapter);
-		setEmptyText("Este grupo aún no tiene circuitos turísticos.");
+		setEmptyText(getString(R.string.group_tours_empty_list));
 	}
 
 	@Override

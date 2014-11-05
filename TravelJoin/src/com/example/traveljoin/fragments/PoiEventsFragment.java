@@ -11,9 +11,7 @@ import com.example.traveljoin.models.PoiEvent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class PoiEventsFragment extends ListFragment {
@@ -44,7 +42,7 @@ public class PoiEventsFragment extends ListFragment {
 		adapter = new GeneralItemListAdapter(
 				getActivity(), events);
 		setListAdapter(adapter);
-		setEmptyText("Este punto aún no tiene eventos.");
+		setEmptyText(getString(R.string.poi_events_empty_list));
 //		registerForContextMenu(getListView());
 	}
 	

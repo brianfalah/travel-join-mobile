@@ -45,7 +45,7 @@ public class TourFormPoisFragment extends ListFragment {
 		
 		tourPoisAdapter = new GeneralItemListAdapter(tourFormActivity, fragmentTourPois);
 		setListAdapter(tourPoisAdapter);
-		setEmptyText("Este circuito aún no tiene puntos de interés.");
+		setEmptyText(getString(R.string.tour_pois_empty_list));
 		registerForContextMenu(getListView());
 	}
 
