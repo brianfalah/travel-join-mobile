@@ -23,9 +23,12 @@ public class StableArrayAdapter extends ArrayAdapter<GeneralItem> {
     LinkedHashMap<GeneralItem, Integer> mIdMap = new LinkedHashMap<GeneralItem, Integer>();
 
     public StableArrayAdapter(Context context, int textViewResourceId, ArrayList<GeneralItem> objects) {
-        super(context, textViewResourceId, objects);
-    	//this.context = context;
-        for (int i = 0; i < objects.size(); ++i) {
+        super(context, textViewResourceId, objects);    
+        setMap(objects);
+    }
+    
+    public void setMap(ArrayList<GeneralItem> objects){
+    	for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i), i);
         }
     }
@@ -92,5 +95,11 @@ public class StableArrayAdapter extends ArrayAdapter<GeneralItem> {
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+    
+    @Override
+    public void clear() {
+    	mIdMap.clear();
+    	super.clear();        
     }
 }

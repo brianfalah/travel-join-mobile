@@ -133,7 +133,8 @@ public class TourFormPoisFragment extends Fragment {
 				Bundle bundle = data.getExtras();
 				ArrayList<GeneralItem> newSelectedPois = (ArrayList<GeneralItem>) bundle.get("newSelectedPois");
 				
-				fragmentTourPois.clear();
+				//fragmentTourPois.clear();
+				adapter.clear();
 				//vemos todos los nuevos seleccionados y armamos 1 array de TourPois y otro de Ids de Pois
 				for (int j = 0; j < newSelectedPois.size(); j++) {	
 					Poi selectedPoi = (Poi) newSelectedPois.get(j);
@@ -141,7 +142,7 @@ public class TourFormPoisFragment extends Fragment {
 					TourPoi tourPoiToAdd = new TourPoi(null, tourId, selectedPoi.getId(), selectedPoi.getName(), selectedPoi.getDescription(), null);
 					fragmentTourPois.add(tourPoiToAdd);
 				}
-
+				adapter.setMap(fragmentTourPois);
 				adapter.notifyDataSetChanged();
 				break;
 			case Activity.RESULT_CANCELED:
