@@ -37,9 +37,11 @@ public class UserProfilePoisFragment extends Fragment {
 		
 		return view;
 	}
-	
+			
 	public void initializeGroupedList(User user) {
+		try {
 		createItemsGroups(user);
+		
 		ExpandableListView expadableListView = (ExpandableListView) view
 				.findViewById(R.id.favouritesExpandableListView);
 		GeneralItemListExpandableAdapter adapter = new GeneralItemListExpandableAdapter(
@@ -47,6 +49,9 @@ public class UserProfilePoisFragment extends Fragment {
 		expadableListView.setAdapter(adapter);
 
 		registerForContextMenu(expadableListView);
+		} catch (IllegalStateException e) {
+			//Do nothing
+		}
 	}
 	
 	public void createItemsGroups(User user) {

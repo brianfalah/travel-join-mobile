@@ -29,31 +29,35 @@ public class UserProfileGroupsFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		super.onCreateView(inflater, container, savedInstanceState);
-		view = inflater.inflate(R.layout.fragment_user_favourites,
-				container, false);
-
+		view = inflater.inflate(R.layout.fragment_user_favourites, container,
+				false);
+		
 		UserProfileActivity activity = (UserProfileActivity) getActivity();
 		initializeGroupedList(activity.user);
 
 		return view;
 	}
-	
-	public void initializeGroupedList(User user) {
-		createItemsGroups(user);
-		ExpandableListView expadableListView = (ExpandableListView) view
-				.findViewById(R.id.favouritesExpandableListView);
-		GeneralItemListExpandableAdapter adapter = new GeneralItemListExpandableAdapter(
-				getActivity(), groups);
-		expadableListView.setAdapter(adapter);
 
-		registerForContextMenu(expadableListView);
+	public void initializeGroupedList(User user) {
+		try {
+			createItemsGroups(user);
+			ExpandableListView expadableListView = (ExpandableListView) view
+					.findViewById(R.id.favouritesExpandableListView);
+			GeneralItemListExpandableAdapter adapter = new GeneralItemListExpandableAdapter(
+					getActivity(), groups);
+			expadableListView.setAdapter(adapter);
+
+			registerForContextMenu(expadableListView);
+		} catch (IllegalStateException e) {
+			// Do nothing
+		}
 	}
 
 	public void createItemsGroups(User user) {
 		ownGroupsGroup = new GeneralItemsGroup(
 				getString(R.string.own_groups_group),
 				R.drawable.ic_action_group, user.getOwnGroups());
-		
+
 		joinedGroupsGroup = new GeneralItemsGroup(
 				getString(R.string.joined_groups_group),
 				R.drawable.ic_action_important, user.getGroups());
@@ -62,5 +66,5 @@ public class UserProfileGroupsFragment extends Fragment {
 		groups.put(OWN_GROUPS_GROUP_KEY, ownGroupsGroup);
 		groups.put(JOINED_GROUPS_GROUP_KEY, joinedGroupsGroup);
 	}
-	
+
 }
