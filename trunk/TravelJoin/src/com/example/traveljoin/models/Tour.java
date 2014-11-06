@@ -243,16 +243,16 @@ public class Tour implements Serializable, GeneralItem {
 	        jsonObject.put("description", getDescription());
 	        jsonObject.put("user_id", getUserId());
 	        
-	        Integer orderNumber = 1;
+	        //Integer orderNumber = 1;
 	        
 	        JSONArray tourPoisJson = new JSONArray();	        
 	        for (int i = 0; i < getTourPois().size(); i++) {
 	        	TourPoi tourPoi = getTourPois().get(i);
 	        	
-	        	if (!tourPoi.isDeleted()){
-	        		tourPoi.setOrderNumber(orderNumber);
-	        		orderNumber += 1;
-	        	}
+//	        	if (!tourPoi.isDeleted()){
+//	        		tourPoi.setOrderNumber(orderNumber);
+//	        		orderNumber += 1;
+//	        	}
 	        	tourPoisJson.put(tourPoi.toJSON());
 			}
 	        	        

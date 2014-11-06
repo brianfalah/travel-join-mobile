@@ -5,15 +5,20 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.example.traveljoin.auxiliaries.DynamicListView;
+import com.example.traveljoin.adapters.StableArrayAdapter;
 import com.example.traveljoin.R;
 import com.example.traveljoin.activities.PoisSelectorActivity;
 import com.example.traveljoin.activities.TourFormActivity;
@@ -22,16 +27,30 @@ import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.TourPoi;
 
-public class TourFormPoisFragment extends ListFragment {
+public class TourFormPoisFragment extends Fragment {
 	TourFormActivity tourFormActivity;
-	private ArrayList<GeneralItem> fragmentTourPois;
-	private GeneralItemListAdapter tourPoisAdapter;
+	public ArrayList<GeneralItem> fragmentTourPois;
+	//private GeneralItemListAdapter tourPoisAdapter;
+	StableArrayAdapter adapter;
+	private DynamicListView listView;
 	private static final int ADD_POI_REQUEST = 1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		
+		View view = inflater.inflate(R.layout.fragment_tour_form_pois,
+				container, false);
+		
+		listView = (DynamicListView) view.findViewById(R.id.listview);
+		
+		return view;
 	}
 
 	@Override
@@ -43,10 +62,17 @@ public class TourFormPoisFragment extends ListFragment {
 			fragmentTourPois.addAll(tourFormActivity.tour.getTourPois());
 		}
 		
-		tourPoisAdapter = new GeneralItemListAdapter(tourFormActivity, fragmentTourPois);
-		setListAdapter(tourPoisAdapter);
-		setEmptyText(getString(R.string.tour_pois_empty_list));
-		registerForContextMenu(getListView());
+//		tourPoisAdapter = new GeneralItemListAdapter(tourFormActivity, fragmentTourPois);
+//		setListAdapter(tourPoisAdapter);
+		
+		adapter = new StableArrayAdapter(tourFormActivity, R.layout.general_list_item, fragmentTourPois);
+		//setEmptyText(getString(R.string.tour_pois_empty_list));
+		
+        listView.setList(fragmentTourPois);
+        listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+		//registerForContextMenu(getListView());
 	}
 
 	@Override
@@ -83,7 +109,7 @@ public class TourFormPoisFragment extends ListFragment {
 		case R.id.context_menu_delete:
 			selectedTourPoi = getTourPoiItem(item);			
 			fragmentTourPois.remove(selectedTourPoi);
-			tourPoisAdapter.notifyDataSetChanged();			
+			adapter.notifyDataSetChanged();			
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -116,7 +142,7 @@ public class TourFormPoisFragment extends ListFragment {
 					fragmentTourPois.add(tourPoiToAdd);
 				}
 
-				tourPoisAdapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 				break;
 			case Activity.RESULT_CANCELED:
 				break;
@@ -126,9 +152,12 @@ public class TourFormPoisFragment extends ListFragment {
 		}
 
 	}
-	
-	
+		
 	public ArrayList<GeneralItem> getTourPois(){
+		for (int i = 0; i < fragmentTourPois.size(); i++) {
+			GeneralItem item = fragmentTourPois.get(i);
+			((TourPoi) item).setOrderNumber(i + 1);
+		}
 		return fragmentTourPois;
 	}
 }
