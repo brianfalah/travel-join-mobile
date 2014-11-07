@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.traveljoin.auxiliaries.Helper;
+
 public class Poi implements Serializable, GeneralItem{
 	
 	/**
@@ -204,14 +206,18 @@ public class Poi implements Serializable, GeneralItem{
 	    	}
 		}
 		
-		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"), poiJson.getDouble("longitude"),
-	    		poiJson.getString("name"), poiJson.getString("description"), poiJson.getString("address"),
-	    		poiJson.getInt("user_id"), poiJson.getInt("category_id"), poiJson.getString("category_name"), poiEventsToAdd);
+		Poi poi = new Poi(poiJson.getInt("id"), poiJson.getDouble("latitude"),
+				poiJson.getDouble("longitude"), poiJson.getString("name"),
+				poiJson.getString("description"), Helper.getStringFromJson(poiJson, "address"),
+				poiJson.getInt("user_id"), Helper.getIntFromJson(poiJson, "category_id"),
+				Helper.getStringFromJson(poiJson, "category_name"), poiEventsToAdd);
 		
-		User user = User.fromJSON(poiJson.getJSONObject("user"));
-		poi.setUser(user);
+		if (poiJson.has("user") && !poiJson.isNull("user")){
+			User user = User.fromJSON(poiJson.getJSONObject("user"));
+			poi.setUser(user);
+		}		
 		
-		poi.setIsFavorite(poiJson.getBoolean("is_favorite"));
+		poi.setIsFavorite(Helper.getBooleanFromJson(poiJson, "is_favorite"));
 		
 		//esto es el objeto rating, si es que el usuario logueado hizo una calificacion, sino viene en null
 		if (poiJson.has("rating") && !poiJson.isNull("rating")){

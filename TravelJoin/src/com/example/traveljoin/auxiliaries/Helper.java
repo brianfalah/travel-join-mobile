@@ -1,5 +1,9 @@
 package com.example.traveljoin.auxiliaries;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,4 +31,56 @@ public class Helper {
         // print height of adapter on log
         Log.i("height of listItem:", String.valueOf(totalHeight));
     }
+    
+    public static int getIntFromJson(JSONObject object, String attr) throws JSONException{
+    	if (object.has(attr) && !object.isNull(attr)){
+    		return object.getInt(attr);    		
+    	}
+    	else{
+    		return 0;
+    	}
+    }
+    
+    public static String getStringFromJson(JSONObject object, String attr) throws JSONException{
+    	if (object.has(attr) && !object.isNull(attr)){
+    		return object.getString(attr);    		
+    	}
+    	else{
+    		return "";
+    	}
+    }
+    
+    public static Double getDoubleFromJson(JSONObject object, String attr) throws JSONException{
+    	if (object.has(attr) && !object.isNull(attr)){
+    		return object.getDouble(attr);    		
+    	}
+    	else{
+    		return 0.0;
+    	}
+    }
+    
+    public static Boolean getBooleanFromJson(JSONObject object, String attr) throws JSONException{
+    	if (object.has(attr) && !object.isNull(attr)){
+    		return object.getBoolean(attr);    		
+    	}
+    	else{
+    		return false;
+    	}
+    }
+    
+    public static JSONArray getArrayFromJson(JSONObject object, String attr) throws JSONException{
+    	if (object.has(attr) && !object.isNull(attr)){
+    		return object.getJSONArray(attr);    		
+    	}
+    	else{
+    		return new JSONArray();
+    	}
+    }
+    
+//    if (type.equals("string"))
+//		return object.getString(attr);
+//	if (type.equals("double"))
+//		return object.getDouble(attr);
+//	if (type.equals("array"))
+//		return object.getJSONArray(attr);
 }
