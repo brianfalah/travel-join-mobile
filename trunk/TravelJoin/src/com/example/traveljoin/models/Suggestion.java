@@ -6,6 +6,10 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
+import com.example.traveljoin.R;
+
 public class Suggestion implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Integer id;
@@ -94,11 +98,11 @@ public class Suggestion implements Serializable{
 		return getSuggestionableType().equals("Tour");
 	}
 	
-	public String getSuggestionableTypeDescription(){
+	public String getSuggestionableTypeDescription(Context context){
 		if (ofPoi())
-			return "(Punto de Inter��s)";
+			return context.getString(R.string.poi);
 		if (ofTour())
-			return "(Circuito Tur��stico)";
+			return context.getString(R.string.tour);
 		return "";
 	}
 
