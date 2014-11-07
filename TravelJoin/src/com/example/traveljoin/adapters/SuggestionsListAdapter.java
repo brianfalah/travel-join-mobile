@@ -50,7 +50,7 @@ public class SuggestionsListAdapter extends ArrayAdapter<Suggestion> {
 		final Suggestion suggestion = data.get(position);
 		holder.textName.setText(suggestion.getSuggestionableName());
 		holder.textDescription.setText(suggestion.getSuggestionableDescription());
-		holder.textType.setText(suggestion.getSuggestionableTypeDescription());
+		holder.textType.setText(suggestion.getSuggestionableTypeDescription(context));
 		holder.btnAccept.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

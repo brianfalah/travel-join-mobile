@@ -22,7 +22,9 @@
     <!-- Menu -->
     <string name="profile">Mi perfil</string>
     <string name="pois">Puntos de interés</string>
+    <string name="poi">Punto de interés</string>
     <string name="tours">Circuitos turísticos</string>
+    <string name="tour">Circuito turístico</string>
     <string name="groups">Grupos</string>
     <string name="augmented_reality">Realidad Aumentada</string>
     <string name="help">Ayuda</string>
