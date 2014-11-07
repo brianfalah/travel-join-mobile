@@ -85,6 +85,21 @@ public class User implements Serializable {
 		this.groups = groups;
 	}
 	
+	public void addGroup(Group group) {
+		this.groups.add(group);
+	}
+	
+	public void deleteGroup(Group group) {
+		int index = 0;
+		for (int i = 0; i < this.groups.size(); i++) {
+			if (this.groups.get(i).getId().equals(group.getId())){
+				index = i;
+				break;
+			}
+		}
+		this.groups.remove(index);
+	}
+	
 	public ArrayList<GeneralItem> getOwnGroups() {
 		return ownGroups;
 	}
