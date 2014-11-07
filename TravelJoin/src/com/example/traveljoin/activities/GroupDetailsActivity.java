@@ -525,6 +525,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				if (api_result.ok()) {
 					group.addMember(user);
 					group.joined(true);
+					user.addGroup(group);
 					invalidateOptionsMenu();
 
 					if (group.isPrivate())
@@ -546,6 +547,7 @@ public class GroupDetailsActivity extends ActionBarActivity implements
 				if (api_result.ok()) {
 					group.findAndRemoveMember(user);
 					group.joined(false);
+					user.deleteGroup(group);
 					invalidateOptionsMenu();
 					refreshMembersFragment();
 					Toast.makeText(GroupDetailsActivity.this,
