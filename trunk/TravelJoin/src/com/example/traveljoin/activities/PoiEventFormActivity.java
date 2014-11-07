@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -250,7 +251,6 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 			valid = false;
 		} else {
 			Calendar now = Calendar.getInstance();
-//			now.add(Calendar.MONTH ,1);
 			if(time.compareTo(now) < 0){
 				edit_text_field.requestFocus();
 				edit_text_field.setError("La fecha y hora debe ser mayor a la hora actual");
@@ -303,9 +303,7 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy HH:mm");           		
 		if ( DATE_FROM.equals(field) ){
 			timeFrom = time;
-			dateFromTv.setText(formatter.format(time.getTime()));			
-//			dateFromTv.setText(time.get(Calendar.DATE) + "/" + time.get(Calendar.MONTH) + "/" + time.get(Calendar.YEAR)
-//				+ " " + String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
+			dateFromTv.setText(formatter.format(time.getTime()));
 			dateFromTv.setError(null);
 		}
 		else{
@@ -323,13 +321,6 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		e.printStackTrace();
 	}
 	
-//	public void closeActivity(Poi poi_created_or_updated){
-//		Intent output = new Intent();	    
-//		output.putExtra("poi_created_or_updated", poi_created_or_updated);	    
-//		setResult(Activity.RESULT_OK, output);
-//		finish();
-//	}
-	
     @Override
     protected void onPause() {
     	super.onPause();
@@ -337,5 +328,16 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
     	if(progress != null)
     		progress.dismiss();	
     }
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
     
 }
