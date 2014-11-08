@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
-import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
@@ -77,7 +76,8 @@ public class ToursSelectorActivity extends Activity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.general_item_selector_activity_actions, menu);
+		getMenuInflater().inflate(
+				R.menu.general_item_selector_activity_actions, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
@@ -166,9 +166,8 @@ public class ToursSelectorActivity extends Activity implements
 						selectedTours.add(tour);
 					}
 					adapter = new GeneralItemCheckeableListAdapter(
-							new GeneralItemListAdapter(
-									ToursSelectorActivity.this, selectedTours),
-									alreadySelectedTours);
+							ToursSelectorActivity.this, selectedTours,
+							alreadySelectedTours);
 					listView.setAdapter(adapter);
 					listView.setOnItemClickListener(tourItemClickListener);
 					adapter.notifyDataSetChanged();

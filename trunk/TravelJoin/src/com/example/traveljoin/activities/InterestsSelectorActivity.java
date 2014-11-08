@@ -20,7 +20,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
-import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.GeneralItem;
 
@@ -57,13 +56,14 @@ public class InterestsSelectorActivity extends Activity implements
 		listView = (ListView) findViewById(R.id.list);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setTextFilterEnabled(true);
-		getInterests(alreadySelectedInterests);		
+		getInterests(alreadySelectedInterests);
 		registerForContextMenu(listView);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.general_item_selector_activity_actions, menu);
+		getMenuInflater().inflate(
+				R.menu.general_item_selector_activity_actions, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
@@ -99,17 +99,17 @@ public class InterestsSelectorActivity extends Activity implements
 	}
 
 	private void getInterests(ArrayList<GeneralItem> alreadySelectedInterests) {
-		GlobalContext globalContext = (GlobalContext) this.getApplicationContext();
+		GlobalContext globalContext = (GlobalContext) this
+				.getApplicationContext();
 		ArrayList<GeneralItem> interests = globalContext.getInterests();
-		
+
 		adapter = new GeneralItemCheckeableListAdapter(
-				new GeneralItemListAdapter(
-						InterestsSelectorActivity.this, interests),
+				InterestsSelectorActivity.this, interests,
 				alreadySelectedInterests);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(interestItemClickListener);
 		adapter.notifyDataSetChanged();
-		
+
 	}
 
 	public void onCancelButtonClicked(View button) {

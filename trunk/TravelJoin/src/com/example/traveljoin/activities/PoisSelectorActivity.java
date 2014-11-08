@@ -24,10 +24,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.example.traveljoin.R;
 import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
-import com.example.traveljoin.adapters.GeneralItemListAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
@@ -68,7 +68,10 @@ public class PoisSelectorActivity extends Activity implements
 		ArrayList<GeneralItem> alreadySelectedPois = (ArrayList<GeneralItem>) getIntent()
 				.getExtras().get("alreadySelectedPois");
 
+		TextView emptyText = new TextView(this); 
+		emptyText.setText(R.string.delete_tour_error_message);
 		listView = (ListView) findViewById(R.id.list);
+		listView.setEmptyView(emptyText);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setTextFilterEnabled(true);
 		getPoisFromServer(alreadySelectedPois);
@@ -77,7 +80,8 @@ public class PoisSelectorActivity extends Activity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.general_item_selector_activity_actions, menu);
+		getMenuInflater().inflate(
+				R.menu.general_item_selector_activity_actions, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
@@ -139,6 +143,10 @@ public class PoisSelectorActivity extends Activity implements
 		setResult(Activity.RESULT_OK, output);
 		finish();
 	}
+	
+	public ListView getListView() {
+		return listView;
+	}
 
 	private class GetPoisTask extends AsyncTask<String, Void, String> {
 		private ApiInterface apiInterface = new ApiInterface();
@@ -166,8 +174,7 @@ public class PoisSelectorActivity extends Activity implements
 						selectedPois.add(poi);
 					}
 					adapter = new GeneralItemCheckeableListAdapter(
-							new GeneralItemListAdapter(
-									PoisSelectorActivity.this, selectedPois),
+							PoisSelectorActivity.this, selectedPois,
 							alreadySelectedPois);
 					listView.setAdapter(adapter);
 					listView.setOnItemClickListener(poiItemClickListener);
