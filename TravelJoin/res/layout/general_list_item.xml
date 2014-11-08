@@ -32,6 +32,7 @@
         android:layout_above="@id/description"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:ellipsize="marquee"
         android:layout_alignWithParentIfMissing="true"
         android:layout_toRightOf="@id/icon"
         android:gravity="center_vertical"
