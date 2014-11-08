@@ -66,7 +66,7 @@ public class PoisSelectorActivity extends Activity implements
 				.getExtras().get("alreadySelectedPois");
 
 		TextView emptyText = new TextView(this); 
-		emptyText.setText(R.string.delete_tour_error_message);
+		emptyText.setText(R.string.tour_select_pois_empty_list);
 		listView = (ListView) findViewById(R.id.list);
 		listView.setEmptyView(emptyText);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
