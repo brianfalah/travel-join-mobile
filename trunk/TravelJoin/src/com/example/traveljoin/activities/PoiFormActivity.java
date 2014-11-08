@@ -299,7 +299,6 @@ public class PoiFormActivity extends ActionBarActivity implements
 	public void showConnectionError() {
 		CustomTravelJoinException exception = new CustomTravelJoinException();
 		exception.alertConnectionProblem(this);
-		// e.printStackTrace();
 	}
 
 	public void showExceptionError(Exception e) {

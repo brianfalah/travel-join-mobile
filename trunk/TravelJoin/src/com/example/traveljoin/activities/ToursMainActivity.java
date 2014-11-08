@@ -63,7 +63,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		actionBar = getActionBar();
 		actionBar.setSubtitle(R.string.tours);
 
-		tours = new ArrayList<GeneralItem>();		
+		tours = new ArrayList<GeneralItem>();
 		adapter = new GeneralItemListAdapter(this, tours);
 
 		listView = (ListView) findViewById(R.id.list);
@@ -71,12 +71,12 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		listView.setTextFilterEnabled(true);
 		registerForContextMenu(listView);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		getToursFromServer();
-	}	
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,7 +139,7 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 			startTourDetailActivity((Tour) adapter.getItem(position));
 		}
 	};
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		final Tour selectedTour = getTourItem(item);
@@ -192,8 +192,9 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 
 	private void startTourDetailActivity(final Tour selectedTour) {
 		Intent intent = new Intent(this, TourDetailsActivity.class);
-		intent.putExtra("tour_id", selectedTour.getId()); // le pasamos el punto a la
-												// activity
+		intent.putExtra("tour_id", selectedTour.getId()); // le pasamos el punto
+															// a la
+		// activity
 		startActivity(intent);
 	}
 
@@ -215,14 +216,14 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 		case CREATE_TOUR_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de tours en el onResume
+				// Se actualiza la lista de tours en el onResume
 				break;
 			}
 			break;
 		case EDIT_TOUR_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//Se actualiza la lista de tours en el onResume
+				// Se actualiza la lista de tours en el onResume
 				break;
 			}
 			break;
@@ -288,18 +289,14 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 						progress.dismiss();
 
 					} catch (JSONException e) {
-						// TODO: Handlear
 						progress.dismiss();
-						e.printStackTrace();
+						showExceptionError(e);
 					} catch (ParseException e) {
-						// TODO: Handlear
-						e.printStackTrace();
+						showExceptionError(e);
 					}
 				} else {
-					// showConnectionError();
-					// TODO si no se pudieron obtener las categorias mostrar
-					// cartel
-					// para reintentar
+					showConnectionError();
+
 				}
 				break;
 			case DELETE_TOUR_METHOD:
@@ -314,6 +311,18 @@ public class ToursMainActivity extends Activity implements OnQueryTextListener {
 				break;
 			}
 		}
+	}
+
+	public void showConnectionError() {
+		CustomTravelJoinException exception = new CustomTravelJoinException();
+		exception.alertConnectionProblem(this);
+	}
+	
+	public void showExceptionError(Exception e) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				e.getMessage());
+		exception.alertExceptionMessage(this);
+		e.printStackTrace();
 	}
 
 	private void initializeUser() {

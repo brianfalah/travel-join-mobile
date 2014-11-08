@@ -288,10 +288,7 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 						e.printStackTrace();
 					}
 				} else {
-					// showConnectionError();
-					// TODO si no se pudieron obtener las categorias mostrar
-					// cartel
-					// para reintentar
+					 showConnectionError();
 				}
 				break;
 			case DELETE_POI_METHOD:
@@ -311,6 +308,12 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 	private void initializeUser() {
 		GlobalContext globalContext = (GlobalContext) getApplicationContext();
 		user = globalContext.getUser();
+	}
+	
+	public void showConnectionError() {
+		CustomTravelJoinException exception = new CustomTravelJoinException();
+		exception.alertConnectionProblem(this);
+		// e.printStackTrace();
 	}
 
 }
