@@ -2,6 +2,7 @@ package com.example.traveljoin.adapters;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,12 +78,9 @@ public class GeneralItemListAdapter extends BaseAdapter implements Filterable {
 		return context;
 	}
 	
-	public ArrayList<GeneralItem> getGeneralItemList() {
-		return generalItemList;
-	}
-	
 	private class GeneralItemListFilter extends Filter {
-
+		
+		@SuppressLint("DefaultLocale")
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
 			FilterResults filterResults = new FilterResults();

@@ -115,14 +115,7 @@
             android:name="com.example.traveljoin.activities.PoisMainActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <meta-data
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MapActivity" />
         </activity>
@@ -187,13 +180,7 @@
             android:name="com.example.traveljoin.activities.ToursMainActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
 
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MapActivity" />
@@ -246,16 +233,7 @@
             android:name="com.example.traveljoin.activities.GroupsMainActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.example.traveljoin.activities.MapActivity" >
-
-            <!-- con la linea de arriba y esta meta-data le indicamos a cada actividad cual es su padre para que se pueda volver atras -->
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+          
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.traveljoin.MapActivity" />
@@ -292,7 +270,7 @@
         <activity
             android:name="com.example.traveljoin.activities.PoisSelectorActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan" >            
         </activity>
 
         <!-- Seleccionador de tours -->
