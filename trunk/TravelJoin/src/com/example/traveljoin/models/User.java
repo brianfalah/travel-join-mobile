@@ -183,7 +183,7 @@ public class User implements Serializable {
 		
 		if (jsonObject.has("favorite_tours") && !jsonObject.isNull("favorite_tours")){
 			ArrayList<GeneralItem> favoriteToursToAdd = new ArrayList<GeneralItem>();
-			JSONArray favoriteToursJson = jsonObject.getJSONArray("tours");
+			JSONArray favoriteToursJson = jsonObject.getJSONArray("favorite_tours");
 			
 			for (int i = 0; i < favoriteToursJson.length(); i++) {
 	    	    JSONObject favoriteTourJson = favoriteToursJson.getJSONObject(i);    	        
