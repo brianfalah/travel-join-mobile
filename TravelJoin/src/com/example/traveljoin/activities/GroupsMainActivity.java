@@ -145,12 +145,12 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 			menu.removeItem(R.id.group_context_menu_edit);
 			menu.removeItem(R.id.group_context_menu_delete);
 		}
-		
+
 		if (group.isOwner(user)) {
 			menu.removeItem(R.id.group_context_menu_join);
 			menu.removeItem(R.id.group_context_menu_disjoin);
 		}
-		
+
 		if (group.isJoined())
 			menu.removeItem(R.id.group_context_menu_join);
 		else
@@ -417,16 +417,12 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 					} catch (JSONException e) {
 						// TODO: Handlear
 						progress.dismiss();
-						e.printStackTrace();
+						showExceptionError(e);
 					} catch (ParseException e) {
-						// TODO: Handlear
-						e.printStackTrace();
+						showExceptionError(e);
 					}
 				} else {
-					// showConnectionError();
-					// TODO si no se pudieron obtener las categorias mostrar
-					// cartel
-					// para reintentar
+					showConnectionError();
 				}
 				break;
 			case DELETE_GROUP_METHOD:
@@ -473,7 +469,11 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 
 		}
 	}
-
+	public void showConnectionError() {
+		CustomTravelJoinException exception = new CustomTravelJoinException();
+		exception.alertConnectionProblem(this);
+	}
+	
 	public void showExceptionError(Exception e) {
 		showError(e.getMessage());
 	}

@@ -40,7 +40,6 @@ public class GroupDetailsPoisFragment extends ListFragment {
 
 		adapter = new GeneralItemListAdapter(getActivity(), groupPois);
 		setListAdapter(adapter);
-		setEmptyText(getString(R.string.group_pois_empty_list));
 	}
 
 	@Override
