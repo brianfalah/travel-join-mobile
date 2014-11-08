@@ -17,6 +17,7 @@
     <string name="ok">Aceptar</string>
     <string name="loading">Cargando</string>
     <string name="wait">Por favor espere...</string>
+    <string name="field_required"> es requerido!</string>
     <!-- FIN Generales -->
 	
     <!-- Menu -->
@@ -84,6 +85,9 @@
     <string name="poi_form_description">Ingrese los datos del punto de interés:</string>
     <string name="poi_categories">Categoría</string>
     <string name="address">Dirección</string>
+    <string name="poi_select_group_suggestion">¿A qué grupo desea sugerir este punto?</string>
+    <string name="poi_event_actual_time_error">La fecha y hora debe ser mayor a la hora actual</string>
+    <string name="poi_event_end_time_error">El día y la hora de fin debe ser mayor al día y la hora de inicio</string>
     <string-array name="distances_for_filters">
         <item>1</item>
         <item>2</item>
@@ -120,6 +124,7 @@
     <string name="rank_tour">Calificar circuito</string>
     <string name="tour_general_information_tab">General</string>
     <string name="tour_pois_tab">Puntos de interés</string>
+    <string name="tour_select_group_suggestion">¿A qué grupo desea sugerir este circuito?</string>
     
     <string name="tour_added_to_favorites_message">El circuito fue agregado a sus favoritos correctamente.</string>
 	<string name="tour_removed_from_favorites_message">El circuito fue borrado de sus favoritos correctamente.</string>

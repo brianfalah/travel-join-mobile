@@ -219,7 +219,7 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 			EditText edit_text_field = (EditText) field;
 			if (TextUtils.isEmpty( edit_text_field.getText().toString() ) ){
 				edit_text_field.requestFocus();
-				edit_text_field.setError(edit_text_field.getHint() + " es requerido!");
+				edit_text_field.setError(edit_text_field.getHint() + getString(R.string.field_required));
 				valid = false;
 			} else {
 				edit_text_field.setError(null);
@@ -229,7 +229,7 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 			if (field instanceof Spinner) {
 				Spinner spinner_field = (Spinner) field;
 				if (TextUtils.isEmpty( ((Category) spinner_field.getSelectedItem()).getName() ) ){
-					Toast.makeText(this, spinner_field.getPrompt() + " es requerido!",
+					Toast.makeText(this, spinner_field.getPrompt() + getString(R.string.field_required),
 			                Toast.LENGTH_SHORT).show();
 					valid = false;
 				}
@@ -247,13 +247,13 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		TextView edit_text_field = (TextView) field;
 		if (time == null){
 			edit_text_field.requestFocus();
-			edit_text_field.setError(edit_text_field.getText() + " es requerido!");
+			edit_text_field.setError(edit_text_field.getText() + getString(R.string.field_required));
 			valid = false;
 		} else {
 			Calendar now = Calendar.getInstance();
 			if(time.compareTo(now) < 0){
 				edit_text_field.requestFocus();
-				edit_text_field.setError("La fecha y hora debe ser mayor a la hora actual");
+				edit_text_field.setError(getString(R.string.poi_event_actual_time_error));
 				valid = false;
 			}
 			else{
@@ -271,7 +271,7 @@ public class PoiEventFormActivity extends ActionBarActivity implements DateTimeP
 		TextView edit_text_field = (TextView) field;
 		if (timeFrom != null && timeTo != null && timeTo.compareTo(timeFrom) <= 0){
 			edit_text_field.requestFocus();
-			edit_text_field.setError("El día y la hora de fin debe ser mayor al día y la hora de inicio");
+			edit_text_field.setError(getString(R.string.poi_event_end_time_error));
 			valid = false;
 		}	
 		else{
