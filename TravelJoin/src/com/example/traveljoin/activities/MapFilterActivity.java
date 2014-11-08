@@ -160,8 +160,7 @@ public class MapFilterActivity extends ActionBarActivity {
 				} catch (JSONException e) {
 					showExceptionError(e);
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					showExceptionError(e);
 				}
 			} else {
 				showConnectionError();

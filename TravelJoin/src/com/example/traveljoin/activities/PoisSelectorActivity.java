@@ -30,6 +30,7 @@ import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
+import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Poi;
 import com.example.traveljoin.models.User;
@@ -178,19 +179,29 @@ public class PoisSelectorActivity extends Activity implements
 					progress.dismiss();
 
 				} catch (JSONException e) {
-					// TODO: Handlear
+					showExceptionError(e);
 					progress.dismiss();
 					e.printStackTrace();
 				} catch (ParseException e) {
-					// TODO: Handlear
+					showExceptionError(e);
 					e.printStackTrace();
 				}
 			} else {
-				// showConnectionError();
-				// TODO si no se pudieron obtener las categorias mostrar cartel
-				// para reintentar
+				 showConnectionError();
 			}
 		}
+	}
+	
+	public void showConnectionError() {
+		CustomTravelJoinException exception = new CustomTravelJoinException();
+		exception.alertConnectionProblem(this);
+	}
+	
+	public void showExceptionError(Exception e) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				e.getMessage());
+		exception.alertExceptionMessage(this);
+		e.printStackTrace();
 	}
 
 }
