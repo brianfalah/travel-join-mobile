@@ -414,7 +414,7 @@ public class PoiDetailsActivity extends ActionBarActivity implements
 	public void suggestPoi(){
 		FragmentManager fm = getSupportFragmentManager();
 		ListDialogSelectGroupFragment groupsFragment = 
-				new ListDialogSelectGroupFragment(this, user.getGroups(), "¿A qué grupo desea sugerir este punto?");
+				new ListDialogSelectGroupFragment(this, user.getGroups(), getString(R.string.poi_select_group_suggestion));
 		groupsFragment.show(fm, "groups_picker");	
 	}
 	

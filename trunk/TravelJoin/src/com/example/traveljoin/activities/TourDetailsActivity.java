@@ -261,7 +261,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	public void deleteTour() { 
 		AlertDialog.Builder dialog = new AlertDialog.Builder(TourDetailsActivity.this);
 		dialog.setTitle(getString(R.string.delete_tour))
-        .setMessage(getString(R.string.delete_poi_message))
+        .setMessage(getString(R.string.delete_tour_message))
         .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             	progress = ProgressDialog.show(TourDetailsActivity.this, getString(R.string.loading),
@@ -349,7 +349,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 	public void suggestTour(){
 		FragmentManager fm = getSupportFragmentManager();
 		ListDialogSelectGroupFragment groupsFragment = 
-				new ListDialogSelectGroupFragment(this, user.getGroups(), "��A qu�� grupo desea sugerir este circuito?");
+				new ListDialogSelectGroupFragment(this, user.getGroups(), getString(R.string.tour_select_group_suggestion));
 		groupsFragment.show(fm, "groups_picker");	
 	}
 	
@@ -547,7 +547,7 @@ public class TourDetailsActivity extends ActionBarActivity implements
 							tour.setRating(rating);
 							adapterViewPager.getInfoFragment().setFields();
 							rankDialog.hide();
-							Toast.makeText(TourDetailsActivity.this, R.string.poi_ranked_ok_message, Toast.LENGTH_SHORT).show();
+							Toast.makeText(TourDetailsActivity.this, R.string.tour_ranked_ok_message, Toast.LENGTH_SHORT).show();
 						} catch (JSONException e) {
 							showExceptionError(e);
 						} catch (ParseException e) {
