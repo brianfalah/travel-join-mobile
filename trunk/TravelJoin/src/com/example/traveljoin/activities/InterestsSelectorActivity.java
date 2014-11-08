@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -35,9 +34,6 @@ public class InterestsSelectorActivity extends Activity implements
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			adapter.toggleChecked(position);
-			CheckedTextView checkedTextView = (CheckedTextView) view
-					.findViewById(R.id.name);
-			checkedTextView.toggle();
 		}
 	};
 

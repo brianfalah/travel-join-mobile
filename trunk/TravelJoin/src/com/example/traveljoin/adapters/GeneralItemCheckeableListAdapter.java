@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.example.traveljoin.R;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.activities.PoisSelectorActivity;
+import com.example.traveljoin.auxiliaries.CheckableLinearLayout;
 import com.example.traveljoin.auxiliaries.CheckeableItem;
 
 import android.annotation.SuppressLint;
@@ -153,13 +154,24 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 				FilterResults results) {
 			filteredCheckeableItems = (ArrayList<CheckeableItem>) results.values;
 			PoisSelectorActivity activity = (PoisSelectorActivity) context;
-//			for (CheckeableItem checkeableItem : filteredCheckeableItems) {
-//				checkeableItem.getView();
-//				CheckedTextView checkedTextView = (CheckedTextView) activity.getListView(). .findViewById(R.id.name);
-//				checkedTextView.setChecked(false);
-//			}
-			
-			activity.getListView().clearChoices();
+
+			for (int index = 0; index < activity.getListView().getChildCount(); index++) {
+				CheckableLinearLayout view = (CheckableLinearLayout) activity
+						.getListView().getChildAt(index);
+
+				view.setChecked(false);
+
+				// CheckedTextView checkedTextView = (CheckedTextView)
+				// activity.getListView(). .findViewById(R.id.name);
+				// checkedTextView.setChecked(false);
+			}
+
+			// CheckedTextView checkedTextView = (CheckedTextView)
+			// activity.getListView(). .findViewById(R.id.name);
+			// checkedTextView.setChecked(false);
+			// }
+
+			//activity.getListView().clearChoices();
 			notifyDataSetChanged();
 		}
 	}
