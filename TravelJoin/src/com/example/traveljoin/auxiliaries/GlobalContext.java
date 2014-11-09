@@ -457,9 +457,6 @@ public class GlobalContext extends Application {
 		}
 	}
 
-	// TODO Refactor de showConnectionError y showExceptionError a un Error
-	// Handler si es que siempre se hace lo mismo con las excepciones. Buscar
-	// esos metodos en todo el proyecto
 	public void showConnectionError() {
 		CustomTravelJoinException exception = new CustomTravelJoinException();
 		exception.alertConnectionProblem(this);

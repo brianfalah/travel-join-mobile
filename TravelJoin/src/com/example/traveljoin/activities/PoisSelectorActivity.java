@@ -131,8 +131,6 @@ public class PoisSelectorActivity extends Activity implements
 	}
 
 	public void onAcceptButtonClicked(View button) {
-		// TODO: Agregar validacion de que si no se agrego ningun item, al menos
-		// se deba seleccionar uno
 
 		Intent output = new Intent();
 		output.putExtra("newSelectedPois", adapter.getSelectedItems());

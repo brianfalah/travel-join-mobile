@@ -280,12 +280,10 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 						progress.dismiss();
 
 					} catch (JSONException e) {
-						// TODO: Handlear
 						progress.dismiss();
-						e.printStackTrace();
+						showExceptionError(e);
 					} catch (ParseException e) {
-						// TODO: Handlear
-						e.printStackTrace();
+						showExceptionError(e);
 					}
 				} else {
 					 showConnectionError();
@@ -315,5 +313,11 @@ public class PoisMainActivity extends Activity implements OnQueryTextListener {
 		exception.alertConnectionProblem(this);
 		// e.printStackTrace();
 	}
-
+	
+	public void showExceptionError(Exception e) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				e.getMessage());
+		exception.alertExceptionMessage(this);
+		e.printStackTrace();
+	}
 }
