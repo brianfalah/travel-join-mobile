@@ -113,8 +113,6 @@ public class AugmentedRealityActivity extends SampleCamActivity {
 
 			if (AugmentedRealityActivity.this.lastKnownLocaton != null
 					&& !AugmentedRealityActivity.this.isFinishing()) {
-				// TODO: you may replace this dummy implementation and instead
-				// load POI information e.g. from your database
 				AugmentedRealityActivity.this.poiData = AugmentedRealityActivity
 						.getPoiInformation(AugmentedRealityActivity.this.poisCurrentSelection);
 				AugmentedRealityActivity.this.callJavaScript(

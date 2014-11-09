@@ -37,60 +37,12 @@ public class PoiEventsFragment extends ListFragment {
 		activity = (PoiDetailsActivity) getActivity();              
 				
 		events = new ArrayList<GeneralItem>();
-		//events.addAll(activity.poi.getPoiEvents());
 
 		adapter = new GeneralItemListAdapter(
 				getActivity(), events);
 		setListAdapter(adapter);
 		setEmptyText(getString(R.string.poi_events_empty_list));
-//		registerForContextMenu(getListView());
 	}
-	
-//	@Override
-//	public void onCreateContextMenu(ContextMenu menu, View v,
-//			ContextMenuInfo menuInfo) {
-//		super.onCreateContextMenu(menu, v, menuInfo);
-//		MenuInflater inflater = getActivity().getMenuInflater();
-//		inflater.inflate(R.menu.poi_event_list_item_context_menu, menu);
-//		
-//		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-//		PoiEvent poiEvent = (PoiEvent) listView.getItemAtPosition(info.position);
-//		if (!poiEvent.getUserId().equals(user.getId())) {
-//			menu.removeItem(R.id.poi_event_context_menu_edit);
-//		}
-//	}
-
-//	OnItemClickListener groupItemClickListener = new OnItemClickListener() {
-//		@Override
-//		public void onItemClick(AdapterView<?> parent, View view, int position,
-//				long id) {
-//			startPoiEventDetailActivity((Group) adapter.getItem(position));
-//		}
-//	};
-	
-//	@Override
-//	public boolean onContextItemSelected(MenuItem item) {
-//		final PoiEvent selectedPoiEvent = getPoiEventItem(item);
-//		switch (item.getItemId()) {
-//		case R.id.poi_event_context_menu_view:
-//			startPoiEventDetailsActivity(selectedPoiEvent);
-//			return true;
-//		case R.id.poi_event_context_menu_edit:
-//			Intent intent_edit = new Intent(activity, PoiEventFormActivity.class);
-//			intent_edit.putExtra("poi_event", selectedPoiEvent);
-//			startActivityForResult(intent_edit, EDIT|);
-//			return true;
-//		default:
-//			return super.onContextItemSelected(item);
-//		}
-//	}
-//
-//	
-//	private PoiEvent getPoiEventItem(MenuItem item) {
-//		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//		PoiEvent poiEvent = (PoiEvent) events.get(info.position);
-//		return poiEvent;
-//	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position,
@@ -105,7 +57,6 @@ public class PoiEventsFragment extends ListFragment {
 		startActivity(intent);
 	}
 	 
-	//TODO ver esto porque cuando se refresque no va a tomar los cambios si edito un evento
 	public void refreshList(){
 		events.clear();
 		events.addAll(activity.poi.getPoiEvents());

@@ -12,6 +12,7 @@ import com.example.traveljoin.adapters.GeneralItemCheckeableListAdapter;
 import com.example.traveljoin.auxiliaries.GlobalContext;
 import com.example.traveljoin.models.ApiInterface;
 import com.example.traveljoin.models.ApiResult;
+import com.example.traveljoin.models.CustomTravelJoinException;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.models.Tour;
 import com.example.traveljoin.models.User;
@@ -126,8 +127,6 @@ public class ToursSelectorActivity extends Activity implements
 	}
 
 	public void onAcceptButtonClicked(View button) {
-		// TODO: Agregar validacion de que si no se agrego ningun item, al menos
-		// se deba seleccionar uno
 
 		Intent output = new Intent();
 		output.putExtra("newSelectedTours", adapter.getSelectedItems());
@@ -170,19 +169,27 @@ public class ToursSelectorActivity extends Activity implements
 					progressDialog.dismiss();
 
 				} catch (JSONException e) {
-					// TODO: Handlear
 					progressDialog.dismiss();
-					e.printStackTrace();
+					showExceptionError(e);
 				} catch (ParseException e) {
-					// TODO: Handlear
-					e.printStackTrace();
+					showExceptionError(e);
 				}
 			} else {
-				// showConnectionError();
-				// TODO si no se pudieron obtener las categorias mostrar cartel
-				// para reintentar
+				showConnectionError();
 			}
 		}
+	}
+
+	public void showConnectionError() {
+		CustomTravelJoinException exception = new CustomTravelJoinException();
+		exception.alertConnectionProblem(this);
+	}
+
+	public void showExceptionError(Exception e) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				e.getMessage());
+		exception.alertExceptionMessage(this);
+		e.printStackTrace();
 	}
 
 }

@@ -415,7 +415,6 @@ public class GroupsMainActivity extends Activity implements OnQueryTextListener 
 						progress.dismiss();
 
 					} catch (JSONException e) {
-						// TODO: Handlear
 						progress.dismiss();
 						showExceptionError(e);
 					} catch (ParseException e) {

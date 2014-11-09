@@ -37,7 +37,6 @@ public class PoiInformationRatingsFragment extends ListFragment {
 				container, false);
 		
 		activity = (PoiDetailsActivity) getActivity();
-		//TODO ver por que me da null el listview
 		View ratingsListLayout = view.findViewById(R.id.ratingsListLayout); 
 		listView = (ListView) ratingsListLayout.findViewWithTag("ratingsListView");
 

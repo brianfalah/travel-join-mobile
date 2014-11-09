@@ -25,16 +25,7 @@ public class Tour implements Serializable, GeneralItem {
 	
 	private ArrayList<TourPoi> tourPois;
 	private ArrayList<TourPoi> tourPoisToDelete;
-	
-	// TODO: borrar este constructor. Solo se esta usando para la lista de Poi.
-	// Presentacion de interfaces de usuario
-	public Tour(String name, String description) {
-		super();
-		this.name = name;
-		this.description = description;
-		this.id = 0;
-	}
-	
+		
 	public Tour(Integer id, String name, String description, Integer userId, ArrayList<GeneralItem> tourPois) {
 		super();
 		this.id = id;

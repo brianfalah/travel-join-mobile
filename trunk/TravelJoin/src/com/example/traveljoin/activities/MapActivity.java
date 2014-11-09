@@ -422,15 +422,14 @@ public class MapActivity extends SlidingFragmentActivity implements
             		progress.dismiss();  
     			} catch (JSONException e) {
     				progress.dismiss();  
-    				e.printStackTrace();
+    				showExceptionError(e);
     			} catch (ParseException e) {
     				progress.dismiss();  
-    				e.printStackTrace();
+    				showExceptionError(e);
 				}
         	}
         	else{
         		showConnectionError();
-        		//TODO si no se pudieron obtener las categorias mostrar cartel para reintentar
         	}        	        	        	        	         	
        }
     }
@@ -574,6 +573,13 @@ public class MapActivity extends SlidingFragmentActivity implements
 		//e.printStackTrace();
 	}
 	
+	public void showExceptionError(Exception e) {
+		CustomTravelJoinException exception = new CustomTravelJoinException(
+				e.getMessage());
+		exception.alertExceptionMessage(this);
+		e.printStackTrace();
+	}
+	
     private boolean servicesConnected() {
         // Check that Google Play services is available
         int resultCode =
@@ -663,8 +669,7 @@ public class MapActivity extends SlidingFragmentActivity implements
                 * PendingIntent
                 */
             } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
+            	showExceptionError(e);
             }
         } else {
             /*

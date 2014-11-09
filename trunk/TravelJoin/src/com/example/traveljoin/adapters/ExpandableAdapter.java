@@ -66,20 +66,17 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	}
 
 	public CheckeableItem getChild(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		CheckeableItem item = mainGroup.get(groupPosition);
 		return groupList.get(item).get(childPosition);
 
 	}
 
 	public long getChildId(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public View getChildView(final int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 
 		final ChildHolder holder;
 		if (convertView == null) {
@@ -149,23 +146,19 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	}
 
 	public int getChildrenCount(int groupPosition) {
-		// TODO Auto-generated method stub
 		CheckeableItem item = mainGroup.get(groupPosition);
 		return groupList.get(item).size();
 	}
 
 	public CheckeableItem getGroup(int groupPosition) {
-		// TODO Auto-generated method stub
 		return mainGroup.get(groupPosition);
 	}
 
 	public int getGroupCount() {
-		// TODO Auto-generated method stub
 		return mainGroup.size();
 	}
 
 	public long getGroupId(int groupPosition) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -207,7 +200,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 				new Handler().postDelayed(new Runnable() {
 
 					public void run() {
-						// TODO Auto-generated method stub
 						if (!checkAll)
 							checkAll = true;
 					}
@@ -227,12 +219,10 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	}
 
 	public boolean hasStableIds() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
