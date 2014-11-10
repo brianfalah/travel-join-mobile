@@ -127,7 +127,6 @@ public class ToursSelectorActivity extends Activity implements
 	}
 
 	public void onAcceptButtonClicked(View button) {
-
 		Intent output = new Intent();
 		output.putExtra("newSelectedTours", adapter.getSelectedItems());
 
@@ -162,7 +161,7 @@ public class ToursSelectorActivity extends Activity implements
 					}
 					adapter = new GeneralItemCheckeableListAdapter(
 							ToursSelectorActivity.this, selectedTours,
-							alreadySelectedTours);
+							alreadySelectedTours, listView);
 					listView.setAdapter(adapter);
 					listView.setOnItemClickListener(tourItemClickListener);
 					adapter.notifyDataSetChanged();
@@ -179,7 +178,7 @@ public class ToursSelectorActivity extends Activity implements
 			}
 		}
 	}
-
+	
 	public void showConnectionError() {
 		CustomTravelJoinException exception = new CustomTravelJoinException();
 		exception.alertConnectionProblem(this);

@@ -2,6 +2,8 @@ package com.example.traveljoin.adapters;
 
 import java.util.ArrayList;
 
+import org.jsoup.safety.Cleaner;
+
 import com.example.traveljoin.R;
 import com.example.traveljoin.models.GeneralItem;
 import com.example.traveljoin.activities.PoisSelectorActivity;
@@ -17,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
@@ -25,12 +28,15 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 	private Context context;
 	private GeneralCheckeableItemListFilter generalcheckeableItemListFilter;
 	private ArrayList<CheckeableItem> checkeableItems;
-	private ArrayList<CheckeableItem> filteredCheckeableItems;
+	private ArrayList<CheckeableItem> originalItems;
+	ListView listView;
+	//private ArrayList<CheckeableItem> filteredCheckeableItems;
 
 	public GeneralItemCheckeableListAdapter(Context context,
 			ArrayList<GeneralItem> items,
-			ArrayList<GeneralItem> previousSelectedItems) {
+			ArrayList<GeneralItem> previousSelectedItems, ListView listView) {
 		this.context = context;
+		this.listView = listView;
 		this.initializeCheckeableItems(items, previousSelectedItems);
 		this.getFilter();
 	}
@@ -39,30 +45,36 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 			ArrayList<GeneralItem> previousSelectedItems) {
 
 		this.checkeableItems = new ArrayList<CheckeableItem>();
-		this.filteredCheckeableItems = new ArrayList<CheckeableItem>();
+		this.originalItems = new ArrayList<CheckeableItem>();
 
 		CheckeableItem checkeableItem;
 
-		for (GeneralItem item : items) {
-			if (previousSelectedItems.contains(item))
+		for (int i = 0; i < items.size(); i++) {
+			GeneralItem item = items.get(i);
+//		for (GeneralItem item : items) {
+			if (previousSelectedItems.contains(item)){
 				checkeableItem = new CheckeableItem(item, true);
-			else
+				listView.setItemChecked(i, checkeableItem.isChecked());
+			}
+			else{
 				checkeableItem = new CheckeableItem(item, false);
+			}
+				
 
 			checkeableItems.add(checkeableItem);
-			filteredCheckeableItems.add(checkeableItem);
+			originalItems.add(checkeableItem);
 		}
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return filteredCheckeableItems.size();
+		return checkeableItems.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return filteredCheckeableItems.get(position);
+		return checkeableItems.get(position);
 	}
 
 	@Override
@@ -90,8 +102,8 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 				.findViewById(R.id.description);
 
 		nameCheckedTextView.setText(checkeableItem.getName());
-		nameCheckedTextView.setChecked(checkeableItems.get(position)
-				.isChecked());
+		nameCheckedTextView.setChecked(checkeableItem.isChecked());
+		listView.setItemChecked(position, checkeableItem.isChecked());
 		descriptionTextView.setText(checkeableItem.getDescription());
 
 		return convertView;
@@ -132,7 +144,7 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 			if (constraint != null && constraint.length() > 0) {
 				ArrayList<CheckeableItem> tempList = new ArrayList<CheckeableItem>();
 
-				for (CheckeableItem checkeableItem : checkeableItems) {
+				for (CheckeableItem checkeableItem : originalItems) {
 					if (checkeableItem.getName().toLowerCase()
 							.contains(constraint.toString().toLowerCase()))
 						tempList.add(checkeableItem);
@@ -141,39 +153,60 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 				filterResults.count = tempList.size();
 				filterResults.values = tempList;
 			} else {
-				filterResults.count = checkeableItems.size();
-				filterResults.values = checkeableItems;
+				filterResults.count = originalItems.size();
+				filterResults.values = originalItems;
 			}
 
 			return filterResults;
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) {
-			filteredCheckeableItems = (ArrayList<CheckeableItem>) results.values;
-			PoisSelectorActivity activity = (PoisSelectorActivity) context;
-
-			for (int index = 0; index < activity.getListView().getChildCount(); index++) {
-				CheckableLinearLayout view = (CheckableLinearLayout) activity
-						.getListView().getChildAt(index);
-
-				view.setChecked(false);
-
-				// CheckedTextView checkedTextView = (CheckedTextView)
-				// activity.getListView(). .findViewById(R.id.name);
-				// checkedTextView.setChecked(false);
-			}
-
-			// CheckedTextView checkedTextView = (CheckedTextView)
-			// activity.getListView(). .findViewById(R.id.name);
-			// checkedTextView.setChecked(false);
-			// }
-
-			//activity.getListView().clearChoices();
-			notifyDataSetChanged();
+//			filteredGeneralItemList = (ArrayList<GeneralItem>) results.values;
+//            notifyDataSetChanged();
+			// Now we have to inform the adapter about the new list filtered
+		    if (results.count == 0)
+		        notifyDataSetInvalidated();
+		    else {
+		    	checkeableItems = (ArrayList<CheckeableItem>) results.values;
+		    	listView.clearChoices();
+//		    	for (int i = 0; i < checkeableItems.size(); i++)
+//		    	    listView.setItemChecked(i, false);
+		        notifyDataSetChanged();
+		    }
+			
 		}
+		
+	    
+		
+//		@SuppressWarnings("unchecked")
+//		@Override
+//		protected void publishResults(CharSequence constraint,
+//				FilterResults results) {
+//			filteredCheckeableItems = (ArrayList<CheckeableItem>) results.values;
+//			PoisSelectorActivity activity = (PoisSelectorActivity) context;
+//
+//			for (int index = 0; index < activity.getListView().getChildCount(); index++) {
+//				CheckableLinearLayout view = (CheckableLinearLayout) activity
+//						.getListView().getChildAt(index);
+//
+//				view.setChecked(false);
+//
+//				// CheckedTextView checkedTextView = (CheckedTextView)
+//				// activity.getListView(). .findViewById(R.id.name);
+//				// checkedTextView.setChecked(false);
+//			}
+//
+//			// CheckedTextView checkedTextView = (CheckedTextView)
+//			// activity.getListView(). .findViewById(R.id.name);
+//			// checkedTextView.setChecked(false);
+//			// }
+//
+//			//activity.getListView().clearChoices();
+//			notifyDataSetChanged();
+//		}
 	}
 
 }
