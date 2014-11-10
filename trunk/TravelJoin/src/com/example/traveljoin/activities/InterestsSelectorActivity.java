@@ -101,7 +101,7 @@ public class InterestsSelectorActivity extends Activity implements
 
 		adapter = new GeneralItemCheckeableListAdapter(
 				InterestsSelectorActivity.this, interests,
-				alreadySelectedInterests);
+				alreadySelectedInterests, listView);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(interestItemClickListener);
 		adapter.notifyDataSetChanged();

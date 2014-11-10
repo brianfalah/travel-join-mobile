@@ -66,7 +66,7 @@ public class PoisSelectorActivity extends Activity implements
 				.getExtras().get("alreadySelectedPois");
 
 		TextView emptyText = new TextView(this); 
-		emptyText.setText(R.string.tour_select_pois_empty_list);
+		emptyText.setText(R.string.delete_tour_error_message);
 		listView = (ListView) findViewById(R.id.list);
 		listView.setEmptyView(emptyText);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -131,7 +131,6 @@ public class PoisSelectorActivity extends Activity implements
 	}
 
 	public void onAcceptButtonClicked(View button) {
-
 		Intent output = new Intent();
 		output.putExtra("newSelectedPois", adapter.getSelectedItems());
 
@@ -170,7 +169,7 @@ public class PoisSelectorActivity extends Activity implements
 					}
 					adapter = new GeneralItemCheckeableListAdapter(
 							PoisSelectorActivity.this, selectedPois,
-							alreadySelectedPois);
+							alreadySelectedPois, listView);
 					listView.setAdapter(adapter);
 					listView.setOnItemClickListener(poiItemClickListener);
 					adapter.notifyDataSetChanged();
@@ -185,7 +184,9 @@ public class PoisSelectorActivity extends Activity implements
 					e.printStackTrace();
 				}
 			} else {
-				 showConnectionError();
+				showConnectionError();
+				// TODO si no se pudieron obtener las categorias mostrar cartel
+				// para reintentar
 			}
 		}
 	}
