@@ -8,12 +8,11 @@
     android:layout_height="wrap_content"
     android:scrollbars="vertical" >
 
-<LinearLayout 
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
- 
-  
+    android:orientation="vertical"
+    android:padding="5dp" >
    
     <TextView
         android:id="@+id/help_mapa"
@@ -28,30 +27,38 @@
         android:id="@+id/helpcontent_mapa1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Visualice los puntos creados por los usuarios de Travel Join"
+        android:text="Visualice los puntos creados por los usuarios de TravelJoin. Puede filtrarlos por distancia, categorías o grupos a los que pertenecen presionando sobre la lupa en la esquina superior derecha."
         android:textSize="20px" 
         android:layout_marginTop="5dp"/>
       <TextView
         android:id="@+id/helpcontent_mapa2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Para agregar un punto de interés, mantenga seleccionadas las coordenadas en el mapa y agregue su descripción."
-        android:layout_marginTop="2dp"
-        android:textSize="20px"/>
-     
-      <TextView
-        android:id="@+id/helpcontent_mapa3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Deslice la pantalla hacia la derecha para ver el menú de la aplicación."
+        android:text="Para agregar un punto de interés, mantenga presionado sobre el punto en el mapa donde desea crearlo y agregue su información."
         android:layout_marginTop="2dp"
         android:textSize="20px"/>
        
-        <TextView
+     <TextView
         android:id="@+id/helpcontent_mapa4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Use los iconos de +/- para hacer zoom sobre las calles."
+        android:text="Use los iconos de +/- para hacer zoom sobre el mapa y arrastre el mapa con sus dedos para desplazarse por él."
+        android:layout_marginTop="2dp"
+        android:textSize="20px"/>
+     
+     <TextView
+        android:id="@+id/helpcontent_mapa4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="También puede ver todos los puntos de interés creados por los usuarios a través de la opción Puntos de interés del menú de la aplicación."
+        android:layout_marginTop="2dp"
+        android:textSize="20px"/>
+     
+       <TextView
+        android:id="@+id/helpcontent_mapa3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Presione en la flecha situada en la esquina superior izquierda para ver el menú de la aplicación."
         android:layout_marginTop="2dp"
         android:textSize="20px"/>
  
@@ -59,17 +66,31 @@
         android:id="@+id/help_circuitos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Circuitos/+ "
+        android:text="Circuitos turísticos"
         android:textSize="25px"
         android:textStyle="bold"
         android:textColor="#ff3c00"
         android:layout_marginTop="15dp"/>
 
  <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Puede ver todos los circuitos turísticos creados a través de la opción Circuitos Turísticos del menú de la aplicación."
+        android:textSize="20px" 
+        android:layout_marginTop="5dp"/>
+ 
+ <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desde allí podrá ver el detalle de cada uno de ellos y editarlos o borrarlos en caso de ser usted su creador."
+        android:textSize="20px" 
+        android:layout_marginTop="5dp"/>
+ 
+ <TextView
         android:id="@+id/helpcontent_circuito1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agregue la descripción del circuito que quiere crear y a continuación indique que puntos de interés lo componen."
+        android:text="Para crear un nuevo circuito, presione sobre el + situado en la esquina superior derecha, agregue la información del circuito que quiere crear y a continuación indique qué puntos de interés lo componen."
         android:textSize="20px" 
         android:layout_marginTop="5dp"/>
 
@@ -77,25 +98,33 @@
         android:id="@+id/help_grupos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Grupos/+"
+        android:text="Grupos"
         android:textSize="25px"
         android:textStyle="bold"
         android:textColor="#ff3c00"
         android:layout_marginTop="15dp"/>
 
+ <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Puede ver todos los grupos creados a través de la opción Grupos del menú de la aplicación."
+        android:textSize="20px" 
+        android:layout_marginTop="5dp"/>
+ 
+ <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desde allí podrá ver el detalle de cada uno de ellos y editarlos o borrarlos en caso de ser usted su creador."
+        android:textSize="20px" 
+        android:layout_marginTop="5dp"/>
+ 
 <TextView
         android:id="@+id/helpcontent_grupo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agregue el detalle del grupo."
+        android:text="Para crear un nuevo grupo presione sobre el + situado en la esquina superior derecha, agregue el detalle del grupo y seleccione los intereses, puntos de interés y circuitos para compartir con otros usuarios."
         android:textSize="20px" 
         android:layout_marginTop="5dp"/>
-<TextView
-        android:id="@+id/helpcontent_grupo2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seleccione los intereses, puntos de interés y circuitos para compartir con otros usuarios."
-        android:textSize="20px"/>
 
 <TextView
         android:id="@+id/help_realidadaumentada"
@@ -110,7 +139,7 @@
         android:id="@+id/helpcontent_ra1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Visualice la información virtual de los puntos de interés cargados con la información física ya creada por los usuarios de Travel Join"
+        android:text="Visualice la información virtual de los puntos de interés cargados con la información física ya creada por los usuarios de TravelJoin"
         android:textSize="20px" 
         android:layout_marginTop="5dp"/>
 
@@ -118,7 +147,7 @@
         android:id="@+id/help_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Informacíon"
+        android:text="Información"
         android:textSize="25px"
         android:textStyle="bold"
         android:textColor="#ff3c00"
@@ -128,14 +157,14 @@
         android:id="@+id/helpcontent_info1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text= "Travel Join - Versión 2.11.43"
+        android:text= "TravelJoin - Versión 2.11.43"
         android:textSize="20px" 
         android:layout_marginTop="5dp"/>
 <TextView
         android:id="@+id/helpcontent_info2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Traveljoin Inc 2014"
+        android:text="TravelJoin Inc 2014"
         android:textSize="20px"/>
 <TextView
         android:id="@+id/helpcontent_info3"
@@ -149,7 +178,7 @@
         android:id="@+id/helpcontent_info5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Contactenos por problemas y consultas a help@traveljoin.com"
+        android:text="Contáctenos por problemas y consultas a help@traveljoin.com"
         android:textSize="20px"
         android:layout_marginTop="20dp"
         android:gravity="center"/>
