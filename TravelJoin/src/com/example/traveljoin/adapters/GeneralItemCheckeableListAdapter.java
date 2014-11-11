@@ -120,7 +120,7 @@ public class GeneralItemCheckeableListAdapter extends BaseAdapter implements
 	public ArrayList<GeneralItem> getSelectedItems() {
 		ArrayList<GeneralItem> selectedItems = new ArrayList<GeneralItem>();
 
-		for (CheckeableItem chekeableItem : checkeableItems) {
+		for (CheckeableItem chekeableItem : originalItems) {
 			if (chekeableItem.isChecked())
 				selectedItems.add(chekeableItem.getItem());
 		}
